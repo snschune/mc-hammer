@@ -6,15 +6,25 @@
 
 std::tuple<double,double,double,double,double,double> source(){
 	//Generate new particle
+	double radius_inner=1;
+	double radius_outer=2;
+	std::vector<double> energy_sample{0,1};
+	std::vector<double> energyList{3};
 	double pi = 3.1415926535897;
 	//Radius of the new particle
-	double radius = pow((pow(stack.radius_inner,3) + Urand()*(pow(stack.radius_outer,3)-pow(stack.radius_inner,3))),(1 / 3));
+	double radius = pow((pow(radius_inner,3) + Urand()*(pow(radius_outer,3)-pow(radius_inner,3))),(1 / 3));
 	//Particle initial direction
 	double mu = 2 * Urand() - 1;
 	double phi = 2 * pi*Urand();
 	//Particle energy
-	double energy = Urand(); //sample some cdf
-	
+	double energyRand = Urand(); //sample some cdf
+	int n;
+	for (n=0; n<energy_sample.size(); n++){
+		if(energy_sample[n] < energyRand){
+		break;
+		}
+	}
+	double energy = energyList[n];
 	double x=radius*sqrt(1-pow(mu,2))*cos(phi);
 	double y=radius*sqrt(1-pow(mu,2))*sin(phi);
 	double z=radius*mu;
