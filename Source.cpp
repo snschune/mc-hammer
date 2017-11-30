@@ -13,7 +13,6 @@ std::tuple<double,double,double,double,double,double> source(){
 	double pi = 3.1415926535897;
 	//Radius of the new particle
 	double radius = pow((pow(radius_inner,3) + Urand()*(pow(radius_outer,3)-pow(radius_inner,3))),(1 / 3));
-	//Particle initial direction
 	double mu = 2 * Urand() - 1;
 	double phi = 2 * pi*Urand();
 	//Particle energy
@@ -28,6 +27,8 @@ std::tuple<double,double,double,double,double,double> source(){
 	double x=radius*sqrt(1-pow(mu,2))*cos(phi);
 	double y=radius*sqrt(1-pow(mu,2))*sin(phi);
 	double z=radius*mu;
+	double mu = 2 * Urand() - 1;
+	double phi = 2 * pi*Urand();
 	std::tuple<double,double,double,double,double,double> stack(x,y,z,mu,phi, energy);
 	return stack;
 }
