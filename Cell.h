@@ -48,7 +48,7 @@ class Cell
 	
 	
 	Surf_ptr closestSurface(Part_ptr p);
-	void processRxn(Part_ptr p, double dist, stack<Part_ptr> &pstack);
+	void processRxn(Part_ptr p, stack<Part_ptr> &pstack);
 	
 			
 };

@@ -57,10 +57,9 @@ Surf_ptr Cell::closestSurface(Part_ptr p)
 	return surfaces[min_index];
 }
 
-void Cell::processRxn(Part_ptr p, double dist, stack<Part_ptr> &pstack)
+void Cell::processRxn(Part_ptr p, stack<Part_ptr> &pstack)
 //a collision has occurred, what happens now?
 {
-	p->move(dist); //CHANGE THIS
 	mat->processRxn(p, pstack, p->getGroup());
 	return;
 }
