@@ -10,7 +10,17 @@
 //Constructor
 Material::Material(int ng, vector<double> total_XSi, vector<double> Sigai, vector<vector<double>> Sigsi): num_g(ng), total_XS(total_XSi), Siga(Sigai), Sigs(Sigsi) 
 {
-	
+	vector<double> gsvec;
+	for(int i = 0; i < ng; i++)
+	{
+		double rowsum = 0;
+		gsvec = Sigs[i];
+		for(int j = 0; j < ng; j++)
+		{
+			rowsum += gsvec[j];
+		}
+		Sigst.push_back(rowsum);
+	}
 }
 
 double Material::getTotalXS(int g)
@@ -25,7 +35,8 @@ double Material::getAbsXS(int g)
 
 double Material::getScaXS(int gi, int gf)
 {
-	return Sigs[gi*num_g+gf-1];
+	vector<double> cScat = Sigs[gi];
+	return cScat[gf];
 }
 
 void Material::processRxn(Part_ptr p, stack<Part_ptr> &pstack, int g)
@@ -50,12 +61,13 @@ void Material::scatter(Part_ptr p, int g)
 	double rand = Urand();
 	double cutoff = 0;
 	int gf = 0;
-	for(int i = (g-1)*num_g; i < g*num_g; i++)
+	vector<double> curSigs = Sigs[g-1];
+	for(int i = 0; i < num_g; i++)
 	{
-		cutoff += Sigs[i]/Sigst[g-1]; 
+		cutoff += curSigs[i]/Sigst[g-1]; 
 		if(rand < cutoff)
 		{
-			gf = i-(g-1)*num_g+1;
+			gf = i+1;
 			break;	
 		}
 	}

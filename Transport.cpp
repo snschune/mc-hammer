@@ -16,20 +16,16 @@ void Transport::setup()
 	//read input file if it existed
 	//plane at x = 0 and at x = 10 -> cell1
 		//material
-		cout << "trans.cpp line 19" << endl;
 		vector<double> sigt;
 		vector<double> siga;
-		vector<double> sigs;
-		cout << "trans.cpp line 23" << endl;
+		vector<double> sigsi;
+		vector<vector<double>> sigso;
 		sigt.push_back(1.0);
-		cout << "trans.cpp line 25" << endl;
 		siga.push_back(1.0);
-		cout << "trans.cpp line 27" << endl;
-		sigs.push_back(0.0);
-		cout << "trans.cpp line 29" << endl;
-		Mat_ptr mat1 = make_shared<Material>(1, sigt, siga, sigs);
+		sigsi.push_back(0.0);
+		sigso.push_back(sigsi);
+		Mat_ptr mat1 = make_shared<Material>(1, sigt, siga, sigso);
 		
-		cout << "trans.cpp line 32" << endl;
 		//bounds
 		Surf_ptr plane1 = make_shared<plane>("plane1", 1.0, 0.0, 0.0, 0.0);
 		Surf_ptr plane2 = make_shared<plane>("plane2", 1.0, 0.0, 0.0, 10.0);
@@ -53,12 +49,12 @@ void Transport::setup()
 		
 	//read source info
 	//all particles start in the positive x direction at the origin
-	numHis = 1e3;
+	numHis = 1e6;
 	
 	for(int i = 0; i < numHis; i++)
 	{
 		p_ptr d = make_shared<point>(1,0,0);
-		p_ptr p = make_shared<point>(0,0,0);
+		p_ptr p = make_shared<point>(0.1,0,0);
 		r_ptr r = make_shared<ray>(*d, *p);
 		
 		
@@ -71,18 +67,21 @@ void Transport::setup()
 }
 void Transport::runTransport()
 {
+	cout << "starting transport" << endl;
 	while(!pstack.empty())
 	{
 		Part_ptr p = pstack.top();
 		runHistory(p);
+		pstack.pop();
 	}
 }
 void Transport::runHistory(Part_ptr p)
 {
 	while(p->isAlive())
 	{
-		double d2s = cells[p->getCell()]->distToSurface(p);
-		double d2c = cells[p->getCell()]->distToCollision(p);
+		int curCell = p->getCell();
+		double d2s = cells[curCell]->distToSurface(p);
+		double d2c = cells[curCell]->distToCollision(p);
 		
 		if(d2s > d2c) //collision!
 		{

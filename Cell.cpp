@@ -47,12 +47,16 @@ Surf_ptr Cell::closestSurface(Part_ptr p)
 	{
 		Surf_ptr cur_surf =  surfaces[i];
 		double dist = cur_surf->distance(r);
-
-		if(dist < min_val)
+		if(dist < min_val && dist > 0)
 		{
 			min_index = i;
 			min_val = dist;
 		}
+	}
+	if(min_index == -1)
+	{
+		std::cerr << "ERROR: NO SURFACE FOUND" << std::endl;
+		std::exit(1);
 	}
 	return surfaces[min_index];
 }
