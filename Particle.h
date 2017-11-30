@@ -9,25 +9,30 @@
 
 #include "Point.h"
 
+typedef std::make_shared<ray> r_ptr;
+
 class Particle
 {
 	private:
-		ray r;
 		bool alive;
-		int region;
+		r_ptr r;
+		int cellNum;
 		int group;
 	public:
 	//constructor
-		Particle(ray ri, int regioni, int gi);
+		Particle(r_ptr ri, int regioni, int gi);
 		//functions
-		point getPos();
-		point getDir();
-		ray   getray();
+		bool isAlive();
+		int getCell();
+		p_ptr getPos();
+		p_ptr getDir();
+		r_ptr   getray();
 		int   getGroup();
 		
+		void setCell(int c);
 		void setGroup(int g);
-		void setPos(point posi);
-		void setDir(point diri);
+		void setPos(p_ptr posi);
+		void setDir(p_ptr diri);
 		void setPos(double xi, double yi, double zi);
 		void setDir(double ui, double vi, double wi);
 		void move(double dist);

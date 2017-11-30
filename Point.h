@@ -1,6 +1,11 @@
 #ifndef _POINT_HEADER_
 #define _POINT_HEADER_
 
+#include <memory>
+
+
+
+
 class point {
   public:
     double x, y, z;
@@ -9,14 +14,16 @@ class point {
     ~point() {};
 };
 
+typedef std::shared_ptr<point> p_ptr;
+
 class ray {
   public:
-    ray( point p, point d );
+    ray( p_ptr p, p_ptr d );
     //ray( point p, point d ) : pos(p), dir(d) {};
     ~ray() {};
 
-    point pos;
-    point dir;
+    p_ptr pos;
+    p_ptr dir;
 };
 
 #endif

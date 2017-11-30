@@ -7,19 +7,28 @@
 #include "Particle.h"
 
 //constructors
-Particle::Particle(ray ri, int regioni, int gi): r(ri), region(regioni), group(gi), alive(1) {}
-
-point Particle::getPos()
+Particle::Particle(r_ptr ri, int regioni, int gi): r(ri), cellNum(regioni), group(gi), alive(1) {}
+bool Particle::isAlive()
 {
-	return r.pos;
+	return alive;
+}
+
+int Particle::getCell()
+{
+	return cellNum;
+}
+
+p_ptr Particle::getPos()
+{
+	return r->pos;
 }
 
 point Particle::getDir()
 {
-	return r.dir;
+	return r->dir;
 }
 
-ray Particle::getray()
+r_ptr Particle::getray()
 {
 	return r;
 }
@@ -35,38 +44,38 @@ void Particle::setGroup(int g)
 	return;
 }
 
-void Particle::setPos(point posi)
+void Particle::setPos(p_ptr posi)
 {
-	r.pos = posi;
+	r->pos = posi;
 }
 
-void Particle::setDir(point diri)
+void Particle::setDir(p_ptr diri)
 {
-	r.dir = diri;
+	r->dir = diri;
 }
 
 void Particle::setPos(double xi, double yi, double zi)
 {
-	(r.pos).x = xi;
-	(r.pos).y = yi;
-	(r.pos).z = zi;
+	(r->pos)->x = xi;
+	(r->pos)->y = yi;
+	(r->pos)->z = zi;
 }
 
 void Particle::setDir(double ui, double vi, double wi)
 {
-	(r.dir).x = ui;
-	(r.dir).y = vi;
-	(r.dir).z = wi;
+	(r->pos)->x = ui;
+	(r->pos)->y = vi;
+	(r->pos)->z = wi;
 }
 
 void Particle::move(double dist)
 {
-	point d = r.dir;
-	point p = r.pos;
+	p_ptr d = r->dir;
+	p_ptr p = r->pos;
 
-	double xn = p.x + d.x*dist;
-	double yn = p.y + d.y*dist;
-	double zn = p.z + d.z*dist;
+	double xn = p->x + d->x*dist;
+	double yn = p->y + d->y*dist;
+	double zn = p->z + d->z*dist;
 	
 	setPos(xn,yn,zn);
 
