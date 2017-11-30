@@ -4,7 +4,7 @@
 #include "Random.h"
 #include "Source.h"
 
-std::tuple<double,double,double,double,double,double> source(){
+std::tuple<double,double,double,double,double,double> Source::source(){
 	//Generate new particle
 	double radius_inner=1;
 	double radius_outer=2;
