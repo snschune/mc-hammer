@@ -10,10 +10,10 @@ double plane::eval( point p ) {
 }
 
 double plane::distance( ray r ) {
-  point p = r.pos;
-  point u = r.dir;
+  p_ptr p = r.pos;
+  p_ptr u = r.dir;
 
-  double dist = ( d - a * p.x - b * p.y - c * p.z ) / ( a * u.x + b * u.y + c * u.z );
+  double dist = ( d - a * p->x - b * p->y - c * p->z ) / ( a * u->x + b * u->y + c * u->z );
   if ( dist > 0.0 ) { return dist; }
   else { return std::numeric_limits<double>::max(); }
 
@@ -24,14 +24,14 @@ double sphere::eval( point p ) {
 }
 
 double sphere::distance( ray r ) {
-  point p = r.pos;
-  point u = r.dir;
+  p_ptr p = r.pos;
+  p_ptr u = r.dir;
 
   // difference between each coordinate and current point
-  point q( p.x - x0, p.y - y0, p.z - z0 );
+  point q( p->x - x0, p->y - y0, p->z - z0 );
 
-  double b = 2.0 * ( q.x * u.x  +  q.y * u.y  +  q.z * u.z );
-  double c = eval( p );
+  double b = 2.0 * ( q.x * u->x  +  q.y * u->y  +  q.z * u->z);
+  double c = eval( *p );
 
   return quad_solve( 1.0, b, c );
 

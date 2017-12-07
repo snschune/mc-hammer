@@ -6,7 +6,13 @@
 #include "Cell.h"
 
 //constructor
-Cell::Cell(Mat_ptr mati, vector<Surf_ptr> surfacesi, vector<bool> insidei): mat(mati), surfaces(surfacesi), inside(insidei) {}
+Cell::Cell(Mat_ptr mati, vector<Surf_ptr> surfacesi, vector<bool> insidei): mat(mati), inside(insidei)
+{
+	for(unsigned int i = 0; i < surfacesi.size(); i++)
+	{
+		surfaces.push_back(surfacesi[i]);
+	}
+}
 
 //functions
 vector<Surf_ptr> Cell::getSurfaces()
@@ -24,9 +30,9 @@ Mat_ptr Cell::getMat()
 
 double Cell::distToSurface(Part_ptr pi)
 {
-	Surf_ptr close_surface = closestSurface(pi);
-	ray r = pi->getray();
-	double dist = close_surface->distance(r);
+	Surf_ptr close_surface;
+	double dist;
+	tie(close_surface,dist) = closestSurface(pi);
 	return dist;
 }
 
@@ -38,15 +44,15 @@ double Cell::distToCollision(Part_ptr pi)
 	return dist;
 }
 
-Surf_ptr Cell::closestSurface(Part_ptr p)
+pair<Surf_ptr, double> Cell::closestSurface(Part_ptr p)
 {
 	int min_index = -1;
 	double min_val = std::numeric_limits<double>::max();
-	ray r = p->getray();
+	r_ptr r = p->getray();
 	for(unsigned int i = 0; i < surfaces.size(); i++)
 	{
 		Surf_ptr cur_surf =  surfaces[i];
-		double dist = cur_surf->distance(r);
+		double dist = cur_surf->distance(*r);
 		if(dist < min_val && dist > 0)
 		{
 			min_index = i;
@@ -58,7 +64,7 @@ Surf_ptr Cell::closestSurface(Part_ptr p)
 		std::cerr << "ERROR: NO SURFACE FOUND" << std::endl;
 		std::exit(1);
 	}
-	return surfaces[min_index];
+	return make_pair(surfaces[min_index], min_val);
 }
 
 void Cell::processRxn(Part_ptr p, stack<Part_ptr> &pstack)
@@ -66,5 +72,18 @@ void Cell::processRxn(Part_ptr p, stack<Part_ptr> &pstack)
 {
 	mat->processRxn(p, pstack, p->getGroup());
 	return;
+}
+
+bool Cell::amIHere(Part_ptr p)
+{
+	point pos = *(p->getPos());
+	bool isWithin = true;
+	//cycle through each surface and if there is one that has a incorrect eval, you are not in this cell
+	for(int i = 0; i < surfaces.size(); i++)
+	{
+		bool test = (surfaces[i]->eval(pos) < 0);
+		isWithin = isWithin && (test == inside[i]);
+	}
+	return isWithin;
 }
 

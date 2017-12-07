@@ -12,6 +12,7 @@
 #include <stack>
 #include <limits>
 
+
 #include "Cell.h"
 #include "Material.h"
 #include "Surface.h"
@@ -22,6 +23,7 @@ using std::vector;
 using std::stack;
 using std::cout;
 using std::endl;
+
 
 typedef std::shared_ptr<point> p_ptr;
 typedef std::shared_ptr<ray> r_ptr;
@@ -46,8 +48,8 @@ class Transport
 	//functions
 		void setup();
 		void runTransport();
-		void runHistory(Part_ptr p);
 		void output();
+		
 };
 
 #endif

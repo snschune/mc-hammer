@@ -11,6 +11,9 @@
 #include <memory> 
 #include <stack>
 #include <limits>
+#include <utility>
+#include <tuple>
+#include <vector>
 
 #include "Material.h"
 #include "Surface.h"
@@ -20,7 +23,12 @@
 
 using std::vector;
 using std::stack;
+using std::pair;
+using std::tie;
+using std::cout;
+using std::endl;
 
+typedef std::shared_ptr<ray> r_ptr;
 typedef std::shared_ptr<Particle> Part_ptr; //found in Particle.h -> Material.h
 typedef std::shared_ptr<Material> Mat_ptr;
 typedef std::shared_ptr<surface> Surf_ptr;
@@ -47,9 +55,9 @@ class Cell
 	double distToCollision(Part_ptr pi);
 	
 	
-	Surf_ptr closestSurface(Part_ptr p);
+	pair<Surf_ptr, double> closestSurface(Part_ptr p);
 	void processRxn(Part_ptr p, stack<Part_ptr> &pstack);
 	
-			
+	bool amIHere(Part_ptr p);
 };
 #endif 

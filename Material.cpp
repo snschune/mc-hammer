@@ -6,7 +6,10 @@
 
 #include "Material.h"
 #include "Random.h"
+#include <iostream>
 
+using std::cout;
+using std::endl;
 //Constructor
 Material::Material(int ng, vector<double> total_XSi, vector<double> Sigai, vector<vector<double>> Sigsi): num_g(ng), total_XS(total_XSi), Siga(Sigai), Sigs(Sigsi) 
 {
@@ -46,11 +49,17 @@ void Material::processRxn(Part_ptr p, stack<Part_ptr> &pstack, int g)
 
 	if(cutoff > rand) //particle is killed
 	{
+		//cout << "Absorption!" << endl;
 		p->kill();
+		//cout << "after: " << endl;
+		//p->printState();
 	}
 	else
 	{
+		//cout << "Scatter!" << endl;
 		scatter(p,g);
+		//cout << "after: " << endl;
+		//p->printState();
 	}
 	return;
 }
@@ -81,16 +90,17 @@ void Material::scatter(Part_ptr p, int g)
 
 void Material::rotate(Part_ptr p, double mu0, double rand)
 {
+	//cout << "Rotation! mu = " << mu0 << " rand = " << rand << endl;
 	if(mu0 == 1)
 		return; //no scattering
 	
 	double pi = 3.1415926535897;
 	
-	ray r = p->getray();
-	point d = r.dir;
-	double u = d.x;
-	double v = d.y;
-	double w = d.z;
+	r_ptr r = p->getray();
+	p_ptr d = r->dir;
+	double u = d->x;
+	double v = d->y;
+	double w = d->z;
 	
 	double phi = 2*pi*rand; 
 	double us = cos(phi);

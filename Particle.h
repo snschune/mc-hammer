@@ -8,8 +8,12 @@
 #define __PARTICLE_H__
 
 #include "Point.h"
+#include <memory>
+#include <iostream>
 
-typedef std::make_shared<ray> r_ptr;
+
+
+typedef std::shared_ptr<ray> r_ptr;
 
 class Particle
 {
@@ -26,7 +30,7 @@ class Particle
 		int getCell();
 		p_ptr getPos();
 		p_ptr getDir();
-		r_ptr   getray();
+		r_ptr getray();
 		int   getGroup();
 		
 		void setCell(int c);
@@ -38,6 +42,7 @@ class Particle
 		void move(double dist);
 		void kill();
 
+		void printState();
 };
 
 

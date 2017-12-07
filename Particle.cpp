@@ -5,6 +5,8 @@
 */
 
 #include "Particle.h"
+using std::cout;
+using std::endl;
 
 //constructors
 Particle::Particle(r_ptr ri, int regioni, int gi): r(ri), cellNum(regioni), group(gi), alive(1) {}
@@ -23,7 +25,7 @@ p_ptr Particle::getPos()
 	return r->pos;
 }
 
-point Particle::getDir()
+p_ptr Particle::getDir()
 {
 	return r->dir;
 }
@@ -46,12 +48,12 @@ void Particle::setGroup(int g)
 
 void Particle::setPos(p_ptr posi)
 {
-	r->pos = posi;
+	setPos(posi->x,posi->y,posi->z);
 }
 
 void Particle::setDir(p_ptr diri)
 {
-	r->dir = diri;
+	setDir(diri->x,diri->y,diri->z);
 }
 
 void Particle::setPos(double xi, double yi, double zi)
@@ -63,9 +65,9 @@ void Particle::setPos(double xi, double yi, double zi)
 
 void Particle::setDir(double ui, double vi, double wi)
 {
-	(r->pos)->x = ui;
-	(r->pos)->y = vi;
-	(r->pos)->z = wi;
+	(r->dir)->x = ui;
+	(r->dir)->y = vi;
+	(r->dir)->z = wi;
 }
 
 void Particle::move(double dist)
@@ -86,4 +88,15 @@ void Particle::kill()
 {
 	alive = 0;
 	return;
+}
+
+void Particle::printState()
+{
+	cout << "Position: " << (r->pos)->x << " " << (r->pos)->y << " " << (r->pos)->z << endl;
+	cout << "Direction: " << (r->dir)->x << " " << (r->dir)->y << " " << (r->dir)->z << endl;
+	cout << "Group: " << group;
+	cout << " Cell: " << cellNum;
+	cout << " Alive: " << alive << endl;
+	cout << endl;
+	
 }

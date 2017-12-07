@@ -2,12 +2,14 @@
 #define _SURFACE_HEADER_
 
 #include <string>
+#include <vector>
 
 #include "Point.h"
 
 class surface {
   private:
     std::string surface_name;
+	
 
   public:
      surface( std::string label ) : surface_name(label) {};
