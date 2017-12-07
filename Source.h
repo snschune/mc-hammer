@@ -6,8 +6,6 @@
 #define _SOURCE_HEADER_
 
 class Source {
-private:
-	std::vector < std::tuple <double, double, double, double, double, double> > ParticleInfo;
 public:
 	virtual std::tuple <double, double, double, double, double, double > sample(double radInner, double radOuter, std::vector<double> energyProbability, std::vector<double> energyList);
 };

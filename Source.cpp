@@ -28,7 +28,7 @@ std::tuple<double,double,double,double,double,double> Source::sample(double radI
 	mu = 2 * Urand() - 1;
 	phi = 2 * pi*Urand();
 
-	std::tuple<double,double,double,double,double,double> particle(x,y,z,mu,phi,energy);
+	auto particle = std::make_tuple(x,y,z,mu,phi,energy);
 
 	return particle;
 }
