@@ -32,3 +32,22 @@ std::tuple<double,double,double,double,double,double> Source::sample(double radI
 
 	return particle;
 }
+
+void Point::setSourcePoint(double xSource, double ySource, double zSource, std::vector<double> energyProbSet, std::vector<double> energyListSet){
+	x=xSource;
+	y=ySource;
+	z=zSource;
+	energyProbability=energyProbSet;
+	energyListSet=energyList;
+}
+
+void Sphere::setSourceSphere(double xSource, double ySource, double zSource, double radInner, double radOuter, std::vector<double> energyProbSet, std::vector<double> energyListSet){
+        x=xSource;
+        y=ySource;
+        z=zSource;
+	radInner=radInner;
+	radOuter=radOuter;
+        energyProbability=energyProbSet;
+        energyListSet=energyList;
+
+}
