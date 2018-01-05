@@ -2,14 +2,12 @@
 #define _SURFACE_HEADER_
 
 #include <string>
-#include <vector>
 
 #include "Point.h"
 
 class surface {
   private:
     std::string surface_name;
-	
 
   public:
      surface( std::string label ) : surface_name(label) {};
@@ -18,7 +16,7 @@ class surface {
     virtual std::string name() { return surface_name; };
 
     virtual double eval( point p )   = 0;
-    virtual double distance( ray r ) = 0;
+    virtual double distance( point p, point u ) = 0;
 };
 
 class plane : public surface {
@@ -29,7 +27,7 @@ class plane : public surface {
     ~plane() {};
 
      double eval( point p );
-     double distance( ray r );
+     double distance( point p, point u );
 };
 
 class sphere : public surface {
@@ -40,7 +38,7 @@ class sphere : public surface {
     ~sphere() {};
 
      double eval( point p );
-     double distance( ray r );
+     double distance( point p, point u );
 };
 
 

@@ -28,7 +28,6 @@ using std::tie;
 using std::cout;
 using std::endl;
 
-typedef std::shared_ptr<ray> r_ptr;
 typedef std::shared_ptr<Particle> Part_ptr; //found in Particle.h -> Material.h
 typedef std::shared_ptr<Material> Mat_ptr;
 typedef std::shared_ptr<surface> Surf_ptr;

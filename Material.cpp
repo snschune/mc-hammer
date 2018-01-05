@@ -13,7 +13,7 @@ using std::endl;
 //Constructor
 Material::Material(int ng, vector<double> total_XSi, vector<double> Sigai, vector<vector<double>> Sigsi): num_g(ng), total_XS(total_XSi), Siga(Sigai), Sigs(Sigsi) 
 {
-	vector<double> gsvec;
+	vector<double> gsvec; //group sum vector
 	for(int i = 0; i < ng; i++)
 	{
 		double rowsum = 0;
@@ -96,11 +96,10 @@ void Material::rotate(Part_ptr p, double mu0, double rand)
 	
 	double pi = 3.1415926535897;
 	
-	r_ptr r = p->getray();
-	p_ptr d = r->dir;
-	double u = d->x;
-	double v = d->y;
-	double w = d->z;
+	point d = p->getDir();
+	double u = d.x;
+	double v = d.y;
+	double w = d.z;
 	
 	double phi = 2*pi*rand; 
 	double us = cos(phi);

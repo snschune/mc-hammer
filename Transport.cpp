@@ -7,7 +7,7 @@
 #include "Transport.h"
 using std::make_shared;
 
-Transport::Transport(){}
+Transport::Transport() {}
 
 void Transport::setup()
 {
@@ -51,16 +51,18 @@ void Transport::setup()
 	//set # his
 	numHis = 100;
 	
+	constants.setNumGroups(1);
+	constants.lock();
+	constants.setNumGroups(2);
 }
 void Transport::runTransport()
 {
 	for(int i = 0; i < numHis ; i++)
 	{
 		//sample src 
-		p_ptr pos = make_shared<point>(0,0,0.001);
-		p_ptr dir = make_shared<point>(0,0,11);
-		r_ptr r = make_shared<ray>(pos, dir);
-		Part_ptr p_new = make_shared<Particle>(r, 1, 1);
+		point pos = point(0,0,constants.tol());
+		point dir = point(0,0,1);
+		Part_ptr p_new = make_shared<Particle>(pos, dir, 1, 1);
 		pstack.push(p_new);
 		
 		//run history
@@ -83,9 +85,9 @@ void Transport::runTransport()
 				}
 				else //hit surface
 				{
-					cout << "pre escape " << cells[0]->amIHere(p) << endl;
-					p->move(d2s + 0.0001);
-					cout << "escape " << cells[0]->amIHere(p) << endl;
+					//cout << "pre escape " << cells[0]->amIHere(p) << endl;
+					p->move(d2s + constants.tol());
+					//cout << "escape " << cells[0]->amIHere(p) << endl;
 					p->kill(); //only 1 cell in this code
 					//p->printState();
 					tallies[0]++;

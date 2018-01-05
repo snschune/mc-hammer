@@ -14,16 +14,16 @@ class point {
     ~point() {};
 };
 
-typedef std::shared_ptr<point> p_ptr;
 
-class ray {
+/*class ray {
   public:
-    ray( p_ptr p, p_ptr d );
+    ray( point p, point d );
     //ray( point p, point d ) : pos(p), dir(d) {};
     ~ray() {};
 
-    p_ptr pos;
-    p_ptr dir;
+    point pos;
+    point dir;
 };
+*/
 
 #endif

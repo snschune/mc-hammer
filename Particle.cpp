@@ -9,7 +9,12 @@ using std::cout;
 using std::endl;
 
 //constructors
-Particle::Particle(r_ptr ri, int regioni, int gi): r(ri), cellNum(regioni), group(gi), alive(1) {}
+Particle::Particle(point posi, point diri, int cellNumi, int gi): pos(posi), dir(diri), cellNum(cellNumi), group(gi), alive(1) 
+{
+	double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
+  	dir.x *= norm; dir.y *= norm; dir.z *= norm;
+}
+
 bool Particle::isAlive()
 {
 	return alive;
@@ -20,20 +25,21 @@ int Particle::getCell()
 	return cellNum;
 }
 
-p_ptr Particle::getPos()
+point Particle::getPos()
 {
-	return r->pos;
+	return pos;
 }
 
-p_ptr Particle::getDir()
+point Particle::getDir()
 {
-	return r->dir;
+	return dir;
 }
 
-r_ptr Particle::getray()
+/*ray Particle::getray()
 {
 	return r;
 }
+*/
 
 int Particle::getGroup()
 {
@@ -46,38 +52,38 @@ void Particle::setGroup(int g)
 	return;
 }
 
-void Particle::setPos(p_ptr posi)
+void Particle::setPos(point posi)
 {
-	setPos(posi->x,posi->y,posi->z);
+	setPos(posi.x,posi.y,posi.z);
 }
 
-void Particle::setDir(p_ptr diri)
+void Particle::setDir(point diri)
 {
-	setDir(diri->x,diri->y,diri->z);
+	setDir(diri.x,diri.y,diri.z);
 }
 
 void Particle::setPos(double xi, double yi, double zi)
 {
-	(r->pos)->x = xi;
-	(r->pos)->y = yi;
-	(r->pos)->z = zi;
+	pos.x = xi;
+	pos.y = yi;
+	pos.z = zi;
 }
 
 void Particle::setDir(double ui, double vi, double wi)
 {
-	(r->dir)->x = ui;
-	(r->dir)->y = vi;
-	(r->dir)->z = wi;
+	dir.x = ui;
+	dir.y = vi;
+	dir.z = wi;
+
+	double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
+  	dir.x *= norm; dir.y *= norm; dir.z *= norm;
 }
 
 void Particle::move(double dist)
 {
-	p_ptr d = r->dir;
-	p_ptr p = r->pos;
-
-	double xn = p->x + d->x*dist;
-	double yn = p->y + d->y*dist;
-	double zn = p->z + d->z*dist;
+	double xn = pos.x + dir.x*dist;
+	double yn = pos.y + dir.y*dist;
+	double zn = pos.z + dir.z*dist;
 	
 	setPos(xn,yn,zn);
 
@@ -92,8 +98,8 @@ void Particle::kill()
 
 void Particle::printState()
 {
-	cout << "Position: " << (r->pos)->x << " " << (r->pos)->y << " " << (r->pos)->z << endl;
-	cout << "Direction: " << (r->dir)->x << " " << (r->dir)->y << " " << (r->dir)->z << endl;
+	cout << "Position: " << pos.x << " " << pos.y << " " << pos.z << endl;
+	cout << "Direction: " << dir.x << " " << dir.y << " " << dir.z << endl;
 	cout << "Group: " << group;
 	cout << " Cell: " << cellNum;
 	cout << " Alive: " << alive << endl;

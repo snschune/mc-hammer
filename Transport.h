@@ -18,6 +18,7 @@
 #include "Surface.h"
 #include "Random.h"
 #include "Particle.h"
+#include "Constants.h"
 
 using std::vector;
 using std::stack;
@@ -25,8 +26,6 @@ using std::cout;
 using std::endl;
 
 
-typedef std::shared_ptr<point> p_ptr;
-typedef std::shared_ptr<ray> r_ptr;
 typedef std::shared_ptr<Cell> Cell_ptr;
 typedef std::shared_ptr<Particle> Part_ptr; 
 typedef std::shared_ptr<Material> Mat_ptr;
@@ -41,6 +40,7 @@ class Transport
 		vector<Surf_ptr> surfaces; //vector of surfaces '
 		stack<Part_ptr> pstack;
 		vector<double> tallies;
+		Constants constants; 
 		
 	public:
 	//constructor
@@ -49,7 +49,6 @@ class Transport
 		void setup();
 		void runTransport();
 		void output();
-		
 };
 
 #endif

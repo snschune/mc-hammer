@@ -8,7 +8,7 @@
 //constructor
 Cell::Cell(Mat_ptr mati, vector<Surf_ptr> surfacesi, vector<bool> insidei): mat(mati), inside(insidei)
 {
-	for(unsigned int i = 0; i < surfacesi.size(); i++)
+	for(unsigned int i = 0; i < surfacesi.size(); i++) //learn auto
 	{
 		surfaces.push_back(surfacesi[i]);
 	}
@@ -48,11 +48,12 @@ pair<Surf_ptr, double> Cell::closestSurface(Part_ptr p)
 {
 	int min_index = -1;
 	double min_val = std::numeric_limits<double>::max();
-	r_ptr r = p->getray();
+	point pos = p->getPos();
+	point dir = p->getDir();
 	for(unsigned int i = 0; i < surfaces.size(); i++)
 	{
 		Surf_ptr cur_surf =  surfaces[i];
-		double dist = cur_surf->distance(*r);
+		double dist = cur_surf->distance(pos,dir);
 		if(dist < min_val && dist > 0)
 		{
 			min_index = i;
@@ -76,7 +77,7 @@ void Cell::processRxn(Part_ptr p, stack<Part_ptr> &pstack)
 
 bool Cell::amIHere(Part_ptr p)
 {
-	point pos = *(p->getPos());
+	point pos = p->getPos();
 	bool isWithin = true;
 	//cycle through each surface and if there is one that has a incorrect eval, you are not in this cell
 	for(int i = 0; i < surfaces.size(); i++)
