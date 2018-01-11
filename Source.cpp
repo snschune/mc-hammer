@@ -18,7 +18,6 @@ unsigned int Source::groupSample(std::vector<double> groupProbability){
 }
 
 Particle setSourcePoint::sample(){
-//	Particle particleNew;
 	double pi = acos(-1.);
 	
 	auto group = groupSample(groupProbability);
@@ -32,8 +31,6 @@ Particle setSourcePoint::sample(){
 	double omegaZ=sin(acos(mu))*sin(phi);
 	point dir = point(omegaX,omegaY,omegaZ);
 	
-//	particleNew.Particle(pos,dir,1,group);
-
         Particle particleNew( pos, dir, 1, group );
 
 	return particleNew;
