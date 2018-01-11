@@ -9,7 +9,11 @@ using std::cout;
 using std::endl;
 
 //constructors
+<<<<<<< HEAD
 Particle::Particle(point posi, point diri, int cellNumi, int gi): pos(posi), dir(diri), cellNum(cellNumi), group(gi), alive(1) 
+=======
+Particle::Particle(point posi, point diri, Cell_ptr celli, int gi): pos(posi), dir(diri), cell(celli), group(gi), alive(1) 
+>>>>>>> esgonz
 {
 	double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
   	dir.x *= norm; dir.y *= norm; dir.z *= norm;
@@ -20,9 +24,15 @@ bool Particle::isAlive()
 	return alive;
 }
 
+<<<<<<< HEAD
 int Particle::getCell()
 {
 	return cellNum;
+=======
+Cell_ptr Particle::getCell()
+{
+	return cell;
+>>>>>>> esgonz
 }
 
 point Particle::getPos()
@@ -101,7 +111,11 @@ void Particle::printState()
 	cout << "Position: " << pos.x << " " << pos.y << " " << pos.z << endl;
 	cout << "Direction: " << dir.x << " " << dir.y << " " << dir.z << endl;
 	cout << "Group: " << group;
+<<<<<<< HEAD
 	cout << " Cell: " << cellNum;
+=======
+	//cout << " Cell: " << cellNum;
+>>>>>>> esgonz
 	cout << " Alive: " << alive << endl;
 	cout << endl;
 	

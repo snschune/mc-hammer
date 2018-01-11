@@ -11,14 +11,22 @@
 #include <memory>
 #include <iostream>
 #include <cmath>
+<<<<<<< HEAD
 
+=======
+>>>>>>> esgonz
 
+class Cell;
+
+typedef std::shared_ptr<Cell> Cell_ptr;
+  
 class Particle
 {
 	private:
 		bool alive;
 		point pos;
 		point dir;
+<<<<<<< HEAD
 		int cellNum; //still need to change this
 		int group;
 	public:
@@ -27,6 +35,16 @@ class Particle
 		//functions
 		bool isAlive();
 		int getCell();
+=======
+		Cell_ptr cell; //still need to change this
+		int group;
+	public:
+	//constructor
+		Particle(point posi, point diri, Cell_ptr celli, int gi);
+		//functions
+		bool isAlive();
+		Cell_ptr getCell();
+>>>>>>> esgonz
 		point getPos();
 		point getDir();
 		//r_ptr getray();
