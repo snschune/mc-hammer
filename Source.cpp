@@ -5,23 +5,23 @@
 #include "Source.h"
 #include "Particle.h"
 
-double Source::groupSample(std::vector<double> groupProbability, std::vector<double> groupList){
+unsigned int Source::groupSample(std::vector<double> groupProbability){
 	double group;
 	double groupRand = Urand(); //sample some cdf
 	for (auto n=0; n<groupProbability.size(); n++){
-		if(groupProbability[n] < groupRand){
-		break;
-		 group = groupList[n];
+		if (groupProbability[n] < groupRand){
+			return n;
 		}
 	}
-	return group;
+	//return group;
+	//TODO: put in error code
 }
 
 Particle setSourcePoint::sample(){
 //	Particle particleNew;
 	double pi = acos(-1.);
 	
-	auto group = groupSample(groupProbability, groupList);
+	auto group = groupSample(groupProbability);
 	
 	point pos = point(x0,y0,z0);
 	
@@ -50,7 +50,7 @@ Particle setSourceSphere::sample(){
 	double y=radius*sqrt(1-pow(mu,2.))*sin(phi)+y0;
 	double z=radius*mu+z0;
 
-	auto group = groupSample(groupProbability, groupList);
+	auto group = groupSample(groupProbability);
 	
 	point pos = point(x,y,z);
 

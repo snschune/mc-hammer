@@ -9,7 +9,7 @@
 class Source {
 private:
 protected:
-	double groupSample(std::vector<double> groupProbability, std::vector<double> groupList);
+	unsigned int groupSample(std::vector<double> groupProbability);
 public:
 	virtual Particle sample() = 0;
 };
@@ -17,19 +17,19 @@ public:
 class setSourcePoint : public Source {
 private: 
    double x0,y0,z0;
-   std::vector <double> groupProbability,groupList;
+   std::vector <double> groupProbability;
 public:
-   setSourcePoint(double xSource, double ySource, double zSource, std::vector<double> groupProbSet, std::vector<double> groupListSet) : x0(xSource), y0(ySource), z0(zSource), groupProbability(groupProbSet), groupList(groupListSet) {};
+   setSourcePoint(double xSource, double ySource, double zSource, std::vector<double> groupProbSet) : x0(xSource), y0(ySource), z0(zSource), groupProbability(groupProbSet)  {};
    Particle sample();
 };
 
 class setSourceSphere : public Source {
 private: 
    double x0,y0,z0, radInner, radOuter;
-   std::vector <double> groupProbability,groupList;
+   std::vector <double> groupProbability;
 public:
-   setSourceSphere(double xSource, double ySource, double zSource, double radInner, double radOuter, std::vector<double> groupProbSet, std::vector<double> groupListSet)
-   : x0(xSource), y0(ySource), z0(zSource), radInner(radInner), radOuter(radOuter), groupProbability(groupProbSet), groupList(groupListSet) {};
+   setSourceSphere(double xSource, double ySource, double zSource, double radInner, double radOuter, std::vector<double> groupProbSet )
+   : x0(xSource), y0(ySource), z0(zSource), radInner(radInner), radOuter(radOuter), groupProbability(groupProbSet) {};
    Particle sample();
 };
 
