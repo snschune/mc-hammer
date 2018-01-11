@@ -18,7 +18,7 @@
 
 
 //estimator functions
-void Estimator::newHist() {};
+void Estimator::endHist() {};
 void Estimator::score(Part_ptr pi ) {};
 std::pair < double , double > Estimator::getScalarEstimator() {};
 
@@ -30,22 +30,11 @@ double Estimator::dist(point p1 ,point p2) {
                     );
 };
 
-//constructor
-MeshTally::MeshTally(string comment, string type,  vector<int> numBins) : Estimator(comment, type) {
-    vector<vector<vector<double>>> setMesh(numBins.at(0),
-           vector<vector<double>>(numBins.at(1),
-                   vector<double>(numBins.at(2)))
-           );
-    mesh = setMesh;
-};
 
 //functions
 void MeshTally::score(Part_ptr pi , Part_ptr pf ){
 
 };
-
-//constructor
-SurfaceTally::SurfaceTally(string comment , string type , Surf_ptr surfi ) : Estimator(comment , type) , surf(surfi) {};
 
 //functions
 void SurfaceTally::score(Part_ptr pi , Part_ptr pf ) {
@@ -53,10 +42,6 @@ void SurfaceTally::score(Part_ptr pi , Part_ptr pf ) {
     if (cross == true) {tally++;};
 };
 
-//constructor
-CellTally::CellTally(string comment , string type, Cell_ptr celli) : Estimator(comment , type) , cell(celli) {
-    tally = 0.0;
-};
 
 //functions
 void CellTally::score(Part_ptr pi , Part_ptr pf ) {
@@ -69,7 +54,7 @@ void CollisionTally::score( ) {
      currentHistTally +=  1.0;
 };
 
-void CollisionTally::newHist() {
+void CollisionTally::endHist() {
     
     //get the square of the tally in this history
     double square = pow( currentHistTally , 2 );
@@ -77,28 +62,33 @@ void CollisionTally::newHist() {
     // set the current history tally and square tally to their tracking vectors
     histTally.push_back(     currentHistTally );
     histTallySqr.push_back(  square           );
+    
+    // set the current hist tally to 0
+    currentHistTally = 0;
 };
 
         
 std::pair < double , double > CollisionTally::getScalarEstimator() {
-    
-    double flux;
-    double uncertainty;
+// This function returns the mean and std deviation in the number 
+// of collisions per history 
+
+    double meanFlux;
+    double sqrFlux;
+    double nHist = histTally.size();
 
     std::pair < double , double >  fluxEstimator;
    
     // sum the tallies and square tallies over the histories
-    flux        = std::accumulate( histTally.begin()    , histTally.end()    , 0 );
-    uncertainty = std::accumulate( histTallySqr.begin() , histTallySqr.end() , 0 );
+    meanFlux  = std::accumulate( histTally.begin()    , histTally.end()    , 0 ) / nHist;
+    sqrFlux   = std::accumulate( histTallySqr.begin() , histTallySqr.end() , 0 );
 
     // find the standard deviation of the estimator
-    uncertainty = pow( pow(flux,2) - uncertainty  , 0.5 );
+    double stdDev = pow( ( sqrFlux / nHist ) - pow( meanFlux , 2 ) ,  0.5 );
 
-    fluxEstimator.first  = flux;
-    fluxEstimator.second = uncertainty;
+    fluxEstimator.first  = meanFlux / crossSection;
+    fluxEstimator.second = stdDev;
 
-    return(fluxEstimator);
-    
+    return(fluxEstimator); 
 };
 
 

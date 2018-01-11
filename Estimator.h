@@ -63,7 +63,7 @@ class Estimator {
     // material
 
   public:
-     Estimator( string comment , string type) : estimator_name(comment) , estimator_type(type) {};
+     Estimator() {};
     ~Estimator() {};
     
     //utility
@@ -74,7 +74,7 @@ class Estimator {
     virtual std::string type() { return estimator_type; };
 
     // estimator methods
-    virtual void newHist();
+    virtual void endHist();
     virtual void score(Part_ptr pi );
     virtual std::pair < double , double > getScalarEstimator();
 
@@ -84,7 +84,7 @@ class MeshTally : public Estimator {
   private:
       vector < vector < vector < double > > > mesh;
   public:
-     MeshTally(string comment, string type , vector<int> numBins); 
+     MeshTally(vector<int> numBins); 
     ~MeshTally() {};
 
      void score(Part_ptr pi , Part_ptr pf );
@@ -95,7 +95,7 @@ class SurfaceTally : public Estimator {
         double   tally;
         Surf_ptr surf;
     public:
-         SurfaceTally(string comment , string type, Surf_ptr surfi );
+         SurfaceTally();
         ~SurfaceTally() {};
         
         void score(Part_ptr pi , Part_ptr pf );
@@ -106,7 +106,7 @@ class CellTally : public Estimator {
         double     tally;
         Cell_ptr   cell;
     public:
-         CellTally(string comment , string type , Cell_ptr celli);
+         CellTally();
         ~CellTally() {};
 
          void score(Part_ptr pi , Part_ptr pf);
@@ -115,18 +115,23 @@ class CellTally : public Estimator {
 class CollisionTally : public Estimator {
     private:
         double    currentHistTally;
+        double    crossSection;
 
         vector < double >    histTally;
         vector < double >    histTallySqr;
             
     public:
-        CollisionTally(string comment , string type): Estimator(comment , type)  {};
+        CollisionTally(double xsec): crossSection(xsec) {};
        ~CollisionTally() {};
-
+        
+        // set/gets
+        double getCurrentHistTally()      { return( currentHistTally ); };
+        vector <double> getHistTally()    { return( histTally        ); };
+        vector <double> getHistTallySqr() { return( histTallySqr     ); };
+        
         // collision tally specific estimator methods
         void score();
-        void newHist();
-
+        void endHist();
         std::pair < double , double > getScalarEstimator();
 };
 
