@@ -18,7 +18,9 @@
 
 
 //estimator functions
+void Estimator::newHist() {};
 void Estimator::score(Part_ptr pi ) {};
+std::pair < double , double > Estimator::getScalarEstimator() {};
 
 double Estimator::dist(point p1 ,point p2) {
     return std::sqrt(
@@ -78,13 +80,13 @@ void CollisionTally::newHist() {
 };
 
         
-ScalarEstimator CollisionTally::getFlux() {
+std::pair < double , double > CollisionTally::getScalarEstimator() {
     
-    double           flux;
-    double           uncertainty;
-    ScalarEstimator  fluxEstimator;
+    double flux;
+    double uncertainty;
+
+    std::pair < double , double >  fluxEstimator;
    
-    
     // sum the tallies and square tallies over the histories
     flux        = std::accumulate( histTally.begin()    , histTally.end()    , 0 );
     uncertainty = std::accumulate( histTallySqr.begin() , histTallySqr.end() , 0 );
@@ -92,8 +94,8 @@ ScalarEstimator CollisionTally::getFlux() {
     // find the standard deviation of the estimator
     uncertainty = pow( pow(flux,2) - uncertainty  , 0.5 );
 
-    fluxEstimator.value = flux;
-    fluxEstimator.uncertainty = uncertainty;
+    fluxEstimator.first  = flux;
+    fluxEstimator.second = uncertainty;
 
     return(fluxEstimator);
     

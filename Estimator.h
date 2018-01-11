@@ -74,7 +74,9 @@ class Estimator {
     virtual std::string type() { return estimator_type; };
 
     // estimator methods
+    virtual void newHist();
     virtual void score(Part_ptr pi );
+    virtual std::pair < double , double > getScalarEstimator();
 
 };
 
@@ -125,7 +127,7 @@ class CollisionTally : public Estimator {
         void score();
         void newHist();
 
-        ScalarEstimator getFlux();
+        std::pair < double , double > getScalarEstimator();
 };
 
 
