@@ -8,9 +8,10 @@
 
 class Source {
 private:
+protected:
 	double groupSample(std::vector<double> groupProbability, std::vector<double> groupList);
 public:
-	virtual Particle sample();
+	virtual Particle sample() = 0;
 };
 
 class setSourcePoint : public Source {
