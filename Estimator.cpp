@@ -62,58 +62,38 @@ void CellTally::score(Part_ptr pi , Part_ptr pf ) {
 };
 
 
-//constructor
-CollisionTally::CollisionTally(string comment , string type, Cell_ptr celli) : Estimator(comment , type) , cell(celli) {
-    numGroups = 8; //TODO no
-
-    currentHistTally.resize(numGroups);
-    histTally.resize(numGroups);
-    histTallySqr.resize(numGroups);
-};
-
 //functions
-void CollisionTally::score(int groupi ) {
-     currentHistTally.at(groupi-1)  +=  1.0;
+void CollisionTally::score( ) {
+     currentHistTally +=  1.0;
 };
 
 void CollisionTally::newHist() {
     
-    vector <double> squares;
+    //get the square of the tally in this history
+    double square = pow( currentHistTally , 2 );
     
-    // for each group, get the square of the tally in this history
-    for (int group = 1; group < numGroups;  ++group) {
-        squares.push_back(pow(currentHistTally.at(group-1),2));
-    }
-
-    // for each group, append the current history tally and square tally to their tracking vectors
-    for (int group = 1; group < numGroups;  ++group) {
-        histTally.at(group-1).push_back( currentHistTally.at(group-1) );
-        histTallySqr.at(group-1).push_back( squares.at(group-1)       );
-    }
+    // set the current history tally and square tally to their tracking vectors
+    histTally.push_back(     currentHistTally );
+    histTallySqr.push_back(  square           );
 };
 
         
-VectorEstimator CollisionTally::getFlux() {
+ScalarEstimator CollisionTally::getFlux() {
     
-    vector <double> flux(numGroups);
-    vector <double> unce(numGroups);
+    double           flux;
+    double           uncertainty;
+    ScalarEstimator  fluxEstimator;
    
     
-    // for each group sum the tallies and square tallies over the histories
-    for (int group = 1; group < numGroups;  ++group) {
-        flux.at(group-1) = std::accumulate(histTally.at(group-1).begin(), histTally.at(group-1).end(), 0);
-        unce.at(group-1) = std::accumulate(histTallySqr.at(group-1).begin(), histTallySqr.at(group-1).end(), 0);
-    }
+    // sum the tallies and square tallies over the histories
+    flux        = std::accumulate( histTally.begin()    , histTally.end()    , 0 );
+    uncertainty = std::accumulate( histTallySqr.begin() , histTallySqr.end() , 0 );
 
-    // for each group find the uncertainty
-    for (int group = 1; group < numGroups;  ++group) {
-        unce.at(group-1) = pow(flux.at(group-1),2) - unce.at(group-1);
-    }
-    
-    VectorEstimator fluxEstimator;
+    // find the standard deviation of the estimator
+    uncertainty = pow( pow(flux,2) - uncertainty  , 0.5 );
 
     fluxEstimator.value = flux;
-    fluxEstimator.uncertainty = unce;
+    fluxEstimator.uncertainty = uncertainty;
 
     return(fluxEstimator);
     

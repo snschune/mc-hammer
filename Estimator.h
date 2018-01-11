@@ -62,20 +62,21 @@ class Estimator {
     // energy binning
     // material
 
-  protected:
-    double dist(point p1 , point p2);
-
   public:
      Estimator( string comment , string type) : estimator_name(comment) , estimator_type(type) {};
     ~Estimator() {};
     
+    //utility
+    double dist(point p1 ,point p2);
+    
+    // naming
     virtual std::string name() { return estimator_name; };
     virtual std::string type() { return estimator_type; };
 
+    // estimator methods
     virtual void score(Part_ptr pi );
-};
 
-//TODO create mesh class, use 1D array and lookup functions
+};
 
 class MeshTally : public Estimator {
   private:
@@ -111,25 +112,20 @@ class CellTally : public Estimator {
 
 class CollisionTally : public Estimator {
     private:
-        vector < double >              currentHistTally;
-        vector < vector < double > >   histTally;
-        vector < vector < double > >   histTallySqr;
-            
-        int numGroups;
+        double    currentHistTally;
 
-        Mat_ptr        mat;
-        Cell_ptr       cell;
+        vector < double >    histTally;
+        vector < double >    histTallySqr;
+            
     public:
-        CollisionTally(string comment , string type, Cell_ptr celli);
+        CollisionTally(string comment , string type): Estimator(comment , type)  {};
        ~CollisionTally() {};
 
-        void score( int groupi );
+        // collision tally specific estimator methods
+        void score();
         void newHist();
 
-        Mat_ptr  getMat()  { return(mat);  };
-        Cell_ptr getcell() { return(cell); };
-
-        VectorEstimator getFlux();
+        ScalarEstimator getFlux();
 };
 
 
