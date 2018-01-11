@@ -21,23 +21,31 @@
 #include "Surface.h"
 
 using std::vector;
+using std::make_shared;
 
 typedef std::shared_ptr<Cell> Cell_ptr;
+typedef std::shared_ptr<Material> Mat_ptr;
+typedef std::shared_ptr<surface> Surf_ptr;
 
 class Geometry
 {
  private:
-  vector< Cell >    cells;
-  vector< surface > surfaces;
-  vector< Material > materials;
-    
+  vector< Cell_ptr >    cells;
+  vector< Surf_ptr > surfaces;
+  vector< Mat_ptr > materials;
+  void setup();
+
  public:
-  bool        amIHere( point, Cell );
+	Geometry();
+  bool        amIHere( point, Cell_ptr);
   Cell_ptr    whereAmI( point );
-    
-  void addCell( Cell );
-  void addSurface( surface );
-  void addMaterial( Material );
+  
+  
+  void addCell( Cell_ptr );
+  void addSurface( Surf_ptr );
+  void addMaterial( Mat_ptr );
+	
+	
 };
 
 #endif

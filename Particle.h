@@ -8,23 +8,34 @@
 #define __PARTICLE_H__
 
 #include "Point.h"
+#include <memory>
+#include <iostream>
+#include <cmath>
 
+class Cell;
+
+typedef std::shared_ptr<Cell> Cell_ptr;
+  
 class Particle
 {
 	private:
-		ray r;
 		bool alive;
-		int region;
+		point pos;
+		point dir;
+		Cell_ptr cell; //still need to change this
 		int group;
 	public:
 	//constructor
-		Particle(ray ri, int regioni, int gi);
+		Particle(point posi, point diri, Cell_ptr celli, int gi);
 		//functions
+		bool isAlive();
+		Cell_ptr getCell();
 		point getPos();
 		point getDir();
-		ray   getray();
+		//r_ptr getray();
 		int   getGroup();
 		
+		void setCell(int c);
 		void setGroup(int g);
 		void setPos(point posi);
 		void setDir(point diri);
@@ -33,6 +44,7 @@ class Particle
 		void move(double dist);
 		void kill();
 
+		void printState();
 };
 
 
