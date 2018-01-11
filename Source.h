@@ -2,30 +2,34 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include "Particle.h"
 #ifndef _SOURCE_HEADER_
 #define _SOURCE_HEADER_
 
 class Source {
+private:
+	double groupSample(std::vector<double> groupProbability, std::vector<double> groupList);
 public:
-	virtual std::tuple <double, double, double, double, double, double > sample(double radInner, double radOuter, std::vector<double> energyProbability, std::vector<double> energyList);
+	virtual Particle sample();
 };
 
-class Point : public Source {
+class setSourcePoint : public Source {
 private: 
-   double x,y,z;
-   std::vector <double> energyProbability,energyList;
+   double x0,y0,z0;
+   std::vector <double> groupProbability,groupList;
 public:
-   double radInner=0;
-   double radOuter=0;
-   void setSourcePoint(double xSource, double ySource, double zSource, std::vector<double> energyProbSet, std::vector<double> energyListSet);
+   setSourcePoint(double xSource, double ySource, double zSource, std::vector<double> groupProbSet, std::vector<double> groupListSet) : x0(xSource), y0(ySource), z0(zSource), groupProbability(groupProbSet), groupList(groupListSet) {};
+   Particle sample();
 };
 
-class Sphere : public Source {
+class setSourceSphere : public Source {
 private: 
-   double x,y,z, radInner, radOuter;
-   std::vector <double> energyProbability,energyList;
+   double x0,y0,z0, radInner, radOuter;
+   std::vector <double> groupProbability,groupList;
 public:
-   void setSourceSphere(double xSource, double ySource, double zSource, double radInner, double radOuter, std::vector<double> energyProbSet, std::vector<double> energyListSet);
+   setSourceSphere(double xSource, double ySource, double zSource, double radInner, double radOuter, std::vector<double> groupProbSet, std::vector<double> groupListSet)
+   : x0(xSource), y0(ySource), z0(zSource), radInner(radInner), radOuter(radOuter), groupProbability(groupProbSet), groupList(groupListSet) {};
+   Particle sample();
 };
 
 #endif
