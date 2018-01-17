@@ -11,6 +11,7 @@
 #include <memory>
 #include <stack>
 #include <limits>
+#include <string>
 
 
 #include "Cell.h"
@@ -42,7 +43,7 @@ private:
     stack<Part_ptr> pstack;
     vector<double> tallies;
     Constants constants;
-    Geometry geometry;
+    Geometry geometry( std::string filename , int num_groups, bool loud );
     
 public:
     //constructor

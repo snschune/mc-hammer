@@ -4,19 +4,7 @@
  Req. Files: Material.h
  */
 
-#include "Geometry.h"
 
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    
-    int num_groups = 2;
-    
-    Geometry( "Berp.xs", num_groups, true );
-    
-    return 0;
-}
-
-/*
 #include "Transport.h"
 #include <memory>
 
@@ -36,5 +24,4 @@ int main()
     
     return 0;
 }
-*/
 

@@ -82,8 +82,8 @@ void Material::rotate(Part_ptr p, double mu0, double rand)
     
     double pi = 3.1415926535897;
     
-    ray r = p->getray();
-    point d = r.dir;
+    point d = p->getDir();
+    //point d = r.dir;
     double u = d.x;
     double v = d.y;
     double w = d.z;

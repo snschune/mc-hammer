@@ -8,7 +8,7 @@
 #include "Transport.h"
 using std::make_shared;
 
-/*
+
 Transport::Transport()
 {
     //set up estimators
@@ -21,7 +21,6 @@ Transport::Transport()
     constants.setNumGroups(1);
     constants.lock();
 }
-*/
 
 /*
 void Transport::setup()
@@ -67,7 +66,7 @@ void Transport::setup()
  }
 */
  
-/*
+
 void Transport::runTransport()
 {
     for(int i = 0; i < numHis ; i++)
@@ -75,6 +74,9 @@ void Transport::runTransport()
         //sample src 
         point pos = point(0,0,constants.tol());
         point dir = point(0,0,1);
+        int num_groups = 2;
+        std::string filename = "Berp.xs";
+        Geometry geometry( filename, num_groups, true );
         Cell_ptr startingCell = geometry.whereAmI(pos);
         Part_ptr p_new = make_shared<Particle>(pos, dir, startingCell, 1);
         pstack.push(p_new);
@@ -117,4 +119,3 @@ void Transport::output()
     cout << "Total Number Absorbed: " << tallies[1] << endl;
     cout << "Total Number Leaked: " << tallies[0] << endl; 
 }
-*/
