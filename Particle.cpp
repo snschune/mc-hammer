@@ -1,122 +1,80 @@
 /*
-	Author: Blake
-	Date: 11/8/17
-	Req. Files: Particle.h
-*/
+ Author: Blake
+ Date: 11/8/17
+ Req. Files: Particle.h
+ */
 
 #include "Particle.h"
-using std::cout;
-using std::endl;
 
 //constructors
-<<<<<<< HEAD
-Particle::Particle(point posi, point diri, int cellNumi, int gi): pos(posi), dir(diri), cellNum(cellNumi), group(gi), alive(1) 
-=======
-Particle::Particle(point posi, point diri, Cell_ptr celli, int gi): pos(posi), dir(diri), cell(celli), group(gi), alive(1) 
->>>>>>> esgonz
-{
-	double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
-  	dir.x *= norm; dir.y *= norm; dir.z *= norm;
-}
-
-bool Particle::isAlive()
-{
-	return alive;
-}
-
-<<<<<<< HEAD
-int Particle::getCell()
-{
-	return cellNum;
-=======
-Cell_ptr Particle::getCell()
-{
-	return cell;
->>>>>>> esgonz
-}
+Particle::Particle(ray ri, int regioni, int gi): r(ri), region(regioni), group(gi), alive(1) {}
 
 point Particle::getPos()
 {
-	return pos;
+    return r.pos;
 }
 
 point Particle::getDir()
 {
-	return dir;
+    return r.dir;
 }
 
-/*ray Particle::getray()
+ray Particle::getray()
 {
-	return r;
+    return r;
 }
-*/
 
 int Particle::getGroup()
 {
-	return group;
+    return group;
 }
 
 void Particle::setGroup(int g)
 {
-	group = g;
-	return;
+    group = g;
+    return;
 }
 
 void Particle::setPos(point posi)
 {
-	setPos(posi.x,posi.y,posi.z);
+    r.pos = posi;
 }
 
 void Particle::setDir(point diri)
 {
-	setDir(diri.x,diri.y,diri.z);
+    r.dir = diri;
 }
 
 void Particle::setPos(double xi, double yi, double zi)
 {
-	pos.x = xi;
-	pos.y = yi;
-	pos.z = zi;
+    (r.pos).x = xi;
+    (r.pos).y = yi;
+    (r.pos).z = zi;
 }
 
 void Particle::setDir(double ui, double vi, double wi)
 {
-	dir.x = ui;
-	dir.y = vi;
-	dir.z = wi;
-
-	double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
-  	dir.x *= norm; dir.y *= norm; dir.z *= norm;
+    (r.dir).x = ui;
+    (r.dir).y = vi;
+    (r.dir).z = wi;
 }
 
 void Particle::move(double dist)
 {
-	double xn = pos.x + dir.x*dist;
-	double yn = pos.y + dir.y*dist;
-	double zn = pos.z + dir.z*dist;
-	
-	setPos(xn,yn,zn);
-
-	return; 
+    point d = r.dir;
+    point p = r.pos;
+    
+    double xn = p.x + d.x*dist;
+    double yn = p.y + d.y*dist;
+    double zn = p.z + d.z*dist;
+    
+    setPos(xn,yn,zn);
+    
+    return; 
 }
 
 void Particle::kill()
 {
-	alive = 0;
-	return;
-}
-
-void Particle::printState()
-{
-	cout << "Position: " << pos.x << " " << pos.y << " " << pos.z << endl;
-	cout << "Direction: " << dir.x << " " << dir.y << " " << dir.z << endl;
-	cout << "Group: " << group;
-<<<<<<< HEAD
-	cout << " Cell: " << cellNum;
-=======
-	//cout << " Cell: " << cellNum;
->>>>>>> esgonz
-	cout << " Alive: " << alive << endl;
-	cout << endl;
-	
+    alive = 0;
+    return;
 }
