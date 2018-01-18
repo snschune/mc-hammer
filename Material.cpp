@@ -11,7 +11,7 @@
 using std::cout;
 using std::endl;
 //Constructor
-Material::Material(int ng, vector<double> total_XSi, vector<double> Sigai, vector<vector<double>> Sigsi, vector< double > Sigsti): num_g(ng), total_XS(total_XSi), Siga(Sigai), Sigs(Sigsi), Sigst(Sigst) 
+Material::Material(int ng, vector<double> total_XSi, vector<double> Sigai, vector<vector<double>> Sigsi, vector< double > Sigsti): num_g(ng), total_XS(total_XSi), Siga(Sigai), Sigs(Sigsi), Sigst(Sigsti) 
 {
 	/*
 	vector<double> gsvec; //group sum vector
@@ -48,20 +48,14 @@ void Material::processRxn(Part_ptr p, stack<Part_ptr> &pstack, int g)
 {
 	double cutoff = Siga[g-1]/total_XS[g-1];
 	double rand = Urand();
-
+	
 	if(cutoff > rand) //particle is killed
 	{
-		//cout << "Absorption!" << endl;
 		p->kill();
-		//cout << "after: " << endl;
-		//p->printState();
 	}
 	else
 	{
-		//cout << "Scatter!" << endl;
 		scatter(p,g);
-		//cout << "after: " << endl;
-		//p->printState();
 	}
 	return;
 }

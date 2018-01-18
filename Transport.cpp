@@ -69,14 +69,14 @@ void Transport::setup()
 
 void Transport::runTransport()
 {
+    std::string filename = "Berp.xs";
+    Geometry geometry( filename, constants.getNumGroups(), true );
     for(int i = 0; i < numHis ; i++)
     {
         //sample src 
         point pos = point(0,0,constants.tol());
         point dir = point(0,0,1);
         int num_groups = 2;
-        std::string filename = "Berp.xs";
-        Geometry geometry( filename, constants.getNumGroups(), true );
         Cell_ptr startingCell = geometry.whereAmI(pos);
         Part_ptr p_new = make_shared<Particle>(pos, dir, startingCell, 1);
         pstack.push(p_new);
@@ -90,7 +90,9 @@ void Transport::runTransport()
                 //cout << "Before: " << endl;
                 //p->printState();
                 Cell_ptr current_Cell = p->getCell();
+			
                 double d2s = current_Cell->distToSurface(p);
+			
                 double d2c = current_Cell->distToCollision(p);
                 if(d2s > d2c) //collision!
                 {
@@ -101,11 +103,8 @@ void Transport::runTransport()
                 }
                 else //hit surface
                 {
-                    //cout << "pre escape " << cells[0]->amIHere(p) << endl;
                     p->move(d2s + constants.tol());
-                    //cout << "escape " << cells[0]->amIHere(p) << endl;
-                    p->kill(); //only 1 cell in this code
-                    //p->printState();
+                    p->kill(); //CHANGE FOR MULTIPLE CELLS
                     tallies[0]++;
                 }
             }

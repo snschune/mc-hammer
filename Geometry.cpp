@@ -151,7 +151,7 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 Cell_ptr Geometry::whereAmI( point pos )
 {
     
-    Cell_ptr hereIAm;
+    Cell_ptr hereIAm = nullptr;
     
     for( auto cell : cells )
     {
@@ -159,6 +159,11 @@ Cell_ptr Geometry::whereAmI( point pos )
         {
             hereIAm = cell;
         }
+    }
+    if(hereIAm == nullptr)
+    {
+	   std::cerr << "Particle unable to be located\n Exiting..." << endl;
+	   exit(1);
     }
     return hereIAm;
 }
