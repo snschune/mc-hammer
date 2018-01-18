@@ -14,7 +14,8 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
     std::vector< double >   fissionxs;
     std::vector< double >   nu;
     std::vector< double >   totalxs;
-    std::vector< double >   scatterxs;
+    std::vector< vector< double > >   scatterxs;
+    std::vector< double > scatterxsTotal;
     std::vector< double >   absorptionxs;
     
     std::ifstream xs_file;
@@ -69,18 +70,23 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
         
         for (int j=0; j < num_groups; ++j) {
             double scatter_tot_xs = 0;
+		  vector< double> tempxsVec;
             for (int k=0; k < num_groups; ++k) {
                 // scatter
                 xs_file >> temp_xs;
-                scatterxs.push_back(temp_xs);
+			 
+                tempxsVec.push_back(temp_xs);
                 scatter_tot_xs += temp_xs;
             }
             // absorption
+		  scatterxs.push_back(tempxsVec);
+		  tempxsVec.clear();
+		  scatterxsTotal.push_back(scatter_tot_xs);
             temp_xs = totalxs[j] - scatter_tot_xs;
             absorptionxs.push_back(temp_xs);
         }
         
-        Mat_ptr temp_material = std::make_shared<Material>( num_groups, totalxs, absorptionxs, scatterxs );
+        Mat_ptr temp_material = std::make_shared<Material>( num_groups, totalxs, absorptionxs, scatterxs, scatterxsTotal );
         
         materials.push_back( temp_material );
         
@@ -104,16 +110,6 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
     
     xs_file.close(); //close XS input file
     
-    //material
-    vector<double> sigt;
-    vector<double> siga;
-    vector<double> sigsi;
-    sigt.push_back(1.0);
-    siga.push_back(0.5);
-    sigsi.push_back(0.5);
-    Mat_ptr mat1 = make_shared<Material>(1, sigt, siga, sigsi);
-    //materials.push_back(mat1);
-    
     
     //surface bounbdaries
     Surf_ptr plane1 = make_shared<plane>("plane1", 0.0, 0.0, 1.0, 0.0);
@@ -128,7 +124,7 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
     vector< pair< Surf_ptr, bool > > cellSurfaces1;
     cellSurfaces1.push_back(surf1);
     cellSurfaces1.push_back(surf2);
-    Cell_ptr cell1 = make_shared<Cell>(mat1, cellSurfaces1);
+    Cell_ptr cell1 = make_shared<Cell>(materials[0], cellSurfaces1);
     cells.push_back(cell1);
     
     

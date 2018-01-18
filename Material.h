@@ -35,7 +35,7 @@ class Material
 
 	public:
 	//Constructor
-		Material(int ng, vector<double> total_XSi, vector<double> Sigai, vector<vector<double>> Sigsi);
+		Material(int, vector<double>, vector<double>, vector<vector<double>>, vector<double>);
 	//Functions
 	double getTotalXS(int g);
 	double getAbsXS(int g);

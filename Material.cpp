@@ -11,8 +11,9 @@
 using std::cout;
 using std::endl;
 //Constructor
-Material::Material(int ng, vector<double> total_XSi, vector<double> Sigai, vector<vector<double>> Sigsi): num_g(ng), total_XS(total_XSi), Siga(Sigai), Sigs(Sigsi) 
+Material::Material(int ng, vector<double> total_XSi, vector<double> Sigai, vector<vector<double>> Sigsi, vector< double > Sigsti): num_g(ng), total_XS(total_XSi), Siga(Sigai), Sigs(Sigsi), Sigst(Sigst) 
 {
+	/*
 	vector<double> gsvec; //group sum vector
 	for(int i = 0; i < ng; i++)
 	{
@@ -24,6 +25,7 @@ Material::Material(int ng, vector<double> total_XSi, vector<double> Sigai, vecto
 		}
 		Sigst.push_back(rowsum);
 	}
+	*/
 }
 
 double Material::getTotalXS(int g)

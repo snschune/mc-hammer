@@ -18,7 +18,7 @@ Transport::Transport()
     //set # his
     numHis = 100;
     
-    constants.setNumGroups(1);
+    constants.setNumGroups(2);
     constants.lock();
 }
 
@@ -76,7 +76,7 @@ void Transport::runTransport()
         point dir = point(0,0,1);
         int num_groups = 2;
         std::string filename = "Berp.xs";
-        Geometry geometry( filename, num_groups, true );
+        Geometry geometry( filename, constants.getNumGroups(), true );
         Cell_ptr startingCell = geometry.whereAmI(pos);
         Part_ptr p_new = make_shared<Particle>(pos, dir, startingCell, 1);
         pstack.push(p_new);
