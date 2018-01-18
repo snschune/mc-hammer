@@ -1,67 +1,93 @@
 /*
-	Author: Blake
-	Date: 11/8/17
-*/
+ Author: Blake
+ Date: 11/8/17
+ */
 
 #include "Cell.h"
 
 //constructor
-Cell::Cell(Mat_ptr mati, vector<Surf_ptr> surfacesi, vector<bool> insidei): mat(mati), surfaces(surfacesi), inside(insidei) {}
+Cell::Cell(Mat_ptr mati, vector<pair<Surf_ptr, bool>> surfacesi): mat(mati)
+{
+    for(auto surface: surfacesi) //learn auto
+    {
+        surfaces.push_back(surface);
+    }
+}
 
 //functions
-vector<Surf_ptr> Cell::getSurfaces()
-{
-	return surfaces;
-}
-vector<bool> Cell::getInside()
-{
-	return inside;
-}
+//vector<Surf_ptr> Cell::getSurfaces()
+//{
+//    return surfaces;
+//}
+//vector<bool> Cell::getInside()
+//{
+//return inside;
+//}
+
 Mat_ptr Cell::getMat()
 {
-	return mat;
+    return mat;
+}
+
+
+
+double Cell::distToCollision(Part_ptr pi)
+{
+    int group = pi->getGroup();
+    double total_xs = mat->getTotalXS(group);
+    double dist = -log(Urand())/total_xs;
+    return dist;
+}
+
+
+
+void Cell::processRxn(Part_ptr p, stack<Part_ptr> &pstack)
+//a collision has occurred, what happens now?
+{
+    mat->processRxn(p, pstack, p->getGroup());
+    return;
+}
+
+bool Cell::amIHere(point pos)
+{
+    bool isWithin = true;
+    //cycle through each surface and if there is one that has a incorrect eval, you are not in this cell
+    for(auto surface: surfaces)
+    {
+        bool test = (surface.first->eval(pos) < 0);
+        isWithin = isWithin && (test == surface.second);
+    }
+    return isWithin;
+}
+
+pair<Surf_ptr, double> Cell::closestSurface(Part_ptr p)
+{
+    Surf_ptr min_surf = nullptr;
+    double min_val = std::numeric_limits<double>::max();
+    point pos = p->getPos();
+    point dir = p->getDir();
+    for(auto bound: surfaces)
+    {
+        Surf_ptr cur_surf =  bound.first;
+        double dist = cur_surf->distance(pos,dir);
+        if(dist < min_val && dist > 0)
+        {
+            min_surf = cur_surf;
+            min_val = dist;
+        }
+    }
+    if(min_surf == nullptr)
+    {
+        std::cerr << "ERROR: NO SURFACE FOUND" << std::endl;
+        std::exit(1);
+    }
+    return make_pair(min_surf, min_val);
 }
 
 double Cell::distToSurface(Part_ptr pi)
 {
-	Surf_ptr close_surface = closestSurface(pi);
-	ray r = pi->getray();
-	double dist = close_surface->distance(r);
-	return dist;
+    Surf_ptr close_surface;
+    double dist;
+    tie(close_surface,dist) = closestSurface(pi);
+    return dist;
 }
-
-double Cell::distToCollision(Part_ptr pi)
-{
-	int group = pi->getGroup();
-	double total_xs = mat->getTotalXS(group);
-	double dist = -log(Urand())/total_xs;
-	return dist;
-}
-
-Surf_ptr Cell::closestSurface(Part_ptr p)
-{
-	int min_index = -1;
-	double min_val = std::numeric_limits<double>::max();
-	ray r = p->getray();
-	for(unsigned int i = 0; i < surfaces.size(); i++)
-	{
-		Surf_ptr cur_surf =  surfaces[i];
-		double dist = cur_surf->distance(r);
-
-		if(dist < min_val)
-		{
-			min_index = i;
-			min_val = dist;
-		}
-	}
-	return surfaces[min_index];
-}
-
-void Cell::processRxn(Part_ptr p, double dist, stack<Part_ptr> &pstack)
-//a collision has occurred, what happens now?
-{
-	p->move(dist); //CHANGE THIS
-	mat->processRxn(p, pstack, p->getGroup());
-	return;
-}
-
