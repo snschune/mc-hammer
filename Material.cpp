@@ -6,19 +6,26 @@
 
 #include "Material.h"
 #include "Random.h"
+#include <iostream>
 
+using std::cout;
+using std::endl;
 //Constructor
-Material::Material(int ng, vector<double> total_XSi, vector<double> Sigai, vector<double> Sigsi): num_g(ng), total_XS(total_XSi), Siga(Sigai), Sigs(Sigsi) 
+Material::Material(int ng, vector<double> total_XSi, vector<double> Sigai, vector<vector<double>> Sigsi, vector< double > Sigsti): num_g(ng), total_XS(total_XSi), Siga(Sigai), Sigs(Sigsi), Sigst(Sigsti) 
 {
+	/*
+	vector<double> gsvec; //group sum vector
 	for(int i = 0; i < ng; i++)
 	{
 		double rowsum = 0;
+		gsvec = Sigs[i];
 		for(int j = 0; j < ng; j++)
 		{
-			rowsum += Sigsi[ng*i+j];	
+			rowsum += gsvec[j];
 		}
-		Sigst[i] = rowsum;
+		Sigst.push_back(rowsum);
 	}
+	*/
 }
 
 double Material::getTotalXS(int g)
@@ -33,14 +40,15 @@ double Material::getAbsXS(int g)
 
 double Material::getScaXS(int gi, int gf)
 {
-	return Sigs[gi*num_g+gf-1];
+	vector<double> cScat = Sigs[gi];
+	return cScat[gf];
 }
 
 void Material::processRxn(Part_ptr p, stack<Part_ptr> &pstack, int g)
 {
 	double cutoff = Siga[g-1]/total_XS[g-1];
 	double rand = Urand();
-
+	
 	if(cutoff > rand) //particle is killed
 	{
 		p->kill();
@@ -58,12 +66,13 @@ void Material::scatter(Part_ptr p, int g)
 	double rand = Urand();
 	double cutoff = 0;
 	int gf = 0;
-	for(int i = (g-1)*num_g; i < g*num_g; i++)
+	vector<double> curSigs = Sigs[g-1];
+	for(int i = 0; i < num_g; i++)
 	{
-		cutoff += Sigs[i]/Sigst[g-1]; 
+		cutoff += curSigs[i]/Sigst[g-1]; 
 		if(rand < cutoff)
 		{
-			gf = i-(g-1)*num_g+1;
+			gf = i+1;
 			break;	
 		}
 	}
@@ -77,13 +86,13 @@ void Material::scatter(Part_ptr p, int g)
 
 void Material::rotate(Part_ptr p, double mu0, double rand)
 {
+	//cout << "Rotation! mu = " << mu0 << " rand = " << rand << endl;
 	if(mu0 == 1)
 		return; //no scattering
 	
 	double pi = 3.1415926535897;
 	
-	ray r = p->getray();
-	point d = r.dir;
+	point d = p->getDir();
 	double u = d.x;
 	double v = d.y;
 	double w = d.z;

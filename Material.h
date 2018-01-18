@@ -29,13 +29,13 @@ class Material
 		int num_g;
 		vector<double> total_XS; //size g
 		vector<double> Siga; //size g
-		vector<double> Sigs; //size g^2
+		vector<vector<double>> Sigs; //size g^2
 		vector<double> Sigst; //size g-> the total for each group (s11+s12+s13...+s1g)
 
 
 	public:
 	//Constructor
-		Material(int ng, vector<double> total_XSi, vector<double> Sigai, vector<double> Sigsi);
+		Material(int, vector<double>, vector<double>, vector<vector<double>>, vector<double>);
 	//Functions
 	double getTotalXS(int g);
 	double getAbsXS(int g);
