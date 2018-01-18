@@ -6,12 +6,13 @@
 #include "Cell.h"
 
 //constructor
-Cell::Cell(Mat_ptr mati, vector<pair<Surf_ptr, bool>> surfacesi): mat(mati)
+Cell::Cell(Mat_ptr mati, vector<pair<Surf_ptr, bool>> surfacesi ): mat(mati)
 {
     for(auto surface: surfacesi) //learn auto
     {
         surfaces.push_back(surface);
     }
+
 }
 
 //functions

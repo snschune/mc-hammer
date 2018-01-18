@@ -33,7 +33,6 @@
 #include "Point.h"
 #include "Particle.h"  
 #include "Surface.h"
-#include "Cell.h"
 #include "Material.h"
 #include "RxnLog.h"
 

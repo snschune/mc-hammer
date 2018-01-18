@@ -20,6 +20,7 @@
 #include "Point.h"
 #include "Cell.h"
 #include "Surface.h"
+#include "Estimator.h"
 
 using std::vector;
 using std::make_shared;
@@ -27,13 +28,14 @@ using std::make_shared;
 typedef std::shared_ptr<Cell> Cell_ptr;
 typedef std::shared_ptr<Material> Mat_ptr;
 typedef std::shared_ptr<surface> Surf_ptr;
+typedef std::shared_ptr<Estimator> Estimator_ptr;
 
 class Geometry
 {
 private:
-    vector< Cell_ptr >    cells;
-    vector< Surf_ptr > surfaces;
-    vector< Mat_ptr > materials;
+    vector< Cell_ptr >      cells;
+    vector< Surf_ptr >      surfaces;
+    vector< Mat_ptr >       materials;
     void setup( std::string filename , int num_groups, bool loud );
     
 public:
@@ -44,6 +46,8 @@ public:
     
     void addCell( Cell_ptr );
     void addSurface( Surf_ptr );
+
+
     
     
 };

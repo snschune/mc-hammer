@@ -41,7 +41,7 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
         std::cout << "Error! No materials to read from file." << std::endl;
     }
     
-    for (int i = 1; i < (num_materials + 1); ++i){
+    for (int i = 1; i < (num_materials + 1); ++i) {
         
         // read XS's
         xs_file >> material_id;
@@ -118,13 +118,22 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
     surfaces.push_back(plane2);
     
     
+    //create estimator TODO add input for estimators
+    // need to input a new vector of a shared pointer to an estimator (one for each group) to the cell
+    //
+    // Generate a Collision estimator for each group
+    vector< Estimator_ptr > estimators;
+    for (int i = 0; i <= (num_groups - 1); ++i) {
+        estimators.push_back( std::make_shared< CollisionTally >( materials.at(0)->getTotalXS(i) ) );
+    }
+
     //create cell
     pair< Surf_ptr, bool > surf1 (plane1, false);
     pair< Surf_ptr, bool > surf2 (plane2, true );
     vector< pair< Surf_ptr, bool > > cellSurfaces1;
     cellSurfaces1.push_back(surf1);
     cellSurfaces1.push_back(surf2);
-    Cell_ptr cell1 = make_shared<Cell>(materials[0], cellSurfaces1);
+    Cell_ptr cell1 = make_shared<Cell>(materials[0], cellSurfaces1 );
     cells.push_back(cell1);
     
     

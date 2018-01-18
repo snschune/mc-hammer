@@ -19,7 +19,8 @@
 #include "Surface.h"
 #include "Random.h"
 #include "Particle.h"
-
+#include "Geometry.h"
+#include "Estimator.h"
 
 using std::vector;
 using std::stack;
@@ -28,9 +29,10 @@ using std::tie;
 using std::cout;
 using std::endl;
 
-typedef std::shared_ptr<Particle> Part_ptr; //found in Particle.h -> Material.h
-typedef std::shared_ptr<Material> Mat_ptr;
-typedef std::shared_ptr<surface> Surf_ptr;
+typedef std::shared_ptr<Particle>  Part_ptr; //found in Particle.h -> Material.h
+typedef std::shared_ptr<Material>  Mat_ptr;
+typedef std::shared_ptr<surface>   Surf_ptr;
+typedef std::shared_ptr<Estimator> Estimator_ptr;
 
 class Cell
 //Region in space, bounded by surfaces/
@@ -42,9 +44,12 @@ private:
     //vector<bool> inside; //1 = inside cooresponding surface, 0 = outside
     vector<pair<Surf_ptr, bool>> surfaces;
     
+    // Estimators
+    vector< Estimator_ptr > estimators;
+   
 public:
     //Constructor:
-    Cell(Mat_ptr mati, vector< pair< Surf_ptr, bool > > surfacesi);
+    Cell(Mat_ptr mati, vector< pair< Surf_ptr, bool > > surfacesi );
     //Functions:
     //vector<Surf_ptr> getSurfaces();
     //vector<bool> getInside();
@@ -58,5 +63,10 @@ public:
     void processRxn(Part_ptr p, stack<Part_ptr> &pstack);
     
     bool amIHere(point pos);
+
+    // Estimator interface
+    //void scoreTally(Part_ptr p )                      { estimator.at(p->getGroup())->score(p);             };
+    //void endTallyHist()                               { estimator.at(group)->endHist();                    }; // must iterate thru groups
+    //std::pair< double , double > getTally(int group)  { return(estimator.at(group)->getScalarEstimator()); };
 };
 #endif 
