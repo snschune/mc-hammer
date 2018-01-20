@@ -34,7 +34,7 @@
 #include "Particle.h"  
 #include "Surface.h"
 #include "Material.h"
-#include "RxnLog.h"
+#include "Constants.h"
 
 using std::vector;
 using std::string;
@@ -43,16 +43,8 @@ typedef std::shared_ptr<Particle>  Part_ptr; //found in Particle.h -> Material.h
 typedef std::shared_ptr<Material>  Mat_ptr;
 typedef std::shared_ptr<surface>   Surf_ptr;
 typedef std::shared_ptr<Cell>      Cell_ptr;
-typedef std::shared_ptr<rxnLog>     log_ptr;
-typedef std::shared_ptr<point>    Point_ptr;
+typedef std::shared_ptr<point>     Point_ptr;
 
-struct VectorEstimator {
-    vector < double > value , uncertainty;
-};
-
-struct ScalarEstimator {
-    double value , uncertainty;
-};
 
 class Estimator {
   private:

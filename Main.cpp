@@ -20,6 +20,7 @@ int main(int argc , char *argv[]) {
 
     Constants constants;
     constants.setNumGroups(2);
+    constants.setNumHis(nHist);
     constants.lock();
 
     // TODO read this stuff from input
