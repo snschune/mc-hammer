@@ -9,18 +9,7 @@
 using std::make_shared;
 
 
-Transport::Transport()
-{
-    //set up estimators
-    tallies.push_back(0);
-    tallies.push_back(0);
-    
-    //set # his
-    numHis = 100;
-    
-    constants.setNumGroups(2);
-    constants.lock();
-}
+Transport::Transport(Geometry geoin, Constants consti , int numhis): geometry(geoin) , constants(consti) , numHis(numhis) {}
 
 /*
 void Transport::setup()
@@ -69,8 +58,6 @@ void Transport::setup()
 
 void Transport::runTransport()
 {
-    std::string filename = "Berp.xs";
-    Geometry geometry( filename, constants.getNumGroups(), true );
     for(int i = 0; i < numHis ; i++)
     {
         //sample src 
@@ -78,34 +65,41 @@ void Transport::runTransport()
         point dir = point(0,0,1);
         int num_groups = 2;
         Cell_ptr startingCell = geometry.whereAmI(pos);
-        Part_ptr p_new = make_shared<Particle>(pos, dir, startingCell, 1);
+        int newGroup = int( round(1 + Urand()) ); 
+        Part_ptr p_new = make_shared<Particle>(pos, dir, startingCell, newGroup);
         pstack.push(p_new);
         
         //run history
         while(!pstack.empty())
         {
+           // std::cout << "Running another history " << std::endl;
+
             Part_ptr p = pstack.top();
             while(p->isAlive())
             {
-                //cout << "Before: " << endl;
-                //p->printState();
                 Cell_ptr current_Cell = p->getCell();
-			
+
                 double d2s = current_Cell->distToSurface(p);
-			
                 double d2c = current_Cell->distToCollision(p);
+                
                 if(d2s > d2c) //collision!
                 {
+                    //score collision tally in current cell
+                    current_Cell->scoreTally(p , current_Cell->getMat()->getTotalXS( p->getGroup() ) ); 
+                    
                     p->move(d2c);
                     current_Cell->processRxn(p, pstack);
-                    if(!p->isAlive())
-                        tallies[1]++;
+
                 }
                 else //hit surface
                 {
                     p->move(d2s + constants.tol());
                     p->kill(); //CHANGE FOR MULTIPLE CELLS
-                    tallies[0]++;
+                }
+
+                //tell all estimators that the history had ended
+                for( auto cell : geometry.getCells() ) {
+                    cell->endTallyHist();
                 }
             }
             pstack.pop();
@@ -115,6 +109,15 @@ void Transport::runTransport()
 void Transport::output()
 {
     cout << "Total Number of Histories: " << numHis << endl;
-    cout << "Total Number Absorbed: " << tallies[1] << endl;
-    cout << "Total Number Leaked: " << tallies[0] << endl; 
+
+    int i = 0;
+    for( Cell_ptr cell : geometry.getCells() ) {
+        ++i;
+        std::cout << "Collision tally in cell " << i << std::endl;
+        for( int j = 1; j <= constants.getNumGroups(); ++j) {
+            std::cout << " group: " << j << ", tally = " << cell->getSingleGroupTally(j).first 
+                           << ", stddev = " << cell->getSingleGroupTally(j).second << std::endl;
+        }
+        cout << std::endl;
+    }
 }

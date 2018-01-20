@@ -16,10 +16,21 @@
 
 #include "Estimator.h"
 
+//helper fucntions
+
+template <class T>
+T vecSum ( std::vector<T> const& A ) {
+    T result = 0;
+    for(auto a : A) {
+        result += a;
+    }
+    return (result);
+}
+
 
 //estimator functions
 void Estimator::endHist() {};
-void Estimator::score(Part_ptr pi ) {};
+void Estimator::score(double xs) {};
 std::pair < double , double > Estimator::getScalarEstimator() {};
 
 double Estimator::dist(point p1 ,point p2) {
@@ -50,8 +61,8 @@ void CellTally::score(Part_ptr pi , Part_ptr pf ) {
 
 
 //functions
-void CollisionTally::score( ) {
-     currentHistTally +=  1.0;
+void CollisionTally::score( double xs ) {
+     currentHistTally +=  1.0 / xs;
 };
 
 void CollisionTally::endHist() {
@@ -72,23 +83,32 @@ std::pair < double , double > CollisionTally::getScalarEstimator() {
 // This function returns the mean and std deviation in the number 
 // of collisions per history 
 
-    double meanFlux;
-    double sqrFlux;
+    double sumFlux;
+    double sqrSumFlux;
     double nHist = histTally.size();
-
     std::pair < double , double >  fluxEstimator;
-   
-    // sum the tallies and square tallies over the histories
-    meanFlux  = std::accumulate( histTally.begin()    , histTally.end()    , 0 ) / nHist;
-    sqrFlux   = std::accumulate( histTallySqr.begin() , histTallySqr.end() , 0 );
+    
+    if (nHist > 1) {
+        // sum the tallies and square tallies over the histories
+        sumFlux      = vecSum < double > ( histTally    );
+        sqrSumFlux   = vecSum < double > ( histTallySqr );
 
-    // find the standard deviation of the estimator
-    double stdDev = pow( ( sqrFlux / nHist ) - pow( meanFlux , 2 ) ,  0.5 );
+        // find the standard deviation of the estimator
+        double stdDev = pow( ( sqrSumFlux - pow( sumFlux , 2 ) / nHist ) / (nHist - 1) , 0.5);
 
-    fluxEstimator.first  = meanFlux / crossSection;
-    fluxEstimator.second = stdDev;
+        fluxEstimator.first  = sumFlux / nHist;
+        fluxEstimator.second = stdDev;
 
-    return(fluxEstimator); 
+        return(fluxEstimator); 
+    }
+    else {
+        std::cout << "Not enough histories to calculate variance! Tallies unreliable." << std::endl;
+        
+        fluxEstimator.first  = 0.0;
+        fluxEstimator.second = 0.0;
+        
+        return(fluxEstimator); 
+    }
 };
 
 

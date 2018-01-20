@@ -7,6 +7,7 @@
 Geometry::Geometry( std::string filename , int num_groups, bool loud )
 {
     setup( filename, num_groups, loud );
+    std::cout << materials.at(0)->getTotalXS(1) << std::endl;
 }
 
 void Geometry::setup( std::string filename , int num_groups, bool loud )
@@ -123,8 +124,8 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
     //
     // Generate a Collision estimator for each group
     vector< Estimator_ptr > estimators;
-    for (int i = 0; i <= (num_groups - 1); ++i) {
-        estimators.push_back( std::make_shared< CollisionTally >( materials.at(0)->getTotalXS(i) ) );
+    for (int i = 1; i <= num_groups; ++i) {
+        estimators.push_back( std::make_shared< CollisionTally >() );  
     }
 
     //create cell
@@ -133,7 +134,7 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
     vector< pair< Surf_ptr, bool > > cellSurfaces1;
     cellSurfaces1.push_back(surf1);
     cellSurfaces1.push_back(surf2);
-    Cell_ptr cell1 = make_shared<Cell>(materials[0], cellSurfaces1 );
+    Cell_ptr cell1 = make_shared<Cell>(materials[0] , cellSurfaces1  , estimators );
     cells.push_back(cell1);
     
     

@@ -34,7 +34,7 @@ public:
     point getDir();
     //r_ptr getray();
     int   getGroup();
-    
+
     void setCell(int c);
     void setGroup(int g);
     void setPos(point posi);

@@ -56,10 +56,9 @@ struct ScalarEstimator {
 
 class Estimator {
   private:
-    std::string estimator_name;
-    std::string estimator_type;
-    // energy binning
-    // material
+    double               currentHistTally;
+    vector < double >    histTally;
+    vector < double >    histTallySqr;
 
   public:
      Estimator() {};
@@ -68,13 +67,14 @@ class Estimator {
     //utility
     double dist(point p1 ,point p2);
     
-    // naming
-    virtual std::string name() { return estimator_name; };
-    virtual std::string type() { return estimator_type; };
-
+    // set/gets
+    virtual double getCurrentHistTally()      { return( currentHistTally ); };
+    virtual vector <double> getHistTally()    { return( histTally        ); };
+    virtual vector <double> getHistTallySqr() { return( histTallySqr     ); };
+    
     // estimator methods
     virtual void endHist();
-    virtual void score(Part_ptr pi );
+    virtual void score(double xs);
     virtual std::pair < double , double > getScalarEstimator();
 
 };
@@ -113,14 +113,12 @@ class CellTally : public Estimator {
 
 class CollisionTally : public Estimator {
     private:
-        double    currentHistTally;
-        double    crossSection;
-
+        double               currentHistTally;
         vector < double >    histTally;
         vector < double >    histTallySqr;
             
     public:
-        CollisionTally(double xsec): crossSection(xsec) {};
+        CollisionTally() { currentHistTally = 0.0; };
        ~CollisionTally() {};
         
         // set/gets
@@ -129,7 +127,7 @@ class CollisionTally : public Estimator {
         vector <double> getHistTallySqr() { return( histTallySqr     ); };
         
         // collision tally specific estimator methods
-        void score();
+        void score(double xs);
         void endHist();
         std::pair < double , double > getScalarEstimator();
 };

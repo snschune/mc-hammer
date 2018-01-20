@@ -6,7 +6,7 @@
 #include "Cell.h"
 
 //constructor
-Cell::Cell(Mat_ptr mati, vector<pair<Surf_ptr, bool>> surfacesi ): mat(mati)
+Cell::Cell(Mat_ptr mati, vector<pair<Surf_ptr, bool>> surfacesi ,  vector< Estimator_ptr > estimi): mat(mati) , estimators(estimi)
 {
     for(auto surface: surfacesi) //learn auto
     {
@@ -91,4 +91,29 @@ double Cell::distToSurface(Part_ptr pi)
     double dist;
     tie(close_surface,dist) = closestSurface(pi);
     return dist;
+}
+
+// Estimator interface
+
+void Cell::scoreTally(Part_ptr p , double xs) {
+    estimators.at( p->getGroup() - 1 )->score(xs);
+}
+
+void Cell::endTallyHist() {
+    for(auto est : estimators) {
+        est->endHist();
+    }
+}
+
+std::pair< double , double > Cell::getSingleGroupTally(int group) {
+    return( estimators.at(group - 1)->getScalarEstimator() );
+}
+
+std::vector< std::pair< double , double > > Cell::getTally() {
+    std::vector< std::pair< double , double > > tallies;
+    for( auto est : estimators) {
+        tallies.push_back( est->getScalarEstimator() );
+    }
+
+    return(tallies);
 }

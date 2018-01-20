@@ -47,7 +47,7 @@ public:
     void addCell( Cell_ptr );
     void addSurface( Surf_ptr );
 
-
+    vector< Cell_ptr > getCells() { return(cells); };
     
     
 };

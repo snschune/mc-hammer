@@ -30,7 +30,7 @@ Material::Material(int ng, vector<double> total_XSi, vector<double> Sigai, vecto
 
 double Material::getTotalXS(int g)
 {
-	return total_XS[g-1];
+    return total_XS[g-1];
 }
 
 double Material::getAbsXS(int g)
@@ -76,8 +76,9 @@ void Material::scatter(Part_ptr p, int g)
 			break;	
 		}
 	}
-	p->setGroup(gf);
-	
+	double oldg = p->getGroup(); //DEBUG
+    p->setGroup(gf);
+    
 	//change direction (isotropic scattering)
 	rand = Urand();
 	double mu0 = 2*Urand()-1;
@@ -86,7 +87,7 @@ void Material::scatter(Part_ptr p, int g)
 
 void Material::rotate(Part_ptr p, double mu0, double rand)
 {
-	//cout << "Rotation! mu = " << mu0 << " rand = " << rand << endl;
+	//xout << "Rotation! mu = " << mu0 << " rand = " << rand << endl;
 	if(mu0 == 1)
 		return; //no scattering
 	

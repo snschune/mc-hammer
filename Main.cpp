@@ -10,9 +10,23 @@
 
 typedef std::shared_ptr<Transport> T_ptr;
 
-int main()
-{
-    T_ptr t = std::make_shared<Transport>();
+int main(int argc , char *argv[]) {
+    
+    int nHist = 0;
+
+    if ( argc > 1 ) {
+        nHist = atoi( argv[1] );
+    }
+
+    Constants constants;
+    constants.setNumGroups(2);
+    constants.lock();
+
+    // TODO read this stuff from input
+    std::string filename = "Berp.xs";
+    Geometry geometry( filename, constants.getNumGroups(), true );
+    
+    T_ptr t = std::make_shared<Transport>(geometry , constants , nHist);
     
     //cout << "setting up..." << endl;
     //t->setup();

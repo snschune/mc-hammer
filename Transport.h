@@ -43,11 +43,12 @@ private:
     stack<Part_ptr> pstack;
     vector<double> tallies;
     Constants constants;
-    Geometry geometry( std::string filename , int num_groups, bool loud );
+    Geometry geometry; 
     
 public:
     //constructor
-    Transport(); //to be altered once input is added
+    Transport( Geometry geoin , Constants consti , int numhis);
+        //to be altered once input is added
     //functions
     //void setup();
     void runTransport();

@@ -49,7 +49,7 @@ private:
    
 public:
     //Constructor:
-    Cell(Mat_ptr mati, vector< pair< Surf_ptr, bool > > surfacesi );
+    Cell(Mat_ptr mati, vector< pair< Surf_ptr, bool > > surfacesi , vector< Estimator_ptr > estimi);
     //Functions:
     //vector<Surf_ptr> getSurfaces();
     //vector<bool> getInside();
@@ -65,8 +65,9 @@ public:
     bool amIHere(point pos);
 
     // Estimator interface
-    //void scoreTally(Part_ptr p )                      { estimator.at(p->getGroup())->score(p);             };
-    //void endTallyHist()                               { estimator.at(group)->endHist();                    }; // must iterate thru groups
-    //std::pair< double , double > getTally(int group)  { return(estimator.at(group)->getScalarEstimator()); };
+    void scoreTally(Part_ptr p , double xs); 
+    void endTallyHist();
+    std::pair< double , double > getSingleGroupTally(int group);
+    std::vector< std::pair< double , double > > getTally();
 };
 #endif 
