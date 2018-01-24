@@ -40,6 +40,7 @@ private:
     
 public:
     Geometry( std::string filename , int num_groups, bool loud );
+	Geometry(double, double); //tester
     bool        amIHere( point, Cell_ptr);
     Cell_ptr    whereAmI( point );
     
@@ -49,6 +50,7 @@ public:
 
     vector< Cell_ptr > getCells() { return(cells); };
     
+	void setuptest(double, double);
     
 };
 

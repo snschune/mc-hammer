@@ -9,7 +9,7 @@ using std::cout;
 using std::endl;
 
 //constructors
-Particle::Particle(point posi, point diri, Cell_ptr celli, int gi): pos(posi), dir(diri), cell(celli), group(gi), alive(1)
+Particle::Particle(point posi, point diri, int gi): pos(posi), dir(diri), group(gi), alive(1)
 {
     double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
     dir.x *= norm; dir.y *= norm; dir.z *= norm;
@@ -46,6 +46,11 @@ int Particle::getGroup()
     return group;
 }
 
+void Particle::setCell(Cell_ptr celli)
+{
+	cell = celli;
+	return;
+}
 void Particle::setGroup(int g)
 {
     group = g;
@@ -100,8 +105,9 @@ void Particle::printState()
 {
     cout << "Position: " << pos.x << " " << pos.y << " " << pos.z << endl;
     cout << "Direction: " << dir.x << " " << dir.y << " " << dir.z << endl;
+	double radius = std::sqrt(pos.x*pos.x + pos.y*pos.y + pos.z*pos.z);
+	cout << "distance from origin: " << radius << endl;
     cout << "Group: " << group;
-    //cout << " Cell: " << cellNum;
     cout << " Alive: " << alive << endl;
     cout << endl;
     

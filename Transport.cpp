@@ -58,25 +58,27 @@ void Transport::setup()
 
 void Transport::runTransport()
 {
+	vector<double> sourceGroups;
+	sourceGroups.push_back(1.0);
+	sourceGroups.push_back(0.0);
+	setSourceSphere psource = setSourceSphere(0.0, 0.0, 0.0, 0.0, 3.0, sourceGroups);
     for(int i = 0; i < numHis ; i++)
     {
-        //sample src 
-        point pos = point(0,0,constants.tol());
-        point dir = point(0,0,1);
-        int num_groups = 2;
-        Cell_ptr startingCell = geometry.whereAmI(pos);
-        int newGroup = int( round(1 + Urand()) ); 
-        Part_ptr p_new = make_shared<Particle>(pos, dir, startingCell, newGroup);
-        pstack.push(p_new);
-        
+		//sample src 
+		Part_ptr p_new = psource.sample();
+		Cell_ptr startingCell = geometry.whereAmI(p_new->getPos());
+		p_new->setCell(startingCell);
+		pstack.push(p_new);
+          
         //run history
         while(!pstack.empty())
         {
-           // std::cout << "Running another history " << std::endl;
+           std::cout << "\nRunning another history\n" << std::endl;
 
             Part_ptr p = pstack.top();
             while(p->isAlive())
             {
+			//p->printState();
                 Cell_ptr current_Cell = p->getCell();
 
                 double d2s = current_Cell->distToSurface(p);
@@ -84,6 +86,7 @@ void Transport::runTransport()
                 
                 if(d2s > d2c) //collision!
                 {
+				cout << "collided" << endl;
                     //score collision tally in current cell
                     current_Cell->scoreTally(p , current_Cell->getMat()->getTotalXS( p->getGroup() ) ); 
                     
@@ -93,8 +96,18 @@ void Transport::runTransport()
                 }
                 else //hit surface
                 {
-                    p->move(d2s + constants.tol());
-                    p->kill(); //CHANGE FOR MULTIPLE CELLS
+				cout << "hit surface" << endl;
+				cout << "moving from " << p->getCell()->name << endl;
+                    p->move(d2s + 0.00001);
+                    Cell_ptr newCell = geometry.whereAmI(p->getPos());
+				if(newCell == nullptr)
+				{
+					p->kill();
+				}
+				else
+				{
+					p->setCell(newCell);
+				}
                 }
 
                 //tell all estimators that the history had ended

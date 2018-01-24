@@ -42,12 +42,13 @@ private:
     Mat_ptr mat; //material properties within cell
     //vector<Surf_ptr> surfaces; //surfaces that enclose cell
     //vector<bool> inside; //1 = inside cooresponding surface, 0 = outside
-    vector<pair<Surf_ptr, bool>> surfaces;
+    vector<pair<Surf_ptr, bool>> surfacePairs;
     
     // Estimators
     vector< Estimator_ptr > estimators;
    
-public:
+public: 
+	std::string name;
     //Constructor:
     Cell(Mat_ptr mati, vector< pair< Surf_ptr, bool > > surfacesi , vector< Estimator_ptr > estimi);
     //Functions:

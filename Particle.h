@@ -26,7 +26,7 @@ private:
     int group;
 public:
     //constructor
-    Particle(point posi, point diri, Cell_ptr celli, int gi);
+    Particle(point posi, point diri, int gi);
     //functions
     bool isAlive();
     Cell_ptr getCell();
@@ -35,7 +35,7 @@ public:
     //r_ptr getray();
     int   getGroup();
 
-    void setCell(int c);
+    void setCell(Cell_ptr);
     void setGroup(int g);
     void setPos(point posi);
     void setDir(point diri);

@@ -21,6 +21,7 @@
 #include "Particle.h"
 #include "Constants.h"
 #include "Geometry.h"
+#include "Source.h"
 
 using std::vector;
 using std::stack;

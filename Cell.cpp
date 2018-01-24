@@ -6,11 +6,14 @@
 #include "Cell.h"
 
 //constructor
-Cell::Cell(Mat_ptr mati, vector<pair<Surf_ptr, bool>> surfacesi ,  vector< Estimator_ptr > estimi): mat(mati) , estimators(estimi)
+Cell::Cell(Mat_ptr mati, vector<pair<Surf_ptr, bool>> surfacePairsi ,  vector< Estimator_ptr > estimi): mat(mati) , estimators(estimi)
 {
-    for(auto surface: surfacesi) //learn auto
+	int i = 0;
+    for(auto surfacePair: surfacePairsi) //learn auto
     {
-        surfaces.push_back(surface);
+		i++;
+		cout << i << endl;
+        surfacePairs.push_back(surfacePair);
     }
 
 }
@@ -53,10 +56,12 @@ bool Cell::amIHere(point pos)
 {
     bool isWithin = true;
     //cycle through each surface and if there is one that has a incorrect eval, you are not in this cell
-    for(auto surface: surfaces)
+    for(auto surfacePair: surfacePairs)
     {
-        bool test = (surface.first->eval(pos) < 0);
-        isWithin = isWithin && (test == surface.second);
+		bool posInSurface = (surfacePair.first->eval(pos) < 0); //is the position inside(true) or out of the surface
+		bool cellInSurface = surfacePair.second;
+        	bool match = posInSurface == cellInSurface;
+		isWithin = isWithin == match;
     }
     return isWithin;
 }
@@ -67,11 +72,11 @@ pair<Surf_ptr, double> Cell::closestSurface(Part_ptr p)
     double min_val = std::numeric_limits<double>::max();
     point pos = p->getPos();
     point dir = p->getDir();
-    for(auto bound: surfaces)
+    for(auto bound: surfacePairs)
     {
         Surf_ptr cur_surf =  bound.first;
         double dist = cur_surf->distance(pos,dir);
-        if(dist < min_val && dist > 0)
+        if(dist < min_val && dist >  0)
         {
             min_surf = cur_surf;
             min_val = dist;
@@ -79,6 +84,8 @@ pair<Surf_ptr, double> Cell::closestSurface(Part_ptr p)
     }
     if(min_surf == nullptr)
     {
+		std::cout << name << std::endl;
+		p->printState();
         std::cerr << "ERROR: NO SURFACE FOUND" << std::endl;
         std::exit(1);
     }
