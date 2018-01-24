@@ -15,8 +15,8 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 	if(filename == "test")
 	{
 
-		double radius = 5.0;
-		double xsec = 2.0;
+		double radius = 0.01;
+		double xsec = 1.0;
 		
 		//std::cout << "Test case specified.\nRadius: ";
 		//std::cin >> radius;

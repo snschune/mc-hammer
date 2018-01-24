@@ -58,11 +58,12 @@ void Transport::setup()
 
 void Transport::runTransport()
 {
-	
+	double tally = 0;
     for(int i = 0; i < numHis ; i++)
     {
 		//sample src 
 		Part_ptr p_new = geometry.sampleSource();
+		//Part_ptr p_new = make_shared<Particle>(point(0,0,0), point(0,0,1), 1);
 		Cell_ptr startingCell = geometry.whereAmI(p_new->getPos());
 		p_new->setCell(startingCell);
 		pstack.push(p_new);
@@ -73,17 +74,18 @@ void Transport::runTransport()
 	       Part_ptr p = pstack.top();
             while(p->isAlive())
             {
+			//p->printState();
                 Cell_ptr current_Cell = p->getCell();
 
                 double d2s = current_Cell->distToSurface(p);
                 double d2c = current_Cell->distToCollision(p);
-			
+			//cout << "d2s: " << d2s << "  d2c: " << d2c << endl;
                 
                 if(d2s > d2c) //collision!
                 {
                     //score collision tally in current cell
                     current_Cell->scoreTally(p , current_Cell->getMat()->getTotalXS( p->getGroup() ) ); 
-                    
+                    tally++;
                     p->move(d2c);
                     current_Cell->processRxn(p, pstack);
 
@@ -91,7 +93,7 @@ void Transport::runTransport()
                 else //hit surface
                 {
 
-                    p->move(d2s + 0.0000001);
+                    p->move(d2s + 0.00000001);
                     Cell_ptr newCell = geometry.whereAmI(p->getPos());
 				if(newCell == nullptr)
 				{
@@ -111,6 +113,8 @@ void Transport::runTransport()
             pstack.pop();
         }
     }
+	tally /= numHis;
+	cout << "tally " << tally << endl;
 }
 void Transport::output()
 {
