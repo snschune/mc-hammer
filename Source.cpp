@@ -7,16 +7,22 @@
 
 
 
-unsigned int Source::groupSample(std::vector<double> groupProbability){
-	double group;
-	double groupRand = Urand(); //sample some cdf
-	for (auto n=0; n<groupProbability.size(); n++){
-		if (groupProbability[n] < groupRand){
-			return n;
+unsigned int Source::groupSample(std::vector<double> groupProbability)
+{
+	if(groupProbability.size() == 1)
+	{
+		return 1;
+	}
+	double rand = Urand();
+	double c = 0;
+	for(unsigned int i = 0; i < groupProbability.size(); i++)
+	{
+		c += groupProbability[i];
+		if(c > rand)
+		{
+			return (i+1);
 		}
 	}
-	//return group;
-	//TODO: put in error code
 }
 
 Part_ptr setSourcePoint::sample(){

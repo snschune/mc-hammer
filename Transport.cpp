@@ -58,14 +58,11 @@ void Transport::setup()
 
 void Transport::runTransport()
 {
-	vector<double> sourceGroups;
-	sourceGroups.push_back(1.0);
-	sourceGroups.push_back(0.0);
-	setSourceSphere psource = setSourceSphere(0.0, 0.0, 0.0, 0.0, 3.0, sourceGroups);
+	
     for(int i = 0; i < numHis ; i++)
     {
 		//sample src 
-		Part_ptr p_new = psource.sample();
+		Part_ptr p_new = geometry.sampleSource();
 		Cell_ptr startingCell = geometry.whereAmI(p_new->getPos());
 		p_new->setCell(startingCell);
 		pstack.push(p_new);
@@ -73,20 +70,17 @@ void Transport::runTransport()
         //run history
         while(!pstack.empty())
         {
-           std::cout << "\nRunning another history\n" << std::endl;
-
-            Part_ptr p = pstack.top();
+	       Part_ptr p = pstack.top();
             while(p->isAlive())
             {
-			//p->printState();
                 Cell_ptr current_Cell = p->getCell();
 
                 double d2s = current_Cell->distToSurface(p);
                 double d2c = current_Cell->distToCollision(p);
+			
                 
                 if(d2s > d2c) //collision!
                 {
-				cout << "collided" << endl;
                     //score collision tally in current cell
                     current_Cell->scoreTally(p , current_Cell->getMat()->getTotalXS( p->getGroup() ) ); 
                     
@@ -96,9 +90,8 @@ void Transport::runTransport()
                 }
                 else //hit surface
                 {
-				cout << "hit surface" << endl;
-				cout << "moving from " << p->getCell()->name << endl;
-                    p->move(d2s + 0.00001);
+
+                    p->move(d2s + 0.0000001);
                     Cell_ptr newCell = geometry.whereAmI(p->getPos());
 				if(newCell == nullptr)
 				{

@@ -8,11 +8,8 @@
 //constructor
 Cell::Cell(Mat_ptr mati, vector<pair<Surf_ptr, bool>> surfacePairsi ,  vector< Estimator_ptr > estimi): mat(mati) , estimators(estimi)
 {
-	int i = 0;
     for(auto surfacePair: surfacePairsi) //learn auto
     {
-		i++;
-		cout << i << endl;
         surfacePairs.push_back(surfacePair);
     }
 
@@ -68,28 +65,27 @@ bool Cell::amIHere(point pos)
 
 pair<Surf_ptr, double> Cell::closestSurface(Part_ptr p)
 {
-    Surf_ptr min_surf = nullptr;
-    double min_val = std::numeric_limits<double>::max();
-    point pos = p->getPos();
-    point dir = p->getDir();
-    for(auto bound: surfacePairs)
-    {
-        Surf_ptr cur_surf =  bound.first;
-        double dist = cur_surf->distance(pos,dir);
-        if(dist < min_val && dist >  0)
-        {
-            min_surf = cur_surf;
-            min_val = dist;
-        }
-    }
-    if(min_surf == nullptr)
-    {
-		std::cout << name << std::endl;
+	Surf_ptr min_surf = nullptr;
+	double min_val = std::numeric_limits<double>::max();
+	point pos = p->getPos();
+	point dir = p->getDir();
+	for(auto bound: surfacePairs)
+	{
+		Surf_ptr cur_surf =  bound.first;
+		double dist = cur_surf->distance(pos,dir);
+		if(dist < min_val && dist >  0)
+		{
+			min_surf = cur_surf;
+			min_val = dist;
+		}
+	}
+	if(min_surf == nullptr)
+	{
 		p->printState();
-        std::cerr << "ERROR: NO SURFACE FOUND" << std::endl;
-        std::exit(1);
-    }
-    return make_pair(min_surf, min_val);
+		std::cerr << "ERROR: NO SURFACE FOUND" << std::endl;
+		std::exit(1);
+	}
+	return make_pair(min_surf, min_val);
 }
 
 double Cell::distToSurface(Part_ptr pi)

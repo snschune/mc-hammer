@@ -15,10 +15,12 @@ int main(int argc , char *argv[])
 //numHis: number of histories (initialized to 1)
 //numGroups: number of groups we will be considering (initialized to 1)
 //xsfilename: the input file containing a list of the cross sections (initialized to Berp.xs)
-//to add: 
+//entering "test" as the filename will start a test case for calculating leaking out of a sphere
+//TODO: 
 //tetfilename: the input file containing the information about the mesh
 //outputfilename
 //surface/cell information input file?
+//
 
 {
 	//tester variables
@@ -37,38 +39,16 @@ int main(int argc , char *argv[])
 	{
 		nHist = 	atoi( argv[1] );
 		numGroups = atoi( argv[2] );
-		if(argv[3] == "test")
-		{
-			testmode = true;
-			rad  = atof( argv[4] );
-			xsec = atof( argv[5] );
-			
-		}
-		else
-			filename = argv[3];
+		filename = argv[3];
 	}
 	constants.setNumGroups(numGroups);
 	constants.setNumHis(nHist);
 	constants.lock();
 	
 
-	// TODO read this stuff from input
-	if(testmode)
-	{
-		Geometry geometry(rad, xsec);
-		vector<double> sourceGroups;
-		sourceGroups.push_back(1.0);
-		sourceGroups.push_back(0.0);
-		setSourceSphere psource = setSourceSphere(0.0, 0.0, 0.0, 0.0, rad, sourceGroups);
-	}
-	else
-	{
-		vector<double> sourceGroups;
-		sourceGroups.push_back(1.0);
-		sourceGroups.push_back(0.0);
-		setSourceSphere psource = setSourceSphere(0.0, 0.0, 0.0, 0.0, 3.0, sourceGroups);
-		Geometry geometry( filename, constants.getNumGroups(), true );
-	}
+		
+	Geometry geometry( filename, constants.getNumGroups(), true );
+	
 
 	T_ptr t = std::make_shared<Transport>(geometry , constants , nHist);
 
