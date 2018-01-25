@@ -23,5 +23,5 @@ $(exec) : $(main)
 	$(cc) $(cflags) $(objects) $< -o $@
 
 clean :
-	rm -f $(objects) $(exec)
-	@ cd $(testdir) && $(MAKE) clean
+	rm -f $(objects) $(exec) Main.o
+	@ cd  $(testdir) && $(MAKE) clean
