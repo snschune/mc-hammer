@@ -1,37 +1,68 @@
-#include <tuple>
+#include <cmath>
 #include <vector>
-#include <memory>
-#include <string>
+#include <tuple>
+#include <iostream>
+#include "Random.h"
+#include "Point.h"
+#include "Source.h"
 #include "Particle.h"
-#ifndef _SOURCE_HEADER_
-#define _SOURCE_HEADER_
-typedef std::shared_ptr<Particle> Part_ptr;
 
-class Source {
-private:
-protected:
-	unsigned int groupSample(std::vector<double> groupProbability);
-public:
-	virtual Part_ptr sample() = 0;
-};
+unsigned int Source::groupSample(std::vector<double> groupProbability) {
+	double groupRand = Urand(); //sample some cdf
+	for (unsigned int n = 0; n<groupProbability.size(); n++) {
+		if (groupProbability[n] > groupRand) {
+			return n;
+		}
+	}
+	return 999;
+	//return group;
+	//TODO: put in error code
+}
 
-class setSourcePoint : public Source {
-private: 
-   double x0,y0,z0;
-   std::vector <double> groupProbability;
-public:
-   setSourcePoint(double xSource, double ySource, double zSource, std::vector<double> groupProbSet) : x0(xSource), y0(ySource), z0(zSource), groupProbability(groupProbSet)  {};
-   Part_ptr sample();
-};
+Particle setSourcePoint::sample() {
+	double pi = acos(-1.);
 
-class setSourceSphere : public Source {
-private: 
-   double x0,y0,z0, radInner, radOuter;
-   std::vector <double> groupProbability;
-public:
-   setSourceSphere(double xSource, double ySource, double zSource, double radInner, double radOuter, std::vector<double> groupProbSet )
-   : x0(xSource), y0(ySource), z0(zSource), radInner(radInner), radOuter(radOuter), groupProbability(groupProbSet) {};
-   Part_ptr sample();
-};
+	auto group = groupSample(groupProbability);
 
-#endif
+	point pos = point(x0, y0, z0);
+
+	double mu = 2 * Urand() - 1;
+	double phi = 2 * pi*Urand();
+	double omegaX = mu;
+	double omegaY = sin(acos(mu))*cos(phi);
+	double omegaZ = sin(acos(mu))*sin(phi);
+	point dir = point(omegaX, omegaY, omegaZ);
+
+	Particle particleNew(pos, dir, 1, group);
+
+	return particleNew;
+}
+
+Particle setSourceSphere::sample() {
+	double pi = acos(-1.);
+	//Radius of the new particle
+	double radius = pow((pow(radInner, 3.0) + Urand()*(pow(radOuter, 3.0) - pow(radInner, 3.0))), (1. / 3.));
+	double mu = 2.0 * Urand() - 1.0;
+	double phi = 2.0 * pi*Urand();
+
+	double x = radius*sqrt(1 - pow(mu, 2.))*cos(phi) + x0;
+	double y = radius*sqrt(1 - pow(mu, 2.))*sin(phi) + y0;
+	double z = radius*mu + z0;
+
+	auto group = groupSample(groupProbability);
+	
+	point pos = point(x, y, z);
+
+	// direction sampling	
+	mu = 2 * Urand() - 1;
+	phi = 2 * pi*Urand();
+	double omegaX = mu;
+	double omegaY = sin(acos(mu))*cos(phi);
+	double omegaZ = sin(acos(mu))*sin(phi);
+	point dir = point(omegaX, omegaY, omegaZ);
+
+	Particle particleNew(pos, dir, 1, group);
+
+	return particleNew;
+
+}

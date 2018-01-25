@@ -1,88 +1,68 @@
 #include <cmath>
 #include <vector>
 #include <tuple>
+#include <iostream>
 #include "Random.h"
+#include "Point.h"
 #include "Source.h"
 #include "Particle.h"
 
-
-
-unsigned int Source::groupSample(std::vector<double> groupProbability)
-{
-	if(groupProbability.size() == 1)
-	{
-		return 1;
-	}
-	double rand = Urand();
-	double c = 0;
-	for(unsigned int i = 0; i < groupProbability.size(); i++)
-	{
-		c += groupProbability[i];
-		if(c > rand)
-		{
-			return (i+1);
+unsigned int Source::groupSample(std::vector<double> groupProbability) {
+	double groupRand = Urand(); //sample some cdf
+	for (unsigned int n = 0; n<groupProbability.size(); n++) {
+		if (groupProbability[n] > groupRand) {
+			return n;
 		}
 	}
+	return 999;
+	//return group;
+	//TODO: put in error code
 }
 
-Part_ptr setSourcePoint::sample(){
+Particle setSourcePoint::sample() {
 	double pi = acos(-1.);
-	
+
 	auto group = groupSample(groupProbability);
-	
-	point pos = point(x0,y0,z0);
-	
+
+	point pos = point(x0, y0, z0);
+
 	double mu = 2 * Urand() - 1;
 	double phi = 2 * pi*Urand();
-	double omegaX=mu;
-	double omegaY=sin(acos(mu))*cos(phi);
-	double omegaZ=sin(acos(mu))*sin(phi);
-	point dir = point(omegaX,omegaY,omegaZ);
-	
-     Part_ptr p = std::make_shared<Particle>(pos, dir, group );
+	double omegaX = mu;
+	double omegaY = sin(acos(mu))*cos(phi);
+	double omegaZ = sin(acos(mu))*sin(phi);
+	point dir = point(omegaX, omegaY, omegaZ);
 
-	return p;
+	Particle particleNew(pos, dir, 1, group);
+
+	return particleNew;
 }
 
-Part_ptr setSourceSphere::sample(){
+Particle setSourceSphere::sample() {
 	double pi = acos(-1.);
 	//Radius of the new particle
-	//double radius = pow((pow(radInner,3.0) + Urand()*(pow(radOuter,3.0)-pow(radInner,3.0))),(1. / 3.));
-	//double mu = 2.0 * Urand() - 1.0;
-	//double phi = 2.0 * pi*Urand();
+	double radius = pow((pow(radInner, 3.0) + Urand()*(pow(radOuter, 3.0) - pow(radInner, 3.0))), (1. / 3.));
+	double mu = 2.0 * Urand() - 1.0;
+	double phi = 2.0 * pi*Urand();
 
-	//double x=radius*sqrt(1-pow(mu,2.))*cos(phi)+x0;
-	//double y=radius*sqrt(1-pow(mu,2.))*sin(phi)+y0;
-	//double z=radius*mu+z0;
-	//std::cout << "mu: " << mu << " x: " << x << " y: " << y << " z: " << z << std::endl;
-	//std::cout << std::endl;
-	double x;
-	double y;
-	double z;
-	bool reject = true;
-	while(reject)
-	{
-		x = 2*Urand()*radOuter;
-		y = 2*Urand()*radOuter;
-		z = 2*Urand()*radOuter;
-		double dist = sqrt(x*x+y*y+z*z);
-		if(dist < radOuter)
-			reject = false;
-	}
+	double x = radius*sqrt(1 - pow(mu, 2.))*cos(phi) + x0;
+	double y = radius*sqrt(1 - pow(mu, 2.))*sin(phi) + y0;
+	double z = radius*mu + z0;
+
 	auto group = groupSample(groupProbability);
 	
-	point pos = point(x,y,z);
+	point pos = point(x, y, z);
 
-        // direction sampling	
-	double mu = 2 * Urand() - 1;
-	double phi = 2 * pi*Urand();
-	double omegaX=mu;
-	double omegaY=sin(acos(mu))*cos(phi);
-	double omegaZ=sin(acos(mu))*sin(phi);
-	point dir = point(omegaX,omegaY,omegaZ);
-	
-     Part_ptr p = std::make_shared<Particle>(pos, dir, group );
+	// direction sampling	
+	mu = 2 * Urand() - 1;
+	phi = 2 * pi*Urand();
+	double omegaX = mu;
+	double omegaY = sin(acos(mu))*cos(phi);
+	double omegaZ = sin(acos(mu))*sin(phi);
+	point dir = point(omegaX, omegaY, omegaZ);
 
-	return p;
+	Particle particleNew(pos, dir, 1, group);
+
+	return particleNew;
 
 }
