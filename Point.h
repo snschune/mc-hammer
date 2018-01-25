@@ -1,6 +1,11 @@
 #ifndef _POINT_HEADER_
 #define _POINT_HEADER_
 
+#include <memory>
+
+
+
+
 class point {
   public:
     double x, y, z;
@@ -9,7 +14,8 @@ class point {
     ~point() {};
 };
 
-class ray {
+
+/*class ray {
   public:
     ray( point p, point d );
     //ray( point p, point d ) : pos(p), dir(d) {};
@@ -18,5 +24,6 @@ class ray {
     point pos;
     point dir;
 };
+*/
 
 #endif

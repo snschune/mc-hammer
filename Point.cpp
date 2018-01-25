@@ -1,7 +1,7 @@
 #include <cmath>
 
 #include "Point.h"
-
+/*
 ray::ray( point p, point d ) : pos(p), dir(d) {
 
   // normalize direciton vector
@@ -9,3 +9,4 @@ ray::ray( point p, point d ) : pos(p), dir(d) {
   dir.x *= norm; dir.y *= norm; dir.z *= norm;
 
 }
+*/

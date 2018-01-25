@@ -5,24 +5,41 @@
 */
 
 #include "Particle.h"
+using std::cout;
+using std::endl;
 
 //constructors
-Particle::Particle(ray ri, int regioni, int gi): r(ri), region(regioni), group(gi), alive(1) {}
+Particle::Particle(point posi, point diri, int cellNumi, int gi): pos(posi), dir(diri), cellNum(cellNumi), group(gi), alive(1) 
+{
+	double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
+  	dir.x *= norm; dir.y *= norm; dir.z *= norm;
+}
+
+bool Particle::isAlive()
+{
+	return alive;
+}
+
+int Particle::getCell()
+{
+	return cellNum;
+}
 
 point Particle::getPos()
 {
-	return r.pos;
+	return pos;
 }
 
 point Particle::getDir()
 {
-	return r.dir;
+	return dir;
 }
 
-ray Particle::getray()
+/*ray Particle::getray()
 {
 	return r;
 }
+*/
 
 int Particle::getGroup()
 {
@@ -37,36 +54,36 @@ void Particle::setGroup(int g)
 
 void Particle::setPos(point posi)
 {
-	r.pos = posi;
+	setPos(posi.x,posi.y,posi.z);
 }
 
 void Particle::setDir(point diri)
 {
-	r.dir = diri;
+	setDir(diri.x,diri.y,diri.z);
 }
 
 void Particle::setPos(double xi, double yi, double zi)
 {
-	(r.pos).x = xi;
-	(r.pos).y = yi;
-	(r.pos).z = zi;
+	pos.x = xi;
+	pos.y = yi;
+	pos.z = zi;
 }
 
 void Particle::setDir(double ui, double vi, double wi)
 {
-	(r.dir).x = ui;
-	(r.dir).y = vi;
-	(r.dir).z = wi;
+	dir.x = ui;
+	dir.y = vi;
+	dir.z = wi;
+
+	double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
+  	dir.x *= norm; dir.y *= norm; dir.z *= norm;
 }
 
 void Particle::move(double dist)
 {
-	point d = r.dir;
-	point p = r.pos;
-
-	double xn = p.x + d.x*dist;
-	double yn = p.y + d.y*dist;
-	double zn = p.z + d.z*dist;
+	double xn = pos.x + dir.x*dist;
+	double yn = pos.y + dir.y*dist;
+	double zn = pos.z + dir.z*dist;
 	
 	setPos(xn,yn,zn);
 
@@ -77,4 +94,15 @@ void Particle::kill()
 {
 	alive = 0;
 	return;
+}
+
+void Particle::printState()
+{
+	cout << "Position: " << pos.x << " " << pos.y << " " << pos.z << endl;
+	cout << "Direction: " << dir.x << " " << dir.y << " " << dir.z << endl;
+	cout << "Group: " << group;
+	cout << " Cell: " << cellNum;
+	cout << " Alive: " << alive << endl;
+	cout << endl;
+	
 }
