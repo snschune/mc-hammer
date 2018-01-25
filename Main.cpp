@@ -1,19 +1,62 @@
+/*
+ Author: ESGonzalez
+ Date: 1/10/18
+ Req. Files: Material.h
+ */
+
+
 #include "Transport.h"
 #include <memory>
 
 typedef std::shared_ptr<Transport> T_ptr;
 
-int main()
+int main(int argc , char *argv[]) 
+//INPUT: numHis numGroups xsfilename 
+//numHis: number of histories (initialized to 1)
+//numGroups: number of groups we will be considering (initialized to 1)
+//xsfilename: the input file containing a list of the cross sections (initialized to Berp.xs)
+//entering "test" as the filename will start a test case for calculating leaking out of a sphere
+//TODO: 
+//tetfilename: the input file containing the information about the mesh
+//outputfilename
+//surface/cell information input file?
+//
+
 {
-	T_ptr t = std::make_shared<Transport>();
+	//tester variables
+	bool testmode = false;
+	double rad = 1.0;
+	double xsec = 1.0;
+	//
+
+	Constants constants;
+	int nHist = 0;
+	int numGroups = 1;
+	std::string filename = "Berp.xs";
 	
-	cout << "setting up..." << endl;
-	t->setup();
-	cout << "completed" << endl;
+	
+	if ( argc > 1 ) 
+	{
+		nHist = 	atoi( argv[1] );
+		numGroups = atoi( argv[2] );
+		filename = argv[3];
+	}
+	constants.setNumGroups(numGroups);
+	constants.setNumHis(nHist);
+	constants.lock();
+	
+
+		
+	Geometry geometry( filename, constants.getNumGroups(), true );
+	
+
+	T_ptr t = std::make_shared<Transport>(geometry , constants , nHist);
+
 	cout << "running transport..." << endl;
 	t->runTransport();
 	cout << "completed" << endl;
 	t->output();
-	
+
 	return 0;
 }
+

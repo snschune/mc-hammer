@@ -1,90 +1,122 @@
 /*
-	Author: Blake
-	Date: 11/8/17
-*/
+ Author: Blake
+ Date: 11/8/17
+ */
 
 #include "Cell.h"
 
 //constructor
-Cell::Cell(Mat_ptr mati, vector<Surf_ptr> surfacesi, vector<bool> insidei): mat(mati), inside(insidei)
+Cell::Cell(Mat_ptr mati, vector<pair<Surf_ptr, bool>> surfacePairsi ,  vector< Estimator_ptr > estimi): mat(mati) , estimators(estimi)
 {
-	for(unsigned int i = 0; i < surfacesi.size(); i++) //learn auto
-	{
-		surfaces.push_back(surfacesi[i]);
-	}
+    for(auto surfacePair: surfacePairsi) //learn auto
+    {
+        surfacePairs.push_back(surfacePair);
+    }
+
 }
 
 //functions
-vector<Surf_ptr> Cell::getSurfaces()
-{
-	return surfaces;
-}
-vector<bool> Cell::getInside()
-{
-	return inside;
-}
+//vector<Surf_ptr> Cell::getSurfaces()
+//{
+//    return surfaces;
+//}
+//vector<bool> Cell::getInside()
+//{
+//return inside;
+//}
+
 Mat_ptr Cell::getMat()
 {
-	return mat;
+    return mat;
 }
 
-double Cell::distToSurface(Part_ptr pi)
-{
-	Surf_ptr close_surface;
-	double dist;
-	tie(close_surface,dist) = closestSurface(pi);
-	return dist;
-}
+
 
 double Cell::distToCollision(Part_ptr pi)
 {
-	int group = pi->getGroup();
-	double total_xs = mat->getTotalXS(group);
-	double dist = -log(Urand())/total_xs;
-	return dist;
+    int group = pi->getGroup();
+    double total_xs = mat->getTotalXS(group);
+    double dist = -log(Urand())/total_xs;
+    return dist;
 }
 
-pair<Surf_ptr, double> Cell::closestSurface(Part_ptr p)
-{
-	int min_index = -1;
-	double min_val = std::numeric_limits<double>::max();
-	point pos = p->getPos();
-	point dir = p->getDir();
-	for(unsigned int i = 0; i < surfaces.size(); i++)
-	{
-		Surf_ptr cur_surf =  surfaces[i];
-		double dist = cur_surf->distance(pos,dir);
-		if(dist < min_val && dist > 0)
-		{
-			min_index = i;
-			min_val = dist;
-		}
-	}
-	if(min_index == -1)
-	{
-		std::cerr << "ERROR: NO SURFACE FOUND" << std::endl;
-		std::exit(1);
-	}
-	return make_pair(surfaces[min_index], min_val);
-}
+
 
 void Cell::processRxn(Part_ptr p, stack<Part_ptr> &pstack)
 //a collision has occurred, what happens now?
 {
-	mat->processRxn(p, pstack, p->getGroup());
-	return;
+    mat->processRxn(p, pstack, p->getGroup());
+    return;
 }
 
-bool Cell::amIHere(Part_ptr p)
+bool Cell::amIHere(point pos)
 {
-	point pos = p->getPos();
-	bool isWithin = true;
-	//cycle through each surface and if there is one that has a incorrect eval, you are not in this cell
-	for(int i = 0; i < surfaces.size(); i++)
-	{
-		bool test = (surfaces[i]->eval(pos) < 0);
-		isWithin = isWithin && (test == inside[i]);
-	}
-	return isWithin;
+    bool isWithin = true;
+    //cycle through each surface and if there is one that has a incorrect eval, you are not in this cell
+    for(auto surfacePair: surfacePairs)
+    {
+		bool posInSurface = (surfacePair.first->eval(pos) < 0); //is the position inside(true) or out of the surface
+		bool cellInSurface = surfacePair.second;
+        	bool match = posInSurface == cellInSurface;
+		isWithin = isWithin == match;
+    }
+    return isWithin;
 }
 
+pair<Surf_ptr, double> Cell::closestSurface(Part_ptr p)
+{
+	Surf_ptr min_surf = nullptr;
+	double min_val = std::numeric_limits<double>::max();
+	point pos = p->getPos();
+	point dir = p->getDir();
+	for(auto bound: surfacePairs)
+	{
+		Surf_ptr cur_surf =  bound.first;
+		double dist = cur_surf->distance(pos,dir);
+		if(dist < min_val && dist >  0)
+		{
+			min_surf = cur_surf;
+			min_val = dist;
+		}
+	}
+	if(min_surf == nullptr)
+	{
+		p->printState();
+		std::cerr << "ERROR: NO SURFACE FOUND" << std::endl;
+		std::exit(1);
+	}
+	return make_pair(min_surf, min_val);
+}
+
+double Cell::distToSurface(Part_ptr pi)
+{
+    Surf_ptr close_surface;
+    double dist;
+    tie(close_surface,dist) = closestSurface(pi);
+    return dist;
+}
+
+// Estimator interface
+
+void Cell::scoreTally(Part_ptr p , double xs) {
+    estimators.at( p->getGroup() - 1 )->score(xs);
+}
+
+void Cell::endTallyHist() {
+    for(auto est : estimators) {
+        est->endHist();
+    }
+}
+
+std::pair< double , double > Cell::getSingleGroupTally(int group) {
+    return( estimators.at(group - 1)->getScalarEstimator() );
+}
+
+std::vector< std::pair< double , double > > Cell::getTally() {
+    std::vector< std::pair< double , double > > tallies;
+    for( auto est : estimators) {
+        tallies.push_back( est->getScalarEstimator() );
+    }
+
+    return(tallies);
+}

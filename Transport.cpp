@@ -1,105 +1,133 @@
 /*
-	Author: Blake
-	Date: 11/21/17
-	Main File
-*/
+ Author: Blake
+ Date: 11/21/17
+ Main File
+ */
+
 
 #include "Transport.h"
 using std::make_shared;
 
-Transport::Transport() {}
 
+Transport::Transport(Geometry geoin, Constants consti , int numhis): geometry(geoin) , constants(consti) , numHis(numhis) {}
+
+/*
 void Transport::setup()
-{
-	//read input file if it existed
-	//plane at x = 0 and at x = 10 -> cell1
-		//material
-		vector<double> sigt;
-		vector<double> siga;
-		vector<double> sigsi;
-		vector<vector<double>> sigso;
-		sigt.push_back(1.0);
-		siga.push_back(0.5);
-		sigsi.push_back(0.5);
-		sigso.push_back(sigsi);
-		Mat_ptr mat1 = make_shared<Material>(1, sigt, siga, sigso);
-		
-		//bounds
-		Surf_ptr plane1 = make_shared<plane>("plane1", 0.0, 0.0, 1.0, 0.0);
-		Surf_ptr plane2 = make_shared<plane>("plane2", 0.0, 0.0, 1.0, 5.0);
-		vector<bool> inside1;
-		inside1.push_back(false); //false -> outside, true -> inside
-		inside1.push_back(true);
-		vector<Surf_ptr> cellSurfaces1;
-		cellSurfaces1.push_back(plane1);
-		cellSurfaces1.push_back(plane2);
-		
-		//create cell 
-		Cell_ptr cell1 = make_shared<Cell>(mat1, cellSurfaces1, inside1);
-		
-		//add to the geometry
-		mats.push_back(mat1);
-		surfaces.push_back(plane1);
-		surfaces.push_back(plane2);
-		cells.push_back(cell1);
-		
-		
-	//set up estimators
-	tallies.push_back(0);
-	tallies.push_back(0);
-	
-	//set # his
-	numHis = 100;
-	
-	constants.setNumGroups(1);
-	constants.lock();
-	constants.setNumGroups(2);
-}
+ {
+ 
+ //read input file if it existed
+ //plane at x = 0 and at x = 10 -> cell1
+ //material
+ vector<double> sigt;
+ vector<double> siga;
+ vector<double> sigsi;
+ vector<vector<double>> sigso;
+ sigt.push_back(1.0);
+ siga.push_back(0.5);
+ sigsi.push_back(0.5);
+ sigso.push_back(sigsi);
+ Material mat1 = Material(1, sigt, siga, sigso);
+ 
+ 
+ //bounds
+ Surf_ptr plane1 = plane1("plane1", 0.0, 0.0, 1.0, 0.0);
+ Surf_ptr plane2 = make_shared<plane>("plane2", 0.0, 0.0, 1.0, 5.0);
+ //vector<bool> inside1;
+ //inside1.push_back(false); //false -> outside, true -> inside
+ //inside1.push_back(true);
+ //vector<Surf_ptr> cellSurfaces1;
+ vector<pair<Surf_ptr, bool>> cellSurfaces1;
+ cellSurfaces1.push_back(plane1);
+ cellSurfaces1.push_back(plane2);
+ 
+ //create cell 
+ Cell_ptr cell1 = make_shared<Cell>(mat1, cellSurfaces1, inside1);
+ 
+ //add to the geometry
+ geometry.addMaterial(mat1);
+ surfaces.push_back(plane1);
+ surfaces.push_back(plane2);
+ cells.push_back(cell1);
+ 
+ 
+ 
+ 
+ }
+*/
+ 
+
 void Transport::runTransport()
 {
-	for(int i = 0; i < numHis ; i++)
-	{
+	double tally = 0;
+    for(int i = 0; i < numHis ; i++)
+    {
 		//sample src 
-		point pos = point(0,0,constants.tol());
-		point dir = point(0,0,1);
-		Part_ptr p_new = make_shared<Particle>(pos, dir, 1, 1);
+		Part_ptr p_new = geometry.sampleSource();
+		//Part_ptr p_new = make_shared<Particle>(point(0,0,0), point(0,0,1), 1);
+		Cell_ptr startingCell = geometry.whereAmI(p_new->getPos());
+		p_new->setCell(startingCell);
 		pstack.push(p_new);
-		
-		//run history
-		while(!pstack.empty())
-		{
-			Part_ptr p = pstack.top();
-			while(p->isAlive())
-			{
-				//cout << "Before: " << endl;
-				//p->printState();
-				int current_Cell = p->getCell() - 1;
-				double d2s = cells[current_Cell]->distToSurface(p);
-				double d2c = cells[current_Cell]->distToCollision(p);
-				if(d2s > d2c) //collision!
+          
+        //run history
+        while(!pstack.empty())
+        {
+	       Part_ptr p = pstack.top();
+            while(p->isAlive())
+            {
+			//p->printState();
+                Cell_ptr current_Cell = p->getCell();
+
+                double d2s = current_Cell->distToSurface(p);
+                double d2c = current_Cell->distToCollision(p);
+			//cout << "d2s: " << d2s << "  d2c: " << d2c << endl;
+                
+                if(d2s > d2c) //collision!
+                {
+                    //score collision tally in current cell
+                    current_Cell->scoreTally(p , current_Cell->getMat()->getTotalXS( p->getGroup() ) ); 
+                    tally++;
+                    p->move(d2c);
+                    current_Cell->processRxn(p, pstack);
+
+                }
+                else //hit surface
+                {
+
+                    p->move(d2s + 0.00000001);
+                    Cell_ptr newCell = geometry.whereAmI(p->getPos());
+				if(newCell == nullptr)
 				{
-					p->move(d2c);
-					cells[current_Cell]->processRxn(p, pstack);
-					if(!p->isAlive())
-						tallies[1]++;
+					p->kill();
 				}
-				else //hit surface
+				else
 				{
-					//cout << "pre escape " << cells[0]->amIHere(p) << endl;
-					p->move(d2s + constants.tol());
-					//cout << "escape " << cells[0]->amIHere(p) << endl;
-					p->kill(); //only 1 cell in this code
-					//p->printState();
-					tallies[0]++;
+					p->setCell(newCell);
 				}
-			}
-			pstack.pop();
-		}
-	}
+                }
+
+                //tell all estimators that the history had ended
+                for( auto cell : geometry.getCells() ) {
+                    cell->endTallyHist();
+                }
+            }
+            pstack.pop();
+        }
+    }
+	tally /= numHis;
+	cout << "tally " << tally << endl;
 }
 void Transport::output()
 {
-	cout << "Total Number of Histories: " << numHis << endl;
-	cout << "Total Number Absorbed: " << tallies[1] << endl;
-	cout << "Total Number Leaked: " << tallies[0] << endl; 
+    cout << "Total Number of Histories: " << numHis << endl;
+
+    int i = 0;
+    for( Cell_ptr cell : geometry.getCells() ) {
+        ++i;
+        std::cout << "Collision tally in cell " << i << std::endl;
+        for( int j = 1; j <= constants.getNumGroups(); ++j) {
+            std::cout << " group: " << j << ", tally = " << cell->getSingleGroupTally(j).first 
+                           << ", stddev = " << cell->getSingleGroupTally(j).second << std::endl;
+        }
+        cout << std::endl;
+    }
 }
