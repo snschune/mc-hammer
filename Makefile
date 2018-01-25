@@ -5,7 +5,7 @@ cflags  = -std=c++0x $(opt)
 testdir = Testing
 pwd     = $(shell pwd)
 
-main    = Transport.cpp
+main    = Main.cpp
 objects = $(patsubst %.cpp,%.o,$(filter-out $(main), $(wildcard *.cpp)))
 
 .PHONY : all test clean
