@@ -60,14 +60,14 @@ void Mesh::printTets()
     for(int i = 0; i<numTets; i++)
     {
         std::cout<<"Tet Number "<<i+1<<":"<<std::endl;
-        std::cout<<"Vertex 1: "<<tetVector[i].second->getVert1().x<<" "
-        <<tetVector[i].second->getVert1().y<<" "<<tetVector[i].second->getVert1().z<<std::endl;
-        std::cout<<"Vertex 2: "<<tetVector[i].second->getVert2().x<<" "
-        <<tetVector[i].second->getVert2().y<<" "<<tetVector[i].second->getVert2().z<<std::endl;
-        std::cout<<"Vertex 3: "<<tetVector[i].second->getVert3().x<<" "
-        <<tetVector[i].second->getVert3().y<<" "<<tetVector[i].second->getVert3().z<<std::endl;
-        std::cout<<"Vertex 4: "<<tetVector[i].second->getVert4().x<<" "
-        <<tetVector[i].second->getVert4().y<<" "<<tetVector[i].second->getVert4().z<<std::endl;
+        std::cout<<"Vertex 1: "<<tetVector[i].second->getVert1()[0]<<" "
+        <<tetVector[i].second->getVert1()[1]<<" "<<tetVector[i].second->getVert1()[2]<<std::endl;
+        std::cout<<"Vertex 2: "<<tetVector[i].second->getVert2()[0]<<" "
+        <<tetVector[i].second->getVert2()[1]<<" "<<tetVector[i].second->getVert2()[2]<<std::endl;
+        std::cout<<"Vertex 3: "<<tetVector[i].second->getVert3()[0]<<" "
+        <<tetVector[i].second->getVert3()[1]<<" "<<tetVector[i].second->getVert3()[2]<<std::endl;
+        std::cout<<"Vertex 4: "<<tetVector[i].second->getVert4()[0]<<" "
+        <<tetVector[i].second->getVert4()[1]<<" "<<tetVector[i].second->getVert4()[2]<<std::endl;
     }
 }
 
@@ -160,4 +160,18 @@ void readFile(std::string fileName, Mesh &Mesh)
         tetVector.push_back(newTet);
     }
     inFile.close();
+}
+
+std::shared_ptr<Tet> Mesh::whereAmI( point pos )
+{
+    std::shared_ptr<Tet> hereIAm = nullptr;
+    
+    for( auto tet : tetVector )
+    {
+        if ( tet.second->amIHere( pos ) == true )
+        {
+            hereIAm = tet.second;
+        }
+    }
+    return hereIAm;
 }
