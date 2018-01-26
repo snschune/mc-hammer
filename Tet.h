@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <iostream>
+#include <memory>
 #include "Point.h"
 
 //Tet Class includes 4 points which define a given tetrahedra

@@ -12,6 +12,7 @@
 #include "Tet.h"
 #include "Point.h"
 #include <vector>
+#include <memory>
 #include <utility>
 #include <iostream>
 #include <fstream>
