@@ -15,6 +15,7 @@
 #include <utility>
 #include <iostream>
 #include <fstream>
+#include <memory>
 
 //mesh class contains full vectors of all tets and vertices present
 
@@ -41,6 +42,7 @@ public:
     void printTets();
     void printVertices();
     void readFile();
+    std::shared_ptr<Tet> whereAmI( point pos );
     
 };
 
