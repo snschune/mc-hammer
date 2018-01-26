@@ -38,7 +38,7 @@ private:
 	vector< Cell_ptr >      cells;
 	vector< Surf_ptr >      surfaces;
 	vector< Mat_ptr >       materials;
-	Source_ptr		    source;
+	Source_ptr		        source;
 	void setup( std::string filename , int num_groups, bool loud );
 
 public:
@@ -49,6 +49,7 @@ public:
 
 	void addCell( Cell_ptr );
 	void addSurface( Surf_ptr );
+    void addMaterial( Mat_ptr );
 
 	vector< Cell_ptr > getCells() { return(cells); };
 	Part_ptr sampleSource() { return(source->sample()); };
@@ -58,4 +59,3 @@ public:
 };
 
 #endif
-
