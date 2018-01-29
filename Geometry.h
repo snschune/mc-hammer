@@ -49,6 +49,7 @@ public:
 
 	void addCell( Cell_ptr );
 	void addSurface( Surf_ptr );
+    void addMaterial( Mat_ptr );
 
 	vector< Cell_ptr > getCells() { return(cells); };
 	Part_ptr sampleSource() { return(source->sample()); };
@@ -58,4 +59,3 @@ public:
 };
 
 #endif
-

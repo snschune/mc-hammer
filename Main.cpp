@@ -1,10 +1,3 @@
-/*
- Author: ESGonzalez
- Date: 1/10/18
- Req. Files: Material.h
- */
-
-
 #include "Transport.h"
 #include <memory>
 
@@ -30,21 +23,21 @@ int main(int argc , char *argv[])
 	//
 
 	Constants constants;
-	int nHist = 0;
-	int numGroups = 1;
-	std::string filename = "Berp.xs";
+	int nHist = 1000;
+	int numGroups = 2;
+	std::string xsFilename = "Berp.xs";
 	
 	if ( argc > 1 ) 
 	{
 		nHist = 	atoi( argv[1] );
 		numGroups = atoi( argv[2] );
-		filename = argv[3];
+		xsFilename = argv[3];
 	}
 	constants.setNumGroups(numGroups);
 	constants.setNumHis(nHist);
 	constants.lock();
 	
-	Geometry geometry( filename, constants.getNumGroups(), true );
+	Geometry geometry( xsFilename, constants.getNumGroups(), true );
 	
 	T_ptr t = std::make_shared<Transport>(geometry , constants , nHist);
 
