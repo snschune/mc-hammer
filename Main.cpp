@@ -34,7 +34,6 @@ int main(int argc , char *argv[])
 	int numGroups = 1;
 	std::string filename = "Berp.xs";
 	
-	
 	if ( argc > 1 ) 
 	{
 		nHist = 	atoi( argv[1] );
@@ -45,11 +44,8 @@ int main(int argc , char *argv[])
 	constants.setNumHis(nHist);
 	constants.lock();
 	
-
-		
 	Geometry geometry( filename, constants.getNumGroups(), true );
 	
-
 	T_ptr t = std::make_shared<Transport>(geometry , constants , nHist);
 
 	cout << "running transport..." << endl;

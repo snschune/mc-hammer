@@ -168,8 +168,13 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 		surfaces.push_back(sphere2);
 
 
-		//create estimator TODO add input for estimators
-		// need to input a new vector of a shared pointer to an estimator (one for each group) to the cell
+		
+        //TODO Estimators live in Geometry. Each time an estimator is created, it's pushed into a vector 
+        // of its estimator category in geometry, and whatever geometric object it belongs to gets a pointer to it
+        // Loop over each cell, surface, tet, mesh element, etc. with an estimator, and then loop over num_groups to initialize estimators
+        // 
+        //
+        //Below is a temporary measure for a simple 2 cell problem:
 		//
 		// Generate a Collision estimator for each group
 		vector< Estimator_ptr > estimators1;
