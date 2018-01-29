@@ -9,20 +9,20 @@
 
 unsigned int Source::groupSample(std::vector<double> groupProbability)
 {
-	if(groupProbability.size() == 1)
-	{
-		return 1;
-	}
-	double rand = Urand();
-	double c = 0;
-	for(unsigned int i = 0; i < groupProbability.size(); i++)
-	{
-		c += groupProbability[i];
-		if(c > rand)
-		{
-			return (i+1);
-		}
-	}
+	if(groupProbability.size() > 1) {
+	    double rand = Urand();
+	    double c = 0;
+	    for(unsigned int i = 0; i < groupProbability.size(); i++)
+	    {
+		    c += groupProbability[i];
+		    if(c > rand)
+		    {
+			    return (i+1);
+		    }
+	    }
+    }
+
+    return(1);
 }
 
 Part_ptr setSourcePoint::sample(){

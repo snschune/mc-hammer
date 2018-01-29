@@ -8,7 +8,7 @@
 #include "Transport.h"
 using std::make_shared;
 
-
+//constructor
 Transport::Transport(Geometry geoin, Constants consti , int numhis): geometry(geoin) , constants(consti) , numHis(numhis) {}
 
 /*
@@ -116,8 +116,7 @@ void Transport::runTransport()
 	tally /= numHis;
 	cout << "tally " << tally << endl;
 }
-void Transport::output()
-{
+void Transport::output() {
     cout << "Total Number of Histories: " << numHis << endl;
 
     int i = 0;
@@ -126,7 +125,7 @@ void Transport::output()
         std::cout << "Collision tally in cell " << i << std::endl;
         for( int j = 1; j <= constants.getNumGroups(); ++j) {
             std::cout << " group: " << j << ", tally = " << cell->getSingleGroupTally(j).first 
-                           << ", stddev = " << cell->getSingleGroupTally(j).second << std::endl;
+                      << ", stddev = " << cell->getSingleGroupTally(j).second << std::endl;
         }
         cout << std::endl;
     }

@@ -34,8 +34,7 @@ typedef std::shared_ptr<Particle> Part_ptr;
 typedef std::shared_ptr<Material> Mat_ptr;
 typedef std::shared_ptr<surface> Surf_ptr;
 
-class Transport
-{
+class Transport {
 private:
     int numHis;
     //vector<Mat_ptr> mats;
@@ -49,7 +48,9 @@ private:
 public:
     //constructor
     Transport( Geometry geoin , Constants consti , int numhis);
+   ~Transport() {}; 
         //to be altered once input is added
+    
     //functions
     //void setup();
     void runTransport();
