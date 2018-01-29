@@ -92,3 +92,28 @@ bool Tet::amIHere( point P )
     
     return isWithin;
 }
+
+// Estimator interface
+
+void Tet::scoreTally(Part_ptr p , double xs) {
+    estimators.at( p->getGroup() - 1 )->score(xs);
+}
+
+void Tet::endTallyHist() {
+    for(auto est : estimators) {
+        est->endHist();
+    }
+}
+
+std::pair< double , double > Tet::getSingleGroupTally(int group) {
+    return( estimators.at(group - 1)->getScalarEstimator() );
+}
+
+std::vector< std::pair< double , double > > Tet::getTally() {
+    std::vector< std::pair< double , double > > tallies;
+    for( auto est : estimators) {
+        tallies.push_back( est->getScalarEstimator() );
+    }
+
+    return(tallies);
+}

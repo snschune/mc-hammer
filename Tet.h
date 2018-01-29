@@ -14,37 +14,50 @@
 #include <memory>
 #include "Point.h"
 #include "Utility.h"
+#include "Estimator.h"
 
 //Tet Class includes 4 points which define a given tetrahedra
 //Tets have ID's associated with them.
 
+typedef std::shared_ptr<point>     point_ptr;
+typedef std::shared_ptr<Estimator> Estimator_ptr;
+typedef std::shared_ptr<Particle>  Part_ptr; 
 
-typedef std::shared_ptr<point> point_ptr;
+using std::vector;
 
 class Tet
 {
 private:
     int    TetID;
     double d0; //sign of the D0 deternminant (false = negative, true = positive)
-    std::vector< double > vert1;
-    std::vector< double > vert2;
-    std::vector< double > vert3;
-    std::vector< double > vert4;
+    vector< double > vert1;
+    vector< double > vert2;
+    vector< double > vert3;
+    vector< double > vert4;
+    
+    // Estimators
+    vector< Estimator_ptr > estimators;
     
 public:
     
     Tet(point p);
-    std::vector< double > getVert1();
-    std::vector< double > getVert2();
-    std::vector< double > getVert3();
-    std::vector< double > getVert4();
+    vector< double > getVert1();
+    vector< double > getVert2();
+    vector< double > getVert3();
+    vector< double > getVert4();
     void setVertices(std::shared_ptr<point> p1, std::shared_ptr<point> p2,
                      std::shared_ptr<point> p3, std::shared_ptr<point> p4);
     
     void addVertice(std::shared_ptr<point> inVertice);
     int getID();
-    std::vector< double > pointFourVec( point p );
+    vector< double > pointFourVec( point p );
     bool amIHere( point p );
+
+    // Estimator interface
+    void scoreTally(Part_ptr p , double xs); 
+    void endTallyHist();
+    std::pair< double , double > getSingleGroupTally(int group);
+    vector< std::pair< double , double > > getTally();
     
 };
 
