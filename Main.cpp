@@ -1,16 +1,17 @@
 #include "Transport.h"
+#include "Logo.h"
 #include <memory>
 
 typedef std::shared_ptr<Transport> T_ptr;
 
 int main(int argc , char *argv[]) 
-//INPUT: numHis numGroups xsfilename 
+//INPUT: numHis numGroups xsFileName meshFileName
 //numHis: number of histories (initialized to 1)
 //numGroups: number of groups we will be considering (initialized to 1)
-//xsfilename: the input file containing a list of the cross sections (initialized to Berp.xs)
+//xsFileName: the input file containing a list of the cross sections (initialized to Berp.xs)
+//meshFileName: the input file containing a list of tets (initialized to coarse.thrm)
 //entering "test" as the filename will start a test case for calculating leaking out of a sphere
-//TODO: 
-//tetfilename: the input file containing the information about the mesh
+//TODO:
 //outputfilename
 //surface/cell information input file?
 //
@@ -24,21 +25,31 @@ int main(int argc , char *argv[])
 
 	Constants constants;
 	int nHist = 1000;
-	int numGroups = 2;
-	std::string xsFilename = "Berp.xs";
+	int numGroups = 1;
+	std::string xsDirectory = "XSFiles/";
+	std::string xsFileName = "test";
+	std::string meshDirectory = "MeshFiles/";
+    std::string meshFileName = "coarse.thrm";
+    bool loud = true; // Print extended dialogue
+	
 	
 	if ( argc > 1 ) 
 	{
 		nHist = 	atoi( argv[1] );
 		numGroups = atoi( argv[2] );
-		xsFilename = argv[3];
+		xsFileName = argv[3];
+        meshFileName = argv[4];
 	}
+    
 	constants.setNumGroups(numGroups);
 	constants.setNumHis(nHist);
 	constants.lock();
-	
-	Geometry geometry( xsFilename, constants.getNumGroups(), true );
-	
+		
+    printLogo();
+    
+	Geometry geometry( xsDirectory+xsFileName, constants.getNumGroups(), loud );
+    Mesh mesh( meshDirectory+meshFileName, loud );
+
 	T_ptr t = std::make_shared<Transport>(geometry , constants , nHist);
 
 	cout << "running transport..." << endl;

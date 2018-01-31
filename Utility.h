@@ -19,6 +19,10 @@ bool sameSign( double a, double b );
 
 double dist(point p1 ,point p2); 
 
+// return largest positive root of quadratic equation with coefficients a, b, c
+// if both roots negative or complex, return a really big number
+double quadSolve( double a, double b, double c );
+
 template<class T>  T vecSum(std::vector<T> vec) {
     T sum = 0;
     for(auto v : vec) {
