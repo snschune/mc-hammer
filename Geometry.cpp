@@ -3,6 +3,7 @@
  Date: 01/08/18
  /////////// Start Revision Log ///////////
  ESG - 01/26/18: Pulled XS reading out of setup and into its own function
+ ESG - 01/31/18: Exit program if xs file failed to open
  /////////// End Revision Log ///////////
  */
 
@@ -155,6 +156,7 @@ void Geometry::readXS( std::string filename , int num_groups, bool loud )
     
     if ( xs_file.fail() ){ // make sure file opens
         std::cerr << "Error! XS file could not be opened." << std::endl;
+        exit(1);
     }
     
     if ( loud ) { // provide extra information if "loud" is true
@@ -172,6 +174,7 @@ void Geometry::readXS( std::string filename , int num_groups, bool loud )
     
     if ( num_materials == 0 ) { // make sure there are XS's to read
         std::cerr << "Error! No materials to read from file." << std::endl;
+        exit(1);
     }
     
     for (int i = 1; i < (num_materials + 1); ++i) {

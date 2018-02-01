@@ -21,6 +21,7 @@ void Mesh::readFile( std::string fileName, bool loud )
     
     if ( inFile.fail() ){ // make sure file opens
         std::cerr << "Error! Mesh file could not be opened." << std::endl;
+        exit(1);
     }
     
     if ( loud ) { // provide extra information if "loud" is true
