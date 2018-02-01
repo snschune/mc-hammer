@@ -39,7 +39,7 @@ Part_ptr setSourcePoint::sample(){
 	double omegaZ=sin(acos(mu))*sin(phi);
 	point dir = point(omegaX,omegaY,omegaZ);
 	
-     Part_ptr p = std::make_shared<Particle>(pos, dir, group );
+    Part_ptr p = std::make_shared<Particle>(pos, dir, group );
 
 	return p;
 }

@@ -196,3 +196,35 @@ Tet_ptr Mesh::whereAmI( point pos )
     }
     return hereIAm;
 }
+
+void Mesh::scoreTally(Part_ptr p, double xs) {
+    //what tet in the mesh did the particle collide in?
+    Tet_ptr t = whereAmI(p->getPos());
+
+    //score the tally in that tet
+    t->scoreTally(p , xs);
+
+}
+
+void Mesh::endTallyHist() {
+    for(auto tet : tetVector) {
+        tet.second->endTallyHist();
+    }
+}
+
+void Mesh::printMeshTallies(string fname) {
+    std::ofstream meshTallyStream;
+    meshTallyStream.open(fname);
+
+    meshTallyStream << "Mesh tally output" << std::endl;
+
+    for(auto tet : tetVector) {
+        meshTallyStream << tet.first;
+        for (auto tally : tet.second->getTally() ) {
+            meshTallyStream << "   " << tally.first;
+        }
+        meshTallyStream << std::endl;
+    }
+}
+
+
