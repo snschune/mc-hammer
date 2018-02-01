@@ -99,6 +99,7 @@ void Mesh::readFile( std::string fileName, bool loud )
         Tet newTet(p);
         newTet.setVertices(verticesVector[temp1-1].second,verticesVector[temp2-1].second,
                            verticesVector[temp3-1].second,verticesVector[temp4-1].second);
+        newTet.setID( tetIndex );
         
         Tet_ptr tempTet = std::make_shared<Tet>(newTet);
         

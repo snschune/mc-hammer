@@ -69,8 +69,8 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
         readXS( filename, num_groups, loud );
 
 		//surface bounbdaries
-		Surf_ptr sphere1 = make_shared<sphere>("sphere1", 0.0, 0.0, 0.0, 3.0);
-		Surf_ptr sphere2 = make_shared<sphere>("sphere2", 0.0, 0.0, 0.0, 10.0);
+		Surf_ptr sphere1 = make_shared<sphere>("sphere1", 0.0, 0.0, 0.0, 0.25);
+		Surf_ptr sphere2 = make_shared<sphere>("sphere2", 0.0, 0.0, 0.0, 0.5);
 		surfaces.push_back(sphere1);
 		surfaces.push_back(sphere2);
 
@@ -112,7 +112,7 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 		vector<double> sourceGroups;
 		sourceGroups.push_back(1.0);
 		sourceGroups.push_back(0.0);
-		source = make_shared<setSourceSphere>(0.0, 0.0, 0.0, 0.0, 3.0, sourceGroups);
+		source = make_shared<setSourceSphere>(0.0, 0.0, 0.0, 0.0, 0.25, sourceGroups);
 	}
     
 	

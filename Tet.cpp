@@ -48,6 +48,11 @@ void Tet::setVertices(std::shared_ptr<point> p1, std::shared_ptr<point> p2,
     }
 }
 
+void Tet::setID( int tetID )
+{
+    TetID = tetID;
+}
+
 int Tet::getID()
 {
     return TetID;
@@ -72,7 +77,7 @@ bool Tet::amIHere( point pos )
     bool isWithin = true;
     double tempDet;
 
-    // Compute determinant and break loop if sign is not the same as D0
+    // Compute determinant and return 'false' if sign is not the same as D0
     tempDet = fourDeterminant( testPoint, vert2, vert3, vert4 ); //D1
     if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
     
