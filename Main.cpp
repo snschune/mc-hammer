@@ -26,9 +26,7 @@ int main(int argc , char *argv[])
 	Constants constants;
 	int nHist = 1000;
 	int numGroups = 1;
-	std::string xsDirectory = "XSFiles/";
 	std::string xsFileName = "test";
-	std::string meshDirectory = "MeshFiles/";
     std::string meshFileName = "coarse.thrm";
     bool loud = true; // Print extended dialogue
 	
@@ -47,8 +45,8 @@ int main(int argc , char *argv[])
 		
     printLogo();
     
-	Geometry geometry( xsDirectory+xsFileName, constants.getNumGroups(), loud );
-    Mesh mesh( meshDirectory+meshFileName, loud );
+	Geometry geometry( xsFileName, constants.getNumGroups(), loud );
+    Mesh mesh( meshFileName, loud );
 
 	T_ptr t = std::make_shared<Transport>(geometry , constants , nHist);
 

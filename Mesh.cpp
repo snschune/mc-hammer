@@ -15,8 +15,9 @@ Mesh::Mesh( std::string fileName, bool loud )
 
 void Mesh::readFile( std::string fileName, bool loud )
 {
+    std::string meshDirectory = "MeshFiles/";
     std::ifstream inFile;
-    inFile.open(fileName);
+    inFile.open(meshDirectory+fileName);
     
     if ( inFile.fail() ){ // make sure file opens
         std::cerr << "Error! Mesh file could not be opened." << std::endl;
