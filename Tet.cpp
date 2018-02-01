@@ -10,7 +10,7 @@
 
 //default cstr initializes a tet of zero size
 
-Tet::Tet( point p ) {}
+Tet::Tet( point p , vector <Estimator_ptr> estimatorsin): estimators(estimatorsin) {}
 
 std::vector< double > Tet::getVert1()
 {
@@ -96,7 +96,9 @@ bool Tet::amIHere( point pos )
 // Estimator interface
 
 void Tet::scoreTally(Part_ptr p , double xs) {
+    std::cout << "        made it to tet! scoring tally in group: " << p->getGroup() << "/" << estimators.size() << std::endl;
     estimators.at( p->getGroup() - 1 )->score(xs);
+    std::cout << "        done" << std::endl;
 }
 
 void Tet::endTallyHist() {

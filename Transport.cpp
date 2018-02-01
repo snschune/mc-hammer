@@ -87,8 +87,10 @@ void Transport::runTransport()
                     current_Cell->scoreTally(p , current_Cell->getMat()->getTotalXS( p->getGroup() ) ); 
                     tally++;
                     
+                    std::cout << "About to score mesh tally " << std::endl;
                     // score mesh tally
                     mesh->scoreTally( p , current_Cell->getMat()->getTotalXS( p->getGroup() ) );
+                    std::cout << "We scored that mesh tally! " << std::endl;
 
                     p->move(d2c);
                     current_Cell->processRxn(p, pstack);
