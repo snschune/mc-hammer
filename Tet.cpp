@@ -96,7 +96,8 @@ bool Tet::amIHere( point pos )
 // Estimator interface
 
 void Tet::scoreTally(Part_ptr p , double xs) {
-    std::cout << "        made it to tet! scoring tally in group: " << p->getGroup() << "/" << estimators.size() << std::endl;
+    std::cout << "        made it to tet! scoring tally in group: ";
+    std::cout << "      " << p->getGroup() << "/" << estimators.size() << std::endl;
     estimators.at( p->getGroup() - 1 )->score(xs);
     std::cout << "        done" << std::endl;
 }

@@ -207,7 +207,12 @@ Tet_ptr Mesh::whereAmI( point pos )
 void Mesh::scoreTally(Part_ptr p, double xs) {
     //what tet in the mesh did the particle collide in?
     Tet_ptr t = whereAmI( p->getPos()) ;
-    std::cout << "    Figured out where we are!"  << std::endl;
+    if(t != nullptr) {
+        std::cout << "    Figured out where we are!"  << std::endl;
+    }
+    else{
+        std::cout << "WhereamI gave me a nullptr :( " << std::endl;
+    }
 
     //score the tally in that tet
     t->scoreTally(p , xs);
