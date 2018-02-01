@@ -9,7 +9,7 @@
 using std::make_shared;
 
 //constructor
-Transport::Transport(Geometry geoin, Constants consti , int numhis): geometry(geoin) , constants(consti) , numHis(numhis) {}
+Transport::Transport(Geometry geoin, Constants consti , int numhis , Mesh_ptr meshin): geometry(geoin) , constants(consti) , numHis(numhis) , mesh(meshin) {}
 
 /*
 void Transport::setup()
@@ -83,9 +83,13 @@ void Transport::runTransport()
                 
                 if(d2s > d2c) //collision!
                 {
-                    //score collision tally in current cell
+                    // score collision tally in current cell
                     current_Cell->scoreTally(p , current_Cell->getMat()->getTotalXS( p->getGroup() ) ); 
                     tally++;
+                    
+                    // score mesh tally
+                    mesh->scoreTally( p , current_Cell->getMat()->getTotalXS( p->getGroup() ) );
+
                     p->move(d2c);
                     current_Cell->processRxn(p, pstack);
 
@@ -109,6 +113,9 @@ void Transport::runTransport()
                 for( auto cell : geometry.getCells() ) {
                     cell->endTallyHist();
                 }
+
+                // end histories in the mesh
+                mesh->endTallyHist();
             }
             pstack.pop();
         }
@@ -129,4 +136,7 @@ void Transport::output() {
         }
         cout << std::endl;
     }
+
+    // print mesh estimators to file
+    mesh->printMeshTallies("mesh.out");
 }

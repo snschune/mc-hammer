@@ -3,6 +3,7 @@
 #include <memory>
 
 typedef std::shared_ptr<Transport> T_ptr;
+typedef std::shared_ptr<Mesh>      Mesh_ptr;
 
 int main(int argc , char *argv[]) 
 //INPUT: numHis numGroups xsFileName meshFileName
@@ -47,8 +48,9 @@ int main(int argc , char *argv[])
     
 	Geometry geometry( xsFileName, constants.getNumGroups(), loud );
     Mesh mesh( meshFileName, loud );
+    Mesh_ptr m = std::make_shared<Mesh>(mesh);
 
-	T_ptr t = std::make_shared<Transport>(geometry , constants , nHist);
+	T_ptr t = std::make_shared<Transport>(geometry , constants , nHist , m);
 
 	cout << "running transport..." << endl;
 	t->runTransport();
