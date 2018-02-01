@@ -146,11 +146,12 @@ void Geometry::readXS( std::string filename , int num_groups, bool loud )
     
     std::ifstream xs_file;
     std::string dummyLine;
+    std::string xsDirectory = "XSFiles/";
     int num_materials;
     int material_id = 0;
     double temp_xs;
     
-    xs_file.open( filename );
+    xs_file.open( xsDirectory+filename );
     
     if ( xs_file.fail() ){ // make sure file opens
         std::cerr << "Error! XS file could not be opened." << std::endl;
