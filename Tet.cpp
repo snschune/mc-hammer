@@ -71,24 +71,21 @@ bool Tet::amIHere( point pos )
     std::vector< double > testPoint = Tet::pointFourVec( pos );
     bool isWithin = false;
     double tempDet;
+
+    // Compute determinant and break loop if sign is not the same as D0
+    tempDet = fourDeterminant( testPoint, vert2, vert3, vert4 ); //D1
+    if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
     
-    while ( !isWithin ) // Algorithm to determine if a point is in a given tet
-    {
-        // Compute determinant and break loop if sign is not the same as D0
-        tempDet = fourDeterminant( testPoint, vert2, vert3, vert4 ); //D1
-        if (!sameSign(d0,tempDet)) { break; }
+    tempDet = fourDeterminant( vert1, testPoint, vert3, vert4 ); //D2
+    if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
         
-        tempDet = fourDeterminant( vert1, testPoint, vert3, vert4 ); //D2
-        if (!sameSign(d0,tempDet)) { break; }
+    tempDet = fourDeterminant( vert1, vert2, testPoint, vert4 ); //D3
+    if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
         
-        tempDet = fourDeterminant( vert1, vert2, testPoint, vert4 ); //D3
-        if (!sameSign(d0,tempDet)) { break; }
+    tempDet = fourDeterminant( vert1, vert2, vert3, testPoint ); //D4
+    if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
         
-        tempDet = fourDeterminant( vert1, vert2, vert3, testPoint ); //D4
-        if (!sameSign(d0,tempDet)) { break; }
-        
-        isWithin = true; // If none of the tests failed, the point is within the tet
-    }
+    isWithin = true; // If none of the tests failed, the point is within the tet
     
     return isWithin;
 }

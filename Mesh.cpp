@@ -194,6 +194,12 @@ Tet_ptr Mesh::whereAmI( point pos )
             hereIAm = tet.second;
         }
     }
+
+    if ( hereIAm = nullptr )
+    {
+        std::cout << "ERROR: Couldn't locate Tet." << std::endl;
+    }
+
     return hereIAm;
 }
 
