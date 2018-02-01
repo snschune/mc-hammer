@@ -40,7 +40,7 @@ void Tet::setVertices(std::shared_ptr<point> p1, std::shared_ptr<point> p2,
     vert3 = Tet::pointFourVec(*p3);
     vert4 = Tet::pointFourVec(*p4);
     
-    d0 = -1.0; //fourDeterminant( vert1, vert2, vert3, vert4 );
+    d0 = fourDeterminant( vert1, vert2, vert3, vert4 );
     
     if (d0 == 0.0)
     {
@@ -69,7 +69,7 @@ std::vector< double > Tet::pointFourVec( point pos )
 bool Tet::amIHere( point pos )
 {
     std::vector< double > testPoint = Tet::pointFourVec( pos );
-    bool isWithin = false;
+    bool isWithin = true;
     double tempDet;
 
     // Compute determinant and break loop if sign is not the same as D0
@@ -84,8 +84,6 @@ bool Tet::amIHere( point pos )
         
     tempDet = fourDeterminant( vert1, vert2, vert3, testPoint ); //D4
     if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
-        
-    isWithin = true; // If none of the tests failed, the point is within the tet
     
     return isWithin;
 }
