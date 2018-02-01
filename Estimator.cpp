@@ -70,8 +70,6 @@ std::pair < double , double > CollisionTally::getScalarEstimator() {
     // sum the tallies and square tallies over the histories
       sumFlux      = vecSum<double>( histTally    );
       sqrSumFlux   = vecSum<double>( histTallySqr );
-   // sumFlux      = vecSumd( histTally    );
-   // sqrSumFlux   = vecSumd( histTallySqr );
    
     // find the standard deviation of the estimator
     double stdDev = pow( ( sqrSumFlux - ( pow( sumFlux , 2 ) / nHist) ) / (nHist - 1) , 0.5);
