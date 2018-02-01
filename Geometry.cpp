@@ -1,14 +1,18 @@
 /*
  Author: ESGonzalez
- Date: 1/8/18
+ Date: 01/08/18
+ /////////// Start Revision Log ///////////
+ ESG - 01/26/18: Pulled XS reading out of setup and into its own function
+ ESG - 01/31/18: Exit program if xs file failed to open
+ /////////// End Revision Log ///////////
  */
 
 #include "Geometry.h"
+
 Geometry::Geometry( std::string filename , int num_groups, bool loud )
 {
     setup( filename, num_groups, loud );
 }
-
 
 void Geometry::setup( std::string filename , int num_groups, bool loud )
 {
@@ -61,117 +65,8 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
     }
     else
 	{
-        //////////////// START: READING XS FILE /////////////////////
-		std::vector< double >   fissionxs;
-		std::vector< double >   nu;
-		std::vector< double >   totalxs;
-		std::vector< vector< double > >   scatterxs;
-		std::vector< double > scatterxsTotal;
-		std::vector< double >   absorptionxs;
-
-		std::ifstream xs_file;
-		std::string dummyLine;
-		int num_materials;
-		int material_id = 0;
-		double temp_xs;
-
-		xs_file.open( filename );
-
-		if ( xs_file.fail() ){ // make sure file opens
-            std::cerr << "Error! File could not be opened." << std::endl;
-		}
-
-        if ( loud ) { // provide extra information if "loud" is true
-            std::cout << "Reading XS file..." << std::endl;
-		}
-
-		// first line of the file gives number of materials
-		xs_file >> num_materials;
-        
-        if ( loud ) { // provide extra information if "loud" is true
-            std::cout << "\tFilename: " << filename << std::endl;
-            std::cout << "\tNumber of energy groups: " << num_groups << std::endl;
-            std::cout << "\tNumber of materials: " << num_materials << std::endl;
-        }
-
-		if ( num_materials == 0 ) { // make sure there are XS's to read
-		   std::cout << "Error! No materials to read from file." << std::endl;
-		}
-        
-        for (int i = 1; i < (num_materials + 1); ++i) {
-            
-            // read XS's
-            xs_file >> material_id;
-            
-            // The first three lines of a block do not contain XS's
-            getline(xs_file,dummyLine); // material id line
-            getline(xs_file,dummyLine); // chi
-            getline(xs_file,dummyLine); // energy bounds
-		   
-            for (int j=0; j < num_groups; ++j) {
-                // fission
-                xs_file >> temp_xs;
-                fissionxs.push_back(temp_xs);
-            }
-		   
-            for (int j=0; j < num_groups; ++j) {
-                // nu
-                xs_file >> temp_xs;
-                nu.push_back(temp_xs);
-            }
-		   
-            for (int j=0; j < num_groups; ++j) {
-                // total
-                xs_file >> temp_xs;
-                totalxs.push_back(temp_xs);
-            }
-		   
-            for (int j=0; j < num_groups; ++j) {
-                double scatter_tot_xs = 0;
-                vector< double> tempxsVec;
-                for (int k=0; k < num_groups; ++k) {
-                    // scatter
-                    xs_file >> temp_xs;
-                    
-                    tempxsVec.push_back(temp_xs);
-                    scatter_tot_xs += temp_xs;
-                    
-                }
-                // absorption
-                scatterxs.push_back(tempxsVec);
-                tempxsVec.clear();
-                scatterxsTotal.push_back(scatter_tot_xs);
-                temp_xs = totalxs[j] - scatter_tot_xs;
-                absorptionxs.push_back(temp_xs);
-                
-            }
-		   
-            Mat_ptr temp_material = std::make_shared<Material>( num_groups, totalxs, absorptionxs, scatterxs, scatterxsTotal );
-		   
-            Geometry::addMaterial( temp_material );
-		   
-            // clear XS vectors
-            fissionxs.clear();
-            nu.clear();
-            totalxs.clear();
-            scatterxs.clear();
-            absorptionxs.clear();
-		   
-        }
-
-		// make sure all materials were read
-		if ( material_id != num_materials ) {
-		   std::cerr << "Error. Final material ID number does not match number of materials." << std::endl;
-		}
-
-        if ( loud ) { // provide extra information if "loud" is true
-            std::cout << "\n\tCross sections read in successfully.\n" << std::endl;
-		}
-
-		xs_file.close(); //close XS input file
-        
-        //////////////// END: READING XS FILE /////////////////////
-
+        //read in the cross sections from file
+        readXS( filename, num_groups, loud );
 
 		//surface bounbdaries
 		Surf_ptr sphere1 = make_shared<sphere>("sphere1", 0.0, 0.0, 0.0, 3.0);
@@ -180,13 +75,8 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 		surfaces.push_back(sphere2);
 
 
-		
-        //TODO Estimators live in Geometry. Each time an estimator is created, it's pushed into a vector 
-        // of its estimator category in geometry, and whatever geometric object it belongs to gets a pointer to it
-        // Loop over each cell, surface, tet, mesh element, etc. with an estimator, and then loop over num_groups to initialize estimators
-        // 
-        //
-        //Below is a temporary measure for a simple 2 cell problem:
+		//create estimator TODO add input for estimators
+		// need to input a new vector of a shared pointer to an estimator (one for each group) to the cell
 		//
 		// Generate a Collision estimator for each group
 		vector< Estimator_ptr > estimators1;
@@ -246,6 +136,119 @@ Cell_ptr Geometry::whereAmI( point pos )
 	return hereIAm;
 }
 
+void Geometry::readXS( std::string filename , int num_groups, bool loud )
+{
+    std::vector< double >   fissionxs;
+    std::vector< double >   nu;
+    std::vector< double >   totalxs;
+    std::vector< vector< double > >   scatterxs;
+    std::vector< double > scatterxsTotal;
+    std::vector< double >   absorptionxs;
+    
+    std::ifstream xs_file;
+    std::string dummyLine;
+    std::string xsDirectory = "XSFiles/";
+    int num_materials;
+    int material_id = 0;
+    double temp_xs;
+    
+    xs_file.open( xsDirectory+filename );
+    
+    if ( xs_file.fail() ){ // make sure file opens
+        std::cerr << "Error! XS file could not be opened." << std::endl;
+        exit(1);
+    }
+    
+    if ( loud ) { // provide extra information if "loud" is true
+        std::cout << "Reading XS file..." << std::endl;
+    }
+    
+    // first line of the file gives number of materials
+    xs_file >> num_materials;
+    
+    if ( loud ) { // provide extra information if "loud" is true
+        std::cout << "\tFilename: " << filename << std::endl;
+        std::cout << "\tNumber of energy groups: " << num_groups << std::endl;
+        std::cout << "\tNumber of materials: " << num_materials << std::endl;
+    }
+    
+    if ( num_materials == 0 ) { // make sure there are XS's to read
+        std::cerr << "Error! No materials to read from file." << std::endl;
+        exit(1);
+    }
+    
+    for (int i = 1; i < (num_materials + 1); ++i) {
+        
+        // read XS's
+        xs_file >> material_id;
+        
+        // The first three lines of a block do not contain XS's
+        getline(xs_file,dummyLine); // material id line
+        getline(xs_file,dummyLine); // chi
+        getline(xs_file,dummyLine); // energy bounds
+        
+        for (int j=0; j < num_groups; ++j) {
+            // fission
+            xs_file >> temp_xs;
+            fissionxs.push_back(temp_xs);
+        }
+        
+        for (int j=0; j < num_groups; ++j) {
+            // nu
+            xs_file >> temp_xs;
+            nu.push_back(temp_xs);
+        }
+        
+        for (int j=0; j < num_groups; ++j) {
+            // total
+            xs_file >> temp_xs;
+            totalxs.push_back(temp_xs);
+        }
+        
+        for (int j=0; j < num_groups; ++j) {
+            double scatter_tot_xs = 0;
+            vector< double> tempxsVec;
+            for (int k=0; k < num_groups; ++k) {
+                // scatter
+                xs_file >> temp_xs;
+                
+                tempxsVec.push_back(temp_xs);
+                scatter_tot_xs += temp_xs;
+                
+            }
+            // absorption
+            scatterxs.push_back(tempxsVec);
+            tempxsVec.clear();
+            scatterxsTotal.push_back(scatter_tot_xs);
+            temp_xs = totalxs[j] - scatter_tot_xs;
+            absorptionxs.push_back(temp_xs);
+            
+        }
+        
+        Mat_ptr temp_material = std::make_shared<Material>( num_groups, totalxs, absorptionxs, scatterxs, scatterxsTotal );
+        
+        Geometry::addMaterial( temp_material );
+        
+        // clear XS vectors
+        fissionxs.clear();
+        nu.clear();
+        totalxs.clear();
+        scatterxs.clear();
+        absorptionxs.clear();
+        
+    }
+    
+    // make sure all materials were read
+    if ( material_id != num_materials ) {
+        std::cerr << "Error. Final material ID number does not match number of materials." << std::endl;
+    }
+    
+    if ( loud ) { // provide extra information if "loud" is true
+        std::cout << "\n\tCross sections read in successfully.\n" << std::endl;
+    }
+    
+    xs_file.close(); //close XS input file
+}
 
 void Geometry::addCell(Cell_ptr newCell)
 {
@@ -261,7 +264,3 @@ void Geometry::addMaterial( Mat_ptr newMaterial)
 {
     materials.push_back(newMaterial);
 }
-
-
-
-

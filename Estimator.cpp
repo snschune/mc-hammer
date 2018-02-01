@@ -19,7 +19,7 @@
 //estimator functions
 void Estimator::endHist() {};
 void Estimator::score(double xs) {};
-std::pair < double , double > Estimator::getScalarEstimator() {};
+//std::pair < double , double > Estimator::getScalarEstimator() {};
 
 //functions
 void MeshTally::score(Part_ptr pi , Part_ptr pf ){
@@ -61,32 +61,32 @@ std::pair < double , double > CollisionTally::getScalarEstimator() {
 // This function returns the mean and std deviation in the number 
 // of collisions per history 
 
-  double sumFlux;
-  double sqrSumFlux;
-  double nHist = histTally.size();
-  std::pair < double , double >  fluxEstimator;
-  
-  if (nHist > 1) {
-    // sum the tallies and square tallies over the histories
-      sumFlux      = vecSum<double>( histTally    );
-      sqrSumFlux   = vecSum<double>( histTallySqr );
-   
-    // find the standard deviation of the estimator
-    double stdDev = pow( ( sqrSumFlux - ( pow( sumFlux , 2 ) / nHist) ) / (nHist - 1) , 0.5);
+    double sumFlux;
+    double sqrSumFlux;
+    double nHist = histTally.size();
+    std::pair < double , double >  fluxEstimator;
     
-    fluxEstimator.first  = sumFlux / nHist;
-    fluxEstimator.second = stdDev;
+    if (nHist > 1) {
+        // sum the tallies and square tallies over the histories
+        sumFlux      = vecSum < double > ( histTally    );
+        sqrSumFlux   = vecSum < double > ( histTallySqr );
 
-    return(fluxEstimator); 
-  }
-  else {
-    std::cout << "Not enough histories to calculate variance! Tallies unreliable." << std::endl;
-    
-    fluxEstimator.first  = 0.0;
-    fluxEstimator.second = 0.0;
-    
-    return(fluxEstimator); 
-  }
+        // find the standard deviation of the estimator
+        double stdDev = pow( ( sqrSumFlux - pow( sumFlux , 2 ) / nHist ) / (nHist - 1) , 0.5);
+
+        fluxEstimator.first  = sumFlux / nHist;
+        fluxEstimator.second = stdDev;
+
+        return(fluxEstimator); 
+    }
+    else {
+        std::cout << "Not enough histories to calculate variance! Tallies unreliable." << std::endl;
+        
+        fluxEstimator.first  = 0.0;
+        fluxEstimator.second = 0.0;
+        
+    }
+    return(fluxEstimator);
 };
 
 

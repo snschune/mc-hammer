@@ -16,33 +16,37 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <string>
 
 //mesh class contains full vectors of all tets and vertices present
 
+typedef std::shared_ptr<point> Point_ptr;
+typedef std::shared_ptr<Tet> Tet_ptr;
 
 class Mesh
 {
 private:
-    std::vector < std::pair<int,std::shared_ptr<point>> > verticesVector;
-    std::vector < std::pair<int,std::shared_ptr<Tet>> >  tetVector;
+    std::vector < std::pair<int,Point_ptr> > verticesVector;
+    std::vector < std::pair<int,Tet_ptr> >   tetVector;
     int numVertices;
     int numTets;
+    void readFile( std::string fileName, bool loud );
     
     
 public:
-    Mesh();
-    void addTet(std::pair<int,std::shared_ptr<Tet>> inTet);
-    void addVertice(std::pair<int,std::shared_ptr<point>> inVertice);
-    int getTetID(std::pair<int,std::shared_ptr<Tet>> inTet);
-    std::vector < std::pair<int,std::shared_ptr<point>> > getVerticesVector();
+    Mesh( std::string fileName, bool loud );
+    
+    void addTet(std::pair<int,Tet_ptr> inTet);
+    void addVertice(std::pair<int,Point_ptr> inVertice);
+    int getTetID(std::pair<int,Tet_ptr> inTet);
+    std::vector < std::pair<int,Point_ptr> > getVerticesVector();
     int getNumVertices();
     void setNumVertices(int inNumber);
     int getNumTets();
     void setNumTets(int inNumber);
     void printTets();
     void printVertices();
-    void readFile();
-    std::shared_ptr<Tet> whereAmI( point pos );
+    Tet_ptr whereAmI( point pos );
     
 };
 

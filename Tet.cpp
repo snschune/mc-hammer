@@ -53,22 +53,22 @@ int Tet::getID()
     return TetID;
 }
 
-std::vector< double > Tet::pointFourVec( point p )
+std::vector< double > Tet::pointFourVec( point pos )
 {
     // Takes a point and returns a vector (length 4) with a "1.0" appended
     std::vector< double > fourVec;
     
-    fourVec.push_back( p.x );
-    fourVec.push_back( p.y );
-    fourVec.push_back( p.z );
+    fourVec.push_back( pos.x );
+    fourVec.push_back( pos.y );
+    fourVec.push_back( pos.z );
     fourVec.push_back( 1.0 );
     
     return fourVec;
 }
 
-bool Tet::amIHere( point P )
+bool Tet::amIHere( point pos )
 {
-    std::vector< double > testPoint = Tet::pointFourVec( P );
+    std::vector< double > testPoint = Tet::pointFourVec( pos );
     bool isWithin = false;
     double tempDet;
     

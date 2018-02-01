@@ -22,6 +22,8 @@
 #include "Constants.h"
 #include "Geometry.h"
 #include "Source.h"
+#include "Mesh.h"
+#include "Tet.h"
 
 using std::vector;
 using std::stack;

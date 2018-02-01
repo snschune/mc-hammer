@@ -1,8 +1,6 @@
 #include <cmath>
 #include <limits>
 
-#include "Point.h"
-#include "QuadSolver.h"
 #include "Surface.h"
 
 double plane::eval( point p ) {
@@ -28,6 +26,6 @@ double sphere::distance( point p, point u ) {
     double b = 2.0 * ( q.x * u.x  +  q.y * u.y  +  q.z * u.z);
     double c = eval( p );
     
-    return quad_solve( 1.0, b, c );
+    return quadSolve( 1.0, b, c );
     
 }

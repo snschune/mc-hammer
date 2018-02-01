@@ -50,8 +50,8 @@ public:
     
     void addVertice(std::shared_ptr<point> inVertice);
     int getID();
-    vector< double > pointFourVec( point p );
-    bool amIHere( point p );
+    vector< double > pointFourVec( point pos );
+    bool amIHere( point pos );
 
     // Estimator interface
     void scoreTally(Part_ptr p , double xs); 

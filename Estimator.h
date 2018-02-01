@@ -34,6 +34,7 @@ class Estimator {
     double               currentHistTally;
     vector < double >    histTally;
     vector < double >    histTallySqr;
+    std::pair < double , double >  fluxEstimator;
 
   public:
      Estimator() {};
@@ -47,7 +48,7 @@ class Estimator {
     // estimator methods
     virtual void endHist();
     virtual void score(double xs);
-    virtual std::pair < double , double > getScalarEstimator();
+    virtual std::pair < double , double > getScalarEstimator() { return( fluxEstimator ); };
 
 };
 

@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Point.h"
+#include "Utility.h"
 
 class surface {
 private:
