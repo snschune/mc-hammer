@@ -32,4 +32,14 @@ template<class T>  T vecSum(std::vector<T> vec) {
     return(sum);
 }
 
+template<class T>  T vecMean(std::vector<T> vec) {
+    T sum = 0;
+    int i = 0;
+    for(auto v : vec) {
+        sum += v;
+        ++i;
+    }
+    return(sum/i);
+}
+
 #endif
