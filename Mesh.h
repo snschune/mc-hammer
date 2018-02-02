@@ -11,6 +11,7 @@
 
 #include "Tet.h"
 #include "Point.h"
+#include "Utility.h"
 #include <vector>
 #include <utility>
 #include <iostream>

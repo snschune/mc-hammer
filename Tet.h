@@ -53,8 +53,8 @@ public:
     void setID( int tetID );
 
     int getID();
-    vector< double > pointFourVec( point pos );
-    bool amIHere( point pos );
+    
+    bool amIHere( std::vector< double > testPoint );
 
     // Estimator interface
     void scoreTally(Part_ptr p , double xs); 

@@ -76,3 +76,16 @@ double quadSolve( double a, double b, double c ) {
     }
     
 }
+
+std::vector< double > pointFourVec( point pos )
+{
+    // Takes a point and returns a vector (length 4) with a "1.0" appended
+    std::vector< double > fourVec;
+    
+    fourVec.push_back( pos.x );
+    fourVec.push_back( pos.y );
+    fourVec.push_back( pos.z );
+    fourVec.push_back( 1.0 );
+    
+    return fourVec;
+}

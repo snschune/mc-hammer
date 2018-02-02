@@ -35,10 +35,10 @@ std::vector< double > Tet::getVert4()
 void Tet::setVertices(std::shared_ptr<point> p1, std::shared_ptr<point> p2,
                       std::shared_ptr<point> p3, std::shared_ptr<point> p4)
 {
-    vert1 = Tet::pointFourVec(*p1);
-    vert2 = Tet::pointFourVec(*p2);
-    vert3 = Tet::pointFourVec(*p3);
-    vert4 = Tet::pointFourVec(*p4);
+    vert1 = pointFourVec(*p1);
+    vert2 = pointFourVec(*p2);
+    vert3 = pointFourVec(*p3);
+    vert4 = pointFourVec(*p4);
     
     d0 = fourDeterminant( vert1, vert2, vert3, vert4 );
     
@@ -58,22 +58,8 @@ int Tet::getID()
     return TetID;
 }
 
-std::vector< double > Tet::pointFourVec( point pos )
+bool Tet::amIHere( std::vector< double > testPoint )
 {
-    // Takes a point and returns a vector (length 4) with a "1.0" appended
-    std::vector< double > fourVec;
-    
-    fourVec.push_back( pos.x );
-    fourVec.push_back( pos.y );
-    fourVec.push_back( pos.z );
-    fourVec.push_back( 1.0 );
-    
-    return fourVec;
-}
-
-bool Tet::amIHere( point pos )
-{
-    std::vector< double > testPoint = Tet::pointFourVec( pos );
     bool isWithin = true;
     double tempDet;
 

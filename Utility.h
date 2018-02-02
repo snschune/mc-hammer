@@ -24,6 +24,8 @@ double dist(point p1 ,point p2);
 // if both roots negative or complex, return a really big number
 double quadSolve( double a, double b, double c );
 
+std::vector< double > pointFourVec( point pos );
+
 template<class T>  T vecSum(std::vector<T> vec) {
     T sum = 0;
     for(auto v : vec) {

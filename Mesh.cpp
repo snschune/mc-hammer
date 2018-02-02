@@ -193,10 +193,12 @@ void Mesh::printVertices()
 Tet_ptr Mesh::whereAmI( point pos )
 {
     Tet_ptr hereIAm = nullptr;
+
+    std::vector< double > testPoint = pointFourVec( pos );
     
     for( auto tet : tetVector )
     {
-        if ( tet.second->amIHere( pos ) == true )
+        if ( tet.second->amIHere( testPoint ) == true )
         {
             hereIAm = tet.second;
         }
