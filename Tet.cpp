@@ -10,7 +10,7 @@
 
 //default cstr initializes a tet of zero size
 
-Tet::Tet( point p ) {}
+Tet::Tet( point p , vector <Estimator_ptr> estimatorsin): estimators(estimatorsin) {}
 
 std::vector< double > Tet::getVert1()
 {
@@ -40,12 +40,17 @@ void Tet::setVertices(std::shared_ptr<point> p1, std::shared_ptr<point> p2,
     vert3 = Tet::pointFourVec(*p3);
     vert4 = Tet::pointFourVec(*p4);
     
-    d0 = -1.0; //fourDeterminant( vert1, vert2, vert3, vert4 );
+    d0 = fourDeterminant( vert1, vert2, vert3, vert4 );
     
     if (d0 == 0.0)
     {
         std::cout << "ERROR: The verticies for tet " << Tet::getID() << "are co-planar." << std::endl;
     }
+}
+
+void Tet::setID( int tetID )
+{
+    TetID = tetID;
 }
 
 int Tet::getID()
@@ -69,26 +74,21 @@ std::vector< double > Tet::pointFourVec( point pos )
 bool Tet::amIHere( point pos )
 {
     std::vector< double > testPoint = Tet::pointFourVec( pos );
-    bool isWithin = false;
+    bool isWithin = true;
     double tempDet;
+
+    // Compute determinant and return 'false' if sign is not the same as D0
+    tempDet = fourDeterminant( testPoint, vert2, vert3, vert4 ); //D1
+    if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
     
-    while ( !isWithin ) // Algorithm to determine if a point is in a given tet
-    {
-        // Compute determinant and break loop if sign is not the same as D0
-        tempDet = fourDeterminant( testPoint, vert2, vert3, vert4 ); //D1
-        if (!sameSign(d0,tempDet)) { break; }
+    tempDet = fourDeterminant( vert1, testPoint, vert3, vert4 ); //D2
+    if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
         
-        tempDet = fourDeterminant( vert1, testPoint, vert3, vert4 ); //D2
-        if (!sameSign(d0,tempDet)) { break; }
+    tempDet = fourDeterminant( vert1, vert2, testPoint, vert4 ); //D3
+    if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
         
-        tempDet = fourDeterminant( vert1, vert2, testPoint, vert4 ); //D3
-        if (!sameSign(d0,tempDet)) { break; }
-        
-        tempDet = fourDeterminant( vert1, vert2, vert3, testPoint ); //D4
-        if (!sameSign(d0,tempDet)) { break; }
-        
-        isWithin = true; // If none of the tests failed, the point is within the tet
-    }
+    tempDet = fourDeterminant( vert1, vert2, vert3, testPoint ); //D4
+    if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
     
     return isWithin;
 }

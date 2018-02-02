@@ -14,6 +14,7 @@
 #include <utility>
 #include <tuple>
 #include <vector>
+#include <ctime>
 
 #include "Material.h"
 #include "Surface.h"
@@ -25,7 +26,7 @@
 using std::vector;
 using std::stack;
 using std::pair;
-using std::tie;
+using std::time;
 using std::cout;
 using std::endl;
 

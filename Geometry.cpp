@@ -77,6 +77,7 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 		Surf_ptr yplane2 = make_shared<plane> ("yplane2", 0.0, 1.0, 0.0, 40.0);
 		Surf_ptr zplane1 = make_shared<plane> ("zplane1", 0.0, 0.0, 1.0, -40.0);
 		Surf_ptr zplane2 = make_shared<plane> ("zplane2", 0.0, 0.0, 1.0, 40.0);
+
 		surfaces.push_back(sphere1);
 		surfaces.push_back(sphere2);
 		surfaces.push_back(xplane1);
@@ -148,6 +149,8 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 		sourceGroups.push_back(1.0);
 		sourceGroups.push_back(0.0);
 		source = make_shared<setSourceSphere>(0.0, 0.0, 0.0, 0.0, 1.4935, sourceGroups);
+
+
 	}
     
 	

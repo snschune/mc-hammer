@@ -1,8 +1,11 @@
 #include "Transport.h"
 #include "Logo.h"
 #include <memory>
+#include "HammerTime.h"
 
-typedef std::shared_ptr<Transport> T_ptr;
+typedef std::shared_ptr<Transport>   T_ptr;
+typedef std::shared_ptr<Mesh>        Mesh_ptr;
+typedef std::shared_ptr<HammerTime>  Time_ptr;
 
 int main(int argc , char *argv[]) 
 //INPUT: numHis numGroups xsFileName meshFileName
@@ -38,21 +41,27 @@ int main(int argc , char *argv[])
 		xsFileName = argv[3];
         meshFileName = argv[4];
 	}
-    
+
 	constants.setNumGroups(numGroups);
 	constants.setNumHis(nHist);
 	constants.lock();
 		
     printLogo();
     
+    // initialize geometry
 	Geometry geometry( xsFileName, constants.getNumGroups(), loud );
-    Mesh mesh( meshFileName, loud );
+    Mesh mesh( meshFileName, loud , constants);
+    Mesh_ptr m = std::make_shared<Mesh>(mesh);
+    
+    // initialize a timer
+    HammerTime time;
+    Time_ptr timer = std::make_shared<HammerTime>(time);
 
-	T_ptr t = std::make_shared<Transport>(geometry , constants , nHist);
+	T_ptr t = std::make_shared<Transport>(geometry , constants , nHist , m , timer);
 
 	cout << "running transport..." << endl;
 	t->runTransport();
-	cout << "completed" << endl;
+	cout << "Printing outputs..." << endl;
 	t->output();
 
 	return 0;

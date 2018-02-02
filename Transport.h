@@ -24,6 +24,7 @@
 #include "Source.h"
 #include "Mesh.h"
 #include "Tet.h"
+#include "HammerTime.h"
 
 using std::vector;
 using std::stack;
@@ -31,10 +32,12 @@ using std::cout;
 using std::endl;
 
 
-typedef std::shared_ptr<Cell> Cell_ptr;
-typedef std::shared_ptr<Particle> Part_ptr;
-typedef std::shared_ptr<Material> Mat_ptr;
-typedef std::shared_ptr<surface> Surf_ptr;
+typedef std::shared_ptr<Cell>       Cell_ptr;
+typedef std::shared_ptr<Particle>   Part_ptr;
+typedef std::shared_ptr<Material>   Mat_ptr;
+typedef std::shared_ptr<surface>    Surf_ptr;
+typedef std::shared_ptr<Mesh>       Mesh_ptr;
+typedef std::shared_ptr<HammerTime> Time_ptr;
 
 class Transport {
 private:
@@ -46,10 +49,12 @@ private:
     vector<double> tallies;
     Constants constants;
     Geometry geometry; 
+    Mesh_ptr mesh;
+    Time_ptr timer;
     
 public:
     //constructor
-    Transport( Geometry geoin , Constants consti , int numhis);
+    Transport(Geometry geoin , Constants consti , int numhis , Mesh_ptr meshin , Time_ptr timein);
    ~Transport() {}; 
         //to be altered once input is added
     

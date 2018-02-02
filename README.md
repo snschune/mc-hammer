@@ -16,3 +16,8 @@ This would correspond to 100,000 histories, 2 energy groups, xs_filname='Berp.xs
 *   Mesh file must be located in the directory "MeshFiles/"
 
 ## Cross section file formatted as:
+
+## Mesh file formatted as:
+
+## Output
+*  Output file is currently hardcoded as "mesh.out", located in the "OutFiles/" directory
