@@ -36,12 +36,6 @@ private:
     vector< double > vert3;
     vector< double > vert4;
 
-    // Constants
-    Constants constants;
-    
-    // Constants
-    Constants constants;
-
     // Estimators
     vector< Estimator_ptr > estimators;
     

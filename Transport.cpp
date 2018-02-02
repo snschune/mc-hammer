@@ -87,10 +87,10 @@ void Transport::runTransport()
                     current_Cell->scoreTally(p , current_Cell->getMat()->getTotalXS( p->getGroup() ) ); 
                     tally++;
                     
-                    std::cout << "About to score mesh tally " << std::endl;
+                    //std::cout << "About to score mesh tally " << std::endl;
                     // score mesh tally
                     mesh->scoreTally( p , current_Cell->getMat()->getTotalXS( p->getGroup() ) );
-                    std::cout << "We scored that mesh tally! " << std::endl;
+                    //std::cout << "We scored that mesh tally! " << std::endl;
 
                     p->move(d2c);
                     current_Cell->processRxn(p, pstack);
@@ -122,11 +122,15 @@ void Transport::runTransport()
             pstack.pop();
         }
     }
+
+    cout << std::endl << "Transport finished!" << std::endl;
+    cout << std::endl << "************************************************************************" << std::endl;
+    cout << "************************************************************************" << std::endl;
 	tally /= numHis;
-	cout << "tally " << tally << endl;
+	//cout << "tally " << tally << endl;
 }
 void Transport::output() {
-    cout << "Total Number of Histories: " << numHis << endl;
+    cout << std::endl << "Total Number of Histories: " << numHis << endl;
 
     int i = 0;
     for( Cell_ptr cell : geometry.getCells() ) {

@@ -206,24 +206,21 @@ Tet_ptr Mesh::whereAmI( point pos )
     {
         std::cout << "ERROR: Couldn't locate Tet." << std::endl;
     }
-
     return hereIAm;
 }
 
 void Mesh::scoreTally(Part_ptr p, double xs) {
     //what tet in the mesh did the particle collide in?
-    Tet_ptr t = whereAmI( p->getPos()) ;
+    Tet_ptr t = whereAmI( p->getPos() );
+
+    // make sure its a valid mesh element
     if(t != nullptr) {
-        std::cout << "    Figured out where we are!"  << std::endl;
+        //score the tally in that tet
+        t->scoreTally(p , xs);
     }
-    else{
-        std::cout << "WhereamI gave me a nullptr :( " << std::endl;
+    else {
+        std::cerr << "Particle could not be located in the Mesh, failed to score tally " << std::endl;
     }
-
-    //score the tally in that tet
-    t->scoreTally(p , xs);
-    std::cout << "    Scored the correct tet"  << std::endl;
-
 }
 
 void Mesh::endTallyHist() {
@@ -233,6 +230,8 @@ void Mesh::endTallyHist() {
 }
 
 void Mesh::printMeshTallies(std::string fname) {
+    std::cout << "Printing mesh tallies to " << fname << " ..." << std::endl;
+
     std::ofstream meshTallyStream;
     meshTallyStream.open(fname);
 

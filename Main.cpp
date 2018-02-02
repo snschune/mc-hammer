@@ -55,7 +55,7 @@ int main(int argc , char *argv[])
 
 	cout << "running transport..." << endl;
 	t->runTransport();
-	cout << "completed" << endl;
+	cout << "Printing outputs..." << endl;
 	t->output();
 
 	return 0;
