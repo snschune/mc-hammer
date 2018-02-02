@@ -35,6 +35,9 @@ private:
     vector< double > vert2;
     vector< double > vert3;
     vector< double > vert4;
+
+    // Constants
+    Constants constants;
     
     // Constants
     Constants constants;
@@ -53,6 +56,8 @@ public:
                      std::shared_ptr<point> p3, std::shared_ptr<point> p4);
     
     void addVertice(std::shared_ptr<point> inVertice);
+    void setID( int tetID );
+
     int getID();
     vector< double > pointFourVec( point pos );
     bool amIHere( point pos );

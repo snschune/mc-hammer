@@ -82,7 +82,6 @@ void Mesh::readFile( std::string fileName, bool loud )
     int k = 1575;
     
     //the indices temp1,2,3,4 correspond to elements of the vertices vector
-
     // initialize tets and push them into the mesh
     for (k = 0; k < 2881-1574; k++)
     {
@@ -106,6 +105,7 @@ void Mesh::readFile( std::string fileName, bool loud )
         Tet newTet(p , estimators);
         newTet.setVertices(verticesVector[temp1-1].second,verticesVector[temp2-1].second,
                            verticesVector[temp3-1].second,verticesVector[temp4-1].second);
+        newTet.setID( tetIndex );
         
         Tet_ptr tempTet = std::make_shared<Tet>(newTet);
         
@@ -201,6 +201,12 @@ Tet_ptr Mesh::whereAmI( point pos )
             hereIAm = tet.second;
         }
     }
+
+    if ( hereIAm == nullptr )
+    {
+        std::cout << "ERROR: Couldn't locate Tet." << std::endl;
+    }
+
     return hereIAm;
 }
 
@@ -226,7 +232,7 @@ void Mesh::endTallyHist() {
     }
 }
 
-void Mesh::printMeshTallies(string fname) {
+void Mesh::printMeshTallies(std::string fname) {
     std::ofstream meshTallyStream;
     meshTallyStream.open(fname);
 

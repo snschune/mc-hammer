@@ -20,8 +20,8 @@
 
 //mesh class contains full vectors of all tets and vertices present
 
-typedef std::shared_ptr<point>      Point_ptr;
-typedef std::shared_ptr<Tet>        Tet_ptr;
+typedef std::shared_ptr<point> Point_ptr;
+typedef std::shared_ptr<Tet> Tet_ptr;
 typedef std::shared_ptr<Estimator>  Estimator_ptr;
 
 class Mesh

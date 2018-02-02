@@ -140,5 +140,5 @@ void Transport::output() {
     }
 
     // print mesh estimators to file
-    mesh->printMeshTallies("mesh.out");
+    mesh->printMeshTallies("OutFiles/mesh.out");
 }
