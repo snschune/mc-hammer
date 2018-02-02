@@ -22,7 +22,7 @@ void HammerTime::endTimer( string key ) {
     else {
         // if the key exists, add a result
         clock_t time = clock() - currentTimes[key];
-        results[key].push_back( ((double)time) / CLOCKS_PER_SEC ); 
+        results[key].push_back(((double)time) / CLOCKS_PER_SEC ); 
     }
 }
 
@@ -43,6 +43,8 @@ std::map <string , double> HammerTime::getAvgResults() {
 }
 
 void HammerTime::printAvgResults(string fname) {
+    std::cout << std::endl << "Printing timing results to " << fname << ".." << std::endl;
+    
     // check if the average has already been calculated
     if(avgResults.empty() ) {
         // take the average of each result vector
@@ -55,10 +57,10 @@ void HammerTime::printAvgResults(string fname) {
     std::ofstream timeOut;
     timeOut.open( fname );
 
-    timeOut << "Timing results" << std::endl;
+    timeOut << "Timing results averaged over " <<  results["History"].size() << " histories:" << std::endl;
     
     for (const auto& any : avgResults) {
-        timeOut << any.first << "   " << any.second << std::endl;
+        timeOut << any.first << "   " << any.second << "  This block ran " << results[any.first].size() << " times." << std::endl;
     }
 }
 

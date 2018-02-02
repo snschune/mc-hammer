@@ -10,6 +10,7 @@
 #include <map>
 #include <vector>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
 

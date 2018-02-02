@@ -9,7 +9,8 @@
 using std::make_shared;
 
 //constructor
-Transport::Transport(Geometry geoin, Constants consti , int numhis , Mesh_ptr meshin): geometry(geoin) , constants(consti) , numHis(numhis) , mesh(meshin) {}
+Transport::Transport(Geometry geoin, Constants consti , int numhis , Mesh_ptr meshin , Time_ptr timein): geometry(geoin) , constants(consti) , 
+    numHis(numhis) , mesh(meshin) , timer(timein) {}
 
 /*
 void Transport::setup()
@@ -48,19 +49,17 @@ void Transport::setup()
  surfaces.push_back(plane1);
  surfaces.push_back(plane2);
  cells.push_back(cell1);
- 
- 
- 
- 
  }
 */
  
-
 void Transport::runTransport()
 {
 	double tally = 0;
     for(int i = 0; i < numHis ; i++)
     {
+        //start a timer
+        timer->startHist();
+
 		//sample src 
 		Part_ptr p_new = geometry.sampleSource();
 		//Part_ptr p_new = make_shared<Particle>(point(0,0,0), point(0,0,1), 1);
@@ -84,13 +83,17 @@ void Transport::runTransport()
                 if(d2s > d2c) //collision!
                 {
                     // score collision tally in current cell
+                    timer->startTimer("scoring collision tally");
                     current_Cell->scoreTally(p , current_Cell->getMat()->getTotalXS( p->getGroup() ) ); 
                     tally++;
-                    
+                    timer->endTimer("scoring collision tally");
+
+                    timer->startTimer("scoring mesh tally");
                     //std::cout << "About to score mesh tally " << std::endl;
                     // score mesh tally
                     mesh->scoreTally( p , current_Cell->getMat()->getTotalXS( p->getGroup() ) );
                     //std::cout << "We scored that mesh tally! " << std::endl;
+                    timer->endTimer("scoring mesh tally");
 
                     p->move(d2c);
                     current_Cell->processRxn(p, pstack);
@@ -111,7 +114,7 @@ void Transport::runTransport()
 				}
                 }
 
-                //tell all estimators that the history had ended
+                //tell all estimators that the history has ended
                 for( auto cell : geometry.getCells() ) {
                     cell->endTallyHist();
                 }
@@ -121,6 +124,8 @@ void Transport::runTransport()
             }
             pstack.pop();
         }
+        // end the history timer
+        timer->endHist();
     }
 
     cout << std::endl << "Transport finished!" << std::endl;
@@ -129,6 +134,7 @@ void Transport::runTransport()
 	tally /= numHis;
 	//cout << "tally " << tally << endl;
 }
+
 void Transport::output() {
     cout << std::endl << "Total Number of Histories: " << numHis << endl;
 
@@ -142,6 +148,9 @@ void Transport::output() {
         }
         cout << std::endl;
     }
+
+    // print timing information
+    timer->printAvgResults("OutFiles/time.out");
 
     // print mesh estimators to file
     mesh->printMeshTallies("OutFiles/mesh.out");
