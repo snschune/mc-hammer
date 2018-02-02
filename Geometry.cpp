@@ -9,12 +9,12 @@
 
 #include "Geometry.h"
 
-Geometry::Geometry( std::string filename , int num_groups, bool loud )
+Geometry::Geometry( std::string filename , int num_groups, int nhist, bool loud )
 {
-    setup( filename, num_groups, loud );
+    setup( filename, num_groups, nhist, loud );
 }
 
-void Geometry::setup( std::string filename , int num_groups, bool loud )
+void Geometry::setup( std::string filename , int num_groups, int nhist, bool loud )
 {
     if(filename == "test")
     {
@@ -45,7 +45,7 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 	
 		//collision tally
 		vector< Estimator_ptr > estimators;
-		Estimator_ptr e1 = make_shared<CollisionTally>();
+		Estimator_ptr e1 = make_shared<CollisionTally>(nhist);
 		estimators.push_back(e1);
 
 
@@ -94,15 +94,15 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 		// Generate a Collision estimator for each group
 		vector< Estimator_ptr > estimators1;
 		for (int i = 1; i <= num_groups; ++i) {
-		   estimators1.push_back( std::make_shared< CollisionTally >() );  
+		   estimators1.push_back( std::make_shared< CollisionTally >(nhist) );  
 		}
 		vector< Estimator_ptr > estimators2;
 		for (int i = 1; i <= num_groups; ++i) {
-		   estimators2.push_back( std::make_shared< CollisionTally >() );  
+		   estimators2.push_back( std::make_shared< CollisionTally >(nhist) );  
 		}
 		vector< Estimator_ptr > estimators3;
 		for (int i = 1; i <= num_groups; ++i) {
-		   estimators3.push_back( std::make_shared< CollisionTally >() );  
+		   estimators3.push_back( std::make_shared< CollisionTally >(nhist) );  
 		}
 	
 

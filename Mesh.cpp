@@ -99,7 +99,7 @@ void Mesh::readFile( std::string fileName, bool loud )
         // create a vector of estimators and fill it with collision tallies
         vector <Estimator_ptr> estimators;
         for(int i = 0; i < constants.getNumGroups(); ++i) {
-		   estimators.push_back( std::make_shared< CollisionTally >() );  
+		   estimators.push_back( std::make_shared< CollisionTally >(constants.getNumHis()) );  
         }
         
         Tet newTet(p , estimators);

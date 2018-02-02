@@ -39,11 +39,11 @@ private:
 	vector< Surf_ptr >      surfaces;
 	vector< Mat_ptr >       materials;
 	Source_ptr		        source;
-	void setup( std::string filename , int num_groups, bool loud );
+	void setup( std::string, int, int, bool);
     void readXS( std::string filename , int num_groups, bool loud );
 
 public:
-	Geometry( std::string filename , int num_groups, bool loud );
+	Geometry( std::string filename , int num_groups, int nhist, bool loud );
 	bool        amIHere( point, Cell_ptr);
 	Cell_ptr    whereAmI( point );
 
