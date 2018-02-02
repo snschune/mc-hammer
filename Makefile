@@ -1,6 +1,6 @@
 exec    = a.out
 cc      = g++
-opt     = -g 
+opt     = -g
 cflags  = -std=c++0x $(opt) 
 testdir = Testing
 pwd     = $(shell pwd)

@@ -69,10 +69,22 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
         readXS( filename, num_groups, loud );
 
 		//surface bounbdaries
-		Surf_ptr sphere1 = make_shared<sphere>("sphere1", 0.0, 0.0, 0.0, 3.0);
-		Surf_ptr sphere2 = make_shared<sphere>("sphere2", 0.0, 0.0, 0.0, 10.0);
+		Surf_ptr sphere1 = make_shared<sphere>("sphere1", 0.0, 0.0, 0.0, 1.4935);
+		Surf_ptr sphere2 = make_shared<sphere>("sphere2", 0.0, 0.0, 0.0, 4.4935);
+		Surf_ptr xplane1 = make_shared<plane> ("xplane1", 1.0, 0.0, 0.0, -40.0);
+		Surf_ptr xplane2 = make_shared<plane> ("xplane2", 1.0, 0.0, 0.0, 40.0);
+		Surf_ptr yplane1 = make_shared<plane> ("yplane1", 0.0, 1.0, 0.0, -40.0);
+		Surf_ptr yplane2 = make_shared<plane> ("yplane2", 0.0, 1.0, 0.0, 40.0);
+		Surf_ptr zplane1 = make_shared<plane> ("zplane1", 0.0, 0.0, 1.0, -40.0);
+		Surf_ptr zplane2 = make_shared<plane> ("zplane2", 0.0, 0.0, 1.0, 40.0);
 		surfaces.push_back(sphere1);
 		surfaces.push_back(sphere2);
+		surfaces.push_back(xplane1);
+		surfaces.push_back(xplane2);
+		surfaces.push_back(yplane1);
+		surfaces.push_back(yplane2);
+		surfaces.push_back(zplane1);
+		surfaces.push_back(zplane2);
 
 
 		//create estimator TODO add input for estimators
@@ -86,6 +98,10 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 		vector< Estimator_ptr > estimators2;
 		for (int i = 1; i <= num_groups; ++i) {
 		   estimators2.push_back( std::make_shared< CollisionTally >() );  
+		}
+		vector< Estimator_ptr > estimators3;
+		for (int i = 1; i <= num_groups; ++i) {
+		   estimators3.push_back( std::make_shared< CollisionTally >() );  
 		}
 	
 
@@ -108,11 +124,30 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 		cells.push_back(cell2);
 		cell2->name = "cell 2";
 
+		pair< Surf_ptr, bool > surfpair3_1 (sphere2, false);
+		pair< Surf_ptr, bool > surfpair3_2 (xplane1, false);
+		pair< Surf_ptr, bool > surfpair3_3 (xplane2, true);
+		pair< Surf_ptr, bool > surfpair3_4 (yplane1, false);
+		pair< Surf_ptr, bool > surfpair3_5 (yplane2, true);
+		pair< Surf_ptr, bool > surfpair3_6 (zplane1, false);
+		pair< Surf_ptr, bool > surfpair3_7 (zplane2, true);
+		vector< pair< Surf_ptr, bool > > cellSurfpairs3;
+		cellSurfpairs3.push_back(surfpair3_1);
+		cellSurfpairs3.push_back(surfpair3_2);
+		cellSurfpairs3.push_back(surfpair3_3);
+		cellSurfpairs3.push_back(surfpair3_4);
+		cellSurfpairs3.push_back(surfpair3_5);
+		cellSurfpairs3.push_back(surfpair3_6);
+		cellSurfpairs3.push_back(surfpair3_7);
+		Cell_ptr cell3 = make_shared<Cell>(materials[2] , cellSurfpairs3  , estimators3 );
+		cells.push_back(cell3);
+		cell2->name = "cell 3";
+		
 		//create source
 		vector<double> sourceGroups;
 		sourceGroups.push_back(1.0);
 		sourceGroups.push_back(0.0);
-		source = make_shared<setSourceSphere>(0.0, 0.0, 0.0, 0.0, 3.0, sourceGroups);
+		source = make_shared<setSourceSphere>(0.0, 0.0, 0.0, 0.0, 1.4935, sourceGroups);
 	}
     
 	
