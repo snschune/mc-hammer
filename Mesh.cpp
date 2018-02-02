@@ -65,9 +65,7 @@ void Mesh::readFile( std::string fileName, bool loud )
         
     }
     
-    int j = 268;
-    
-    for(j = 268; j < 1575; j++)
+    for(int j = 0; j < numTets; j++)
     {
         //used to skip lines that we dont care about
         int wasteVariable1;
@@ -79,11 +77,9 @@ void Mesh::readFile( std::string fileName, bool loud )
     
     std::vector<Tet> tetVector;  //just used for test case, can comment out or delete if desired
     
-    int k = 1575;
-    
     //the indices temp1,2,3,4 correspond to elements of the vertices vector
     // initialize tets and push them into the mesh
-    for (k = 0; k < 2881-1574; k++)
+    for (int k = 0; k < numTets; k++)
     {
         int tetIndex;
         int temp1,temp2,temp3,temp4;
