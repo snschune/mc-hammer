@@ -55,7 +55,7 @@ void Mesh::readFile( std::string fileName, bool loud )
         Mesh::setNumTets(numTets);
         
         
-        Point_ptr tempPtr = std::make_shared<point>(point(xValue,yValue,zValue));
+        Point_ptr tempPtr = std::make_shared<point>(point(xValue*100,yValue*100,zValue*100));
         
         std::pair<int,Point_ptr> vertice;
         vertice = std::make_pair(idNumber,tempPtr);
@@ -99,7 +99,7 @@ void Mesh::readFile( std::string fileName, bool loud )
         // create a vector of estimators and fill it with collision tallies
         vector <Estimator_ptr> estimators;
         for(int i = 0; i < constants.getNumGroups(); ++i) {
-		   estimators.push_back( std::make_shared< CollisionTally >(constants.getNumHis()) );  
+		   estimators.push_back( std::make_shared< CollisionTally >() );  
         }
         
         Tet newTet(p , estimators);

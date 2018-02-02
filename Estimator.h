@@ -39,10 +39,10 @@ class Estimator {
 	
     std::pair < double , double >  fluxEstimator;
   protected:
-	int nHist;
+	unsigned long long nHist;
 
   public:
-     Estimator(int nhisti): nHist(nhisti), histTally(0), histTallySqr(0) {}; 
+     Estimator() { histTally = 0.0; histTallySqr = 0.0; nHist = 0; }; 
     ~Estimator() {};
     
     // set/gets
@@ -62,7 +62,7 @@ class MeshTally : public Estimator {
     vector < vector < vector < double > > > mesh;
 
   public:
-    MeshTally(int nHisti, vector<int> numBins): Estimator(nHisti) {};
+    MeshTally(vector<int> numBins): Estimator() {};
    ~MeshTally() {};
 
     void score(Part_ptr pi , Part_ptr pf );
@@ -74,7 +74,7 @@ class SurfaceTally : public Estimator {
     Surf_ptr surf;
 
   public:
-    SurfaceTally(int nHisti): Estimator(nHisti) {};
+    SurfaceTally(): Estimator() {};
    ~SurfaceTally() {};
     
     void score(Part_ptr pi , Part_ptr pf );
@@ -86,7 +86,7 @@ class CellTally : public Estimator {
     Cell_ptr   cell;
 
   public:
-    CellTally(int nHisti): Estimator(nHisti) {};
+    CellTally(): Estimator() {};
    ~CellTally() {};
 
     void score(Part_ptr pi , Part_ptr pf);
@@ -99,7 +99,7 @@ class CollisionTally : public Estimator {
     double    histTallySqr;
           
   public:
-    CollisionTally(int nHisti): Estimator(nHisti) ,  currentHistTally(0.0) {};
+    CollisionTally(): Estimator() ,  currentHistTally(0.0) {histTally = 0.0; histTallySqr = 0.0; };
    ~CollisionTally() {};
       
     // set/gets

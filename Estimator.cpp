@@ -56,6 +56,7 @@ void CollisionTally::endHist() {
   
   // set the current hist tally to 0
   currentHistTally = 0;
+  nHist++;
 };
 
         
@@ -74,8 +75,8 @@ std::pair < double , double > CollisionTally::getScalarEstimator() {
         //sqrSumFlux   = vecSum < double > ( histTallySqr );
 
         // find the standard deviation of the estimator
-        double stdDev = pow( ( histTallySqr - pow( histTally , 2 ) / nHist ) / (nHist - 1) , 0.5);
-
+        //double stdDev = pow( ( histTallySqr - pow( histTally , 2 ) / nHist ) / (nHist - 1) , 0.5);
+        double stdDev = sqrt( 1.0 / nHist * ( histTallySqr / nHist - pow(histTally/nHist, 2 ))); 
         fluxEstimator.first  = histTally / nHist;
         fluxEstimator.second = stdDev;
 

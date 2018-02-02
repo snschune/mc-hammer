@@ -113,17 +113,17 @@ void Transport::runTransport()
 					p->setCell(newCell);
 				}
                 }
-
-                //tell all estimators that the history has ended
-                for( auto cell : geometry.getCells() ) {
-                    cell->endTallyHist();
-                }
-
-                // end histories in the mesh
-                mesh->endTallyHist();
             }
             pstack.pop();
         }
+		//tell all estimators that the history has ended
+         for( auto cell : geometry.getCells() ) {
+		cell->endTallyHist();
+         }
+
+           // end histories in the mesh
+           mesh->endTallyHist();
+
         // end the history timer
         timer->endHist();
     }
