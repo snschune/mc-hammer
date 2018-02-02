@@ -10,7 +10,7 @@
 
 //default cstr initializes a tet of zero size
 
-Tet::Tet( point p ) {}
+Tet::Tet( point p , vector <Estimator_ptr> estimatorsin): estimators(estimatorsin) {}
 
 std::vector< double > Tet::getVert1()
 {

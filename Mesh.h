@@ -22,6 +22,7 @@
 
 typedef std::shared_ptr<point> Point_ptr;
 typedef std::shared_ptr<Tet> Tet_ptr;
+typedef std::shared_ptr<Estimator>  Estimator_ptr;
 
 class Mesh
 {
@@ -31,10 +32,11 @@ private:
     int numVertices;
     int numTets;
     void readFile( std::string fileName, bool loud );
+    Constants constants;
     
     
 public:
-    Mesh( std::string fileName, bool loud );
+    Mesh( std::string fileName, bool loud  , Constants constantsin);
     
     void addTet(std::pair<int,Tet_ptr> inTet);
     void addVertice(std::pair<int,Point_ptr> inVertice);

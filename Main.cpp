@@ -47,7 +47,7 @@ int main(int argc , char *argv[])
     printLogo();
     
 	Geometry geometry( xsFileName, constants.getNumGroups(), loud );
-    Mesh mesh( meshFileName, loud );
+    Mesh mesh( meshFileName, loud , constants);
     Mesh_ptr m = std::make_shared<Mesh>(mesh);
     
 

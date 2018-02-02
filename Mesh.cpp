@@ -8,7 +8,7 @@
 
 #include "Mesh.h"
 
-Mesh::Mesh( std::string fileName, bool loud )
+Mesh::Mesh( std::string fileName, bool loud , Constants constantsin): constants(constantsin)
 {
     readFile( fileName, loud );
 }
@@ -83,6 +83,7 @@ void Mesh::readFile( std::string fileName, bool loud )
     
     //the indices temp1,2,3,4 correspond to elements of the vertices vector
     
+    // initialize tets and push them into the mesh
     for (k = 0; k < 2881-1574; k++)
     {
         int tetIndex;
@@ -95,8 +96,14 @@ void Mesh::readFile( std::string fileName, bool loud )
         
         
         point p(0,0,0);  //our zero point for initalization
+
+        // create a vector of estimators and fill it with collision tallies
+        vector <Estimator_ptr> estimators;
+        for(int i = 0; i < constants.getNumGroups(); ++i) {
+        estimators.push_back( std::make_shared< CollisionTally >() );  
+        }
         
-        Tet newTet(p);
+        Tet newTet(p , estimators);
         newTet.setVertices(verticesVector[temp1-1].second,verticesVector[temp2-1].second,
                            verticesVector[temp3-1].second,verticesVector[temp4-1].second);
         newTet.setID( tetIndex );
@@ -219,7 +226,7 @@ void Mesh::endTallyHist() {
     }
 }
 
-void Mesh::printMeshTallies(string fname) {
+void Mesh::printMeshTallies(std::string fname) {
     std::ofstream meshTallyStream;
     meshTallyStream.open(fname);
 

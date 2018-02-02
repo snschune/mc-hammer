@@ -15,6 +15,7 @@
 #include "Point.h"
 #include "Utility.h"
 #include "Estimator.h"
+#include "Constants.h"
 
 //Tet Class includes 4 points which define a given tetrahedra
 //Tets have ID's associated with them.
@@ -34,13 +35,16 @@ private:
     vector< double > vert2;
     vector< double > vert3;
     vector< double > vert4;
+
+    // Constants
+    Constants constants;
     
     // Estimators
     vector< Estimator_ptr > estimators;
     
 public:
     
-    Tet(point p);
+    Tet(point p , vector<Estimator_ptr> estimatorsin);
     vector< double > getVert1();
     vector< double > getVert2();
     vector< double > getVert3();
