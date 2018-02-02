@@ -9,12 +9,12 @@
 
 #include "Geometry.h"
 
-Geometry::Geometry( std::string filename , int num_groups, bool loud )
+Geometry::Geometry( std::string filename , int num_groups, int nhist, bool loud )
 {
-    setup( filename, num_groups, loud );
+    setup( filename, num_groups, nhist, loud );
 }
 
-void Geometry::setup( std::string filename , int num_groups, bool loud )
+void Geometry::setup( std::string filename , int num_groups, int nhist, bool loud )
 {
     if(filename == "test")
     {
@@ -45,7 +45,7 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 	
 		//collision tally
 		vector< Estimator_ptr > estimators;
-		Estimator_ptr e1 = make_shared<CollisionTally>();
+		Estimator_ptr e1 = make_shared<CollisionTally>(nhist);
 		estimators.push_back(e1);
 
 
@@ -69,14 +69,14 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
         readXS( filename, num_groups, loud );
 
 		//surface bounbdaries
-		Surf_ptr sphere1 = make_shared<sphere>("sphere1", 0.0, 0.0, 0.0, 1.4935);
-		Surf_ptr sphere2 = make_shared<sphere>("sphere2", 0.0, 0.0, 0.0, 4.4935);
-		Surf_ptr xplane1 = make_shared<plane> ("xplane1", 1.0, 0.0, 0.0, -40.0);
-		Surf_ptr xplane2 = make_shared<plane> ("xplane2", 1.0, 0.0, 0.0, 40.0);
-		Surf_ptr yplane1 = make_shared<plane> ("yplane1", 0.0, 1.0, 0.0, -40.0);
-		Surf_ptr yplane2 = make_shared<plane> ("yplane2", 0.0, 1.0, 0.0, 40.0);
-		Surf_ptr zplane1 = make_shared<plane> ("zplane1", 0.0, 0.0, 1.0, -40.0);
-		Surf_ptr zplane2 = make_shared<plane> ("zplane2", 0.0, 0.0, 1.0, 40.0);
+		Surf_ptr sphere1 = make_shared<sphere>("sphere1", 0.0, 0.0, 0.0, 1.4935*0.0254);
+		Surf_ptr sphere2 = make_shared<sphere>("sphere2", 0.0, 0.0, 0.0, 4.4935*0.0254);
+		Surf_ptr xplane1 = make_shared<plane> ("xplane1", 1.0, 0.0, 0.0, -40.0*0.0254);
+		Surf_ptr xplane2 = make_shared<plane> ("xplane2", 1.0, 0.0, 0.0, 40.0*0.0254);
+		Surf_ptr yplane1 = make_shared<plane> ("yplane1", 0.0, 1.0, 0.0, -40.0*0.0254);
+		Surf_ptr yplane2 = make_shared<plane> ("yplane2", 0.0, 1.0, 0.0, 40.0*0.0254);
+		Surf_ptr zplane1 = make_shared<plane> ("zplane1", 0.0, 0.0, 1.0, -40.0*0.0254);
+		Surf_ptr zplane2 = make_shared<plane> ("zplane2", 0.0, 0.0, 1.0, 40.0*0.0254);
 
 		surfaces.push_back(sphere1);
 		surfaces.push_back(sphere2);
@@ -94,15 +94,15 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 		// Generate a Collision estimator for each group
 		vector< Estimator_ptr > estimators1;
 		for (int i = 1; i <= num_groups; ++i) {
-		   estimators1.push_back( std::make_shared< CollisionTally >() );  
+		   estimators1.push_back( std::make_shared< CollisionTally >(nhist) );  
 		}
 		vector< Estimator_ptr > estimators2;
 		for (int i = 1; i <= num_groups; ++i) {
-		   estimators2.push_back( std::make_shared< CollisionTally >() );  
+		   estimators2.push_back( std::make_shared< CollisionTally >(nhist) );  
 		}
 		vector< Estimator_ptr > estimators3;
 		for (int i = 1; i <= num_groups; ++i) {
-		   estimators3.push_back( std::make_shared< CollisionTally >() );  
+		   estimators3.push_back( std::make_shared< CollisionTally >(nhist) );  
 		}
 	
 
@@ -148,7 +148,7 @@ void Geometry::setup( std::string filename , int num_groups, bool loud )
 		vector<double> sourceGroups;
 		sourceGroups.push_back(1.0);
 		sourceGroups.push_back(0.0);
-		source = make_shared<setSourceSphere>(0.0, 0.0, 0.0, 0.0, 1.4935, sourceGroups);
+		source = make_shared<setSourceSphere>(0.0, 0.0, 0.0, 0.0, 1.4935*0.0254, sourceGroups);
 
 
 	}

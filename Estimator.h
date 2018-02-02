@@ -32,18 +32,23 @@ typedef std::shared_ptr<point>     Point_ptr;
 class Estimator {
   private:
     double               currentHistTally;
-    vector < double >    histTally;
-    vector < double >    histTallySqr;
+    //vector < double >    histTally;
+    //vector < double >    histTallySqr;
+	double histTally;
+	double histTallySqr;
+	
     std::pair < double , double >  fluxEstimator;
+  protected:
+	int nHist;
 
   public:
-     Estimator() {};
+     Estimator(int nhisti): nHist(nhisti), histTally(0), histTallySqr(0) {}; 
     ~Estimator() {};
     
     // set/gets
-    virtual double getCurrentHistTally()      { return( currentHistTally ); };
-    virtual vector <double> getHistTally()    { return( histTally        ); };
-    virtual vector <double> getHistTallySqr() { return( histTallySqr     ); };
+    virtual double getCurrentHistTally() { return( currentHistTally ); };
+    virtual double getHistTally()    	 { return( histTally        ); };
+    virtual double getHistTallySqr() 	 { return( histTallySqr     ); };
     
     // estimator methods
     virtual void endHist();
@@ -57,7 +62,7 @@ class MeshTally : public Estimator {
     vector < vector < vector < double > > > mesh;
 
   public:
-    MeshTally(vector<int> numBins): Estimator() {};
+    MeshTally(int nHisti, vector<int> numBins): Estimator(nHisti) {};
    ~MeshTally() {};
 
     void score(Part_ptr pi , Part_ptr pf );
@@ -69,7 +74,7 @@ class SurfaceTally : public Estimator {
     Surf_ptr surf;
 
   public:
-    SurfaceTally(): Estimator() {};
+    SurfaceTally(int nHisti): Estimator(nHisti) {};
    ~SurfaceTally() {};
     
     void score(Part_ptr pi , Part_ptr pf );
@@ -81,7 +86,7 @@ class CellTally : public Estimator {
     Cell_ptr   cell;
 
   public:
-    CellTally(): Estimator() {};
+    CellTally(int nHisti): Estimator(nHisti) {};
    ~CellTally() {};
 
     void score(Part_ptr pi , Part_ptr pf);
@@ -89,18 +94,18 @@ class CellTally : public Estimator {
 
 class CollisionTally : public Estimator {
   private:
-    double              currentHistTally;
-    vector< double >    histTally;
-    vector< double >    histTallySqr;
+    double    currentHistTally;
+    double    histTally;
+    double    histTallySqr;
           
   public:
-    CollisionTally(): Estimator() ,  currentHistTally(0.0) {};
+    CollisionTally(int nHisti): Estimator(nHisti) ,  currentHistTally(0.0) {};
    ~CollisionTally() {};
       
     // set/gets
-    double getCurrentHistTally()       { return( currentHistTally ); };
-    vector< double > getHistTally()    { return( histTally        ); };
-    vector< double > getHistTallySqr() { return( histTallySqr     ); };
+    double getCurrentHistTally()   { return( currentHistTally ); };
+    double getHistTally()    		{ return( histTally        ); };
+    double getHistTallySqr() 		{ return( histTallySqr     ); };
     
     // collision tally specific estimator methods
     void score(double xs);

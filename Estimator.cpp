@@ -49,8 +49,10 @@ void CollisionTally::endHist() {
   double square = pow( currentHistTally , 2 );
   
   // set the current history tally and square tally to their tracking vectors
-  histTally.push_back(     currentHistTally );
-  histTallySqr.push_back(  square           );
+  //histTally.push_back(     currentHistTally );
+  //histTallySqr.push_back(  square           );
+	histTally += currentHistTally;
+	histTallySqr += square;
   
   // set the current hist tally to 0
   currentHistTally = 0;
@@ -61,20 +63,20 @@ std::pair < double , double > CollisionTally::getScalarEstimator() {
 // This function returns the mean and std deviation in the number 
 // of collisions per history 
 
-    double sumFlux;
-    double sqrSumFlux;
-    double nHist = histTally.size();
+    //double sumFlux;
+    //double sqrSumFlux;
+    //double nHist = histTally.size();
     std::pair < double , double >  fluxEstimator;
     
     if (nHist > 1) {
         // sum the tallies and square tallies over the histories
-        sumFlux      = vecSum < double > ( histTally    );
-        sqrSumFlux   = vecSum < double > ( histTallySqr );
+        //sumFlux      = vecSum < double > ( histTally    );
+        //sqrSumFlux   = vecSum < double > ( histTallySqr );
 
         // find the standard deviation of the estimator
-        double stdDev = pow( ( sqrSumFlux - pow( sumFlux , 2 ) / nHist ) / (nHist - 1) , 0.5);
+        double stdDev = pow( ( histTallySqr - pow( histTally , 2 ) / nHist ) / (nHist - 1) , 0.5);
 
-        fluxEstimator.first  = sumFlux / nHist;
+        fluxEstimator.first  = histTally / nHist;
         fluxEstimator.second = stdDev;
 
         return(fluxEstimator); 
