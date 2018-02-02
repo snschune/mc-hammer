@@ -20,7 +20,6 @@ using std::vector;
 
 class HammerTime {
     // this class is for timeing various subroutines in transport
-    // it is initialized by passing it a vector of strings containing the names of functions to time
     // Each history, any function can be timed by calling start and end on either side of it
     // At the beginning and end of each history, startHist() and endHist() should be called, so as to calculate average history time
     // There are multiple functions to get or print the results of the timer
