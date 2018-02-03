@@ -29,7 +29,7 @@ class Mesh
 {
 private:
     std::vector < std::pair<int,Point_ptr> > verticesVector;
-    std::vector < std::pair<int,Tet_ptr> >   tetVector;
+    std::vector < Tet_ptr >   tetVector;
     int numVertices;
     int numTets;
     void readFile( std::string fileName, bool loud );
@@ -39,9 +39,9 @@ private:
 public:
     Mesh( std::string fileName, bool loud  , Constants constantsin);
     
-    void addTet(std::pair<int,Tet_ptr> inTet);
+    void addTet(Tet_ptr inTet);
     void addVertice(std::pair<int,Point_ptr> inVertice);
-    int getTetID(std::pair<int,Tet_ptr> inTet);
+    int getTetID(Tet_ptr inTet);
     std::vector < std::pair<int,Point_ptr> > getVerticesVector();
     int getNumVertices();
     void setNumVertices(int inNumber);

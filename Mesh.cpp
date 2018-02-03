@@ -87,7 +87,7 @@ void Mesh::readFile( std::string fileName, bool loud )
         inFile>>temp1>>temp2>>temp3>>temp4;
         
         
-        std::pair<int,Tet_ptr> tetToAdd;
+        Tet_ptr tetToAdd;
         
         
         point p(0,0,0);  //our zero point for initalization
@@ -105,10 +105,8 @@ void Mesh::readFile( std::string fileName, bool loud )
         
         Tet_ptr tempTet = std::make_shared<Tet>(newTet);
         
-        tetToAdd = std::make_pair(tetIndex,tempTet);
         
-        
-        Mesh::addTet(tetToAdd);
+        addTet(tempTet);
         tetVector.push_back(newTet);
     }
     
@@ -119,7 +117,7 @@ void Mesh::readFile( std::string fileName, bool loud )
     inFile.close();
 }
 
-void Mesh::addTet(std::pair<int,Tet_ptr> inTet)
+void Mesh::addTet(Tet_ptr inTet)
 {
     tetVector.push_back(inTet);
 }
@@ -129,9 +127,9 @@ void Mesh::addVertice(std::pair<int,Point_ptr> inVertice)
     verticesVector.push_back(inVertice);
 }
 
-int Mesh::getTetID(std::pair<int,Tet_ptr> inTet)
+int Mesh::getTetID(Tet_ptr inTet)
 {
-    return inTet.second->getID();
+    return inTet->getID();
 }
 
 std::vector < std::pair<int,Point_ptr> > Mesh::getVerticesVector()
@@ -165,14 +163,14 @@ void Mesh::printTets()
     for(int i = 0; i<numTets; i++)
     {
         std::cout<<"Tet Number "<<i+1<<":"<<std::endl;
-        std::cout<<"Vertex 1: "<<tetVector[i].second->getVert1()[0]<<" "
-        <<tetVector[i].second->getVert1()[1]<<" "<<tetVector[i].second->getVert1()[2]<<std::endl;
-        std::cout<<"Vertex 2: "<<tetVector[i].second->getVert2()[0]<<" "
-        <<tetVector[i].second->getVert2()[1]<<" "<<tetVector[i].second->getVert2()[2]<<std::endl;
-        std::cout<<"Vertex 3: "<<tetVector[i].second->getVert3()[0]<<" "
-        <<tetVector[i].second->getVert3()[1]<<" "<<tetVector[i].second->getVert3()[2]<<std::endl;
-        std::cout<<"Vertex 4: "<<tetVector[i].second->getVert4()[0]<<" "
-        <<tetVector[i].second->getVert4()[1]<<" "<<tetVector[i].second->getVert4()[2]<<std::endl;
+        std::cout<<"Vertex 1: "<<tetVector[i]->getVert1()[0]<<" "
+        <<tetVector[i]->getVert1()[1]<<" "<<tetVector[i]->getVert1()[2]<<std::endl;
+        std::cout<<"Vertex 2: "<<tetVector[i]->getVert2()[0]<<" "
+        <<tetVector[i]->getVert2()[1]<<" "<<tetVector[i]->getVert2()[2]<<std::endl;
+        std::cout<<"Vertex 3: "<<tetVector[i]->getVert3()[0]<<" "
+        <<tetVector[i]->getVert3()[1]<<" "<<tetVector[i]->getVert3()[2]<<std::endl;
+        std::cout<<"Vertex 4: "<<tetVector[i]->getVert4()[0]<<" "
+        <<tetVector[i]->getVert4()[1]<<" "<<tetVector[i]->getVert4()[2]<<std::endl;
     }
 }
 
@@ -194,9 +192,9 @@ Tet_ptr Mesh::whereAmI( point pos )
     
     for( auto tet : tetVector )
     {
-        if ( tet.second->amIHere( testPoint ) == true )
+        if ( tet->amIHere( testPoint ) == true )
         {
-            hereIAm = tet.second;
+            hereIAm = tet;
         }
     }
 
@@ -223,7 +221,7 @@ void Mesh::scoreTally(Part_ptr p, double xs) {
 
 void Mesh::endTallyHist() {
     for(auto tet : tetVector) {
-        tet.second->endTallyHist();
+        tet->endTallyHist();
     }
 }
 
@@ -236,8 +234,8 @@ void Mesh::printMeshTallies(std::string fname) {
     meshTallyStream << "Mesh tally output" << std::endl;
 
     for(auto tet : tetVector) {
-        meshTallyStream << tet.first;
-        for (auto tally : tet.second->getTally() ) {
+        meshTallyStream << tet->getID();
+        for (auto tally : tet->getTally() ) {
             meshTallyStream << "   " << tally.first;
         }
         meshTallyStream << std::endl;
