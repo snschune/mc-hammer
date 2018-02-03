@@ -1,4 +1,4 @@
 Timing results averaged over 1000 histories:
-History   0.00377  This block ran 1000 times.
-scoring collision tally   8.27815e-07  This block ran 12080 times.
-scoring mesh tally   0.000308775  This block ran 12080 times.
+History   0.01462  This block ran 1000 times.
+scoring collision tally   0  This block ran 1000 times.
+scoring mesh tally   0.00532  This block ran 1000 times.

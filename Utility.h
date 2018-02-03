@@ -13,8 +13,12 @@
 
 #include "Point.h"
 
-double fourDeterminant(std::vector< double > row1, std::vector< double > row2,
-                       std::vector< double > row3, std::vector< double > row4 );
+using std::vector;
+
+double fourDeterminant(const std::vector< double >& row1, const std::vector< double >& row2,
+                       const std::vector< double >& row3, const std::vector< double >& row4 );
+					   
+double threeDeterminant(const vector< double >& v1, const vector< double >& v2, const vector< double >& v3);
 
 bool sameSign( double a, double b );
 

@@ -55,7 +55,7 @@ void Mesh::readFile( std::string fileName, bool loud )
         Mesh::setNumTets(numTets);
         
         
-        Point_ptr tempPtr = std::make_shared<point>(point(xValue*100,yValue*100,zValue*100));
+        Point_ptr tempPtr = std::make_shared<point>(point(xValue-101.6,yValue-101.6,zValue-101.6));
         
         std::pair<int,Point_ptr> vertice;
         vertice = std::make_pair(idNumber,tempPtr);
@@ -202,7 +202,7 @@ Tet_ptr Mesh::whereAmI( point pos )
 
     if ( hereIAm == nullptr )
     {
-        std::cout << "ERROR: Couldn't locate Tet." << std::endl;
+       // std::cout << "ERROR: Couldn't locate Tet." << std::endl;
     }
     return hereIAm;
 }
@@ -210,7 +210,7 @@ Tet_ptr Mesh::whereAmI( point pos )
 void Mesh::scoreTally(Part_ptr p, double xs) {
     //what tet in the mesh did the particle collide in?
     Tet_ptr t = whereAmI( p->getPos() );
-
+	
     // make sure its a valid mesh element
     if(t != nullptr) {
         //score the tally in that tet

@@ -8,12 +8,7 @@
 
 using std::vector;
 
-double fourDeterminant(vector< double > v1, vector< double > v2, vector< double > v3, vector< double > v4) {
-    
-    if(v1.size() != 4 or v2.size() != 4 or v3.size() != 4 or v4.size() != 4) {
-        std::cerr << " Vectors in fourDeterminant must be of length 4!" << std::endl;
-        return(0);
-    }
+double fourDeterminant(const vector< double >& v1, const vector< double >& v2, const vector< double >& v3, const vector< double >& v4) {
     
     double det1 = v2[1] * (v3[2] * v4[3] - v3[3] * v4[2]) + v2[2] * (v3[3] * v4[1] - v3[1] * v4[3]) + v2[3] * (v3[1] * v4[2] - v3[2] * v4[1]);
     double det2 = v2[0] * (v3[2] * v4[3] - v3[3] * v4[2]) + v2[2] * (v3[3] * v4[0] - v3[0] * v4[3]) + v2[3] * (v3[0] * v4[2] - v3[2] * v4[0]);
@@ -24,6 +19,11 @@ double fourDeterminant(vector< double > v1, vector< double > v2, vector< double 
     return det_final;
 }
 
+double threeDeterminant(const vector< double >& v1, const vector< double >& v2, const vector< double >& v3)
+{
+	double det = v1[0] * (v2[1] * v3[2] - v2[2] * v3[1]) - v1[1] * (v2[0] * v3[2] - v2[2] * v3[0]) + v1[2] * (v2[0] * v3[1] - v2[1] * v3[0]);
+	return det;
+}
 
 double dist(point p1 , point p2) {
   return std::sqrt(

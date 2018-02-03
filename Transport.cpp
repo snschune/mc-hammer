@@ -97,7 +97,7 @@ void Transport::runTransport()
 
                     p->move(d2c);
                     current_Cell->processRxn(p, pstack);
-
+                    p->kill(); //TODO: make this not awful
                 }
                 else //hit surface
                 {
