@@ -56,11 +56,10 @@ void CollisionTally::endHist() {
   
   // set the current hist tally to 0
   currentHistTally = 0;
-  nHist++;
 };
 
         
-std::pair < double , double > CollisionTally::getScalarEstimator() {
+std::pair < double , double > CollisionTally::getScalarEstimator(unsigned long long nHist) {
 // This function returns the mean and std deviation in the number 
 // of collisions per history 
 

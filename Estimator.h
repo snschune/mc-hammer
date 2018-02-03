@@ -38,11 +38,9 @@ class Estimator {
 	double histTallySqr;
 	
     std::pair < double , double >  fluxEstimator;
-  protected:
-	unsigned long long nHist;
 
   public:
-     Estimator() { histTally = 0.0; histTallySqr = 0.0; nHist = 0; }; 
+     Estimator() { histTally = 0.0; histTallySqr = 0.0;}; 
     ~Estimator() {};
     
     // set/gets
@@ -53,7 +51,7 @@ class Estimator {
     // estimator methods
     virtual void endHist();
     virtual void score(double xs);
-    virtual std::pair < double , double > getScalarEstimator() { return( fluxEstimator ); };
+    virtual std::pair < double , double > getScalarEstimator(unsigned long long) { return( fluxEstimator ); };
 
 };
 
@@ -110,7 +108,7 @@ class CollisionTally : public Estimator {
     // collision tally specific estimator methods
     void score(double xs);
     void endHist();
-    std::pair< double , double > getScalarEstimator();
+    std::pair< double , double > getScalarEstimator(unsigned long long);
 };
 
 #endif

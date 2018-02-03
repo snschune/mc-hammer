@@ -159,14 +159,14 @@ void Tet::endTallyHist() {
     }
 }
 
-std::pair< double , double > Tet::getSingleGroupTally(int group) {
-    return( estimators.at(group - 1)->getScalarEstimator() );
+std::pair< double , double > Tet::getSingleGroupTally(int group, unsigned long long nHist) {
+    return( estimators.at(group - 1)->getScalarEstimator(nHist) );
 }
 
-std::vector< std::pair< double , double > > Tet::getTally() {
+std::vector< std::pair< double , double > > Tet::getTally(unsigned long long nHist) {
     std::vector< std::pair< double , double > > tallies;
     for( auto est : estimators) {
-        tallies.push_back( est->getScalarEstimator() );
+        tallies.push_back( est->getScalarEstimator(nHist) );
     }
 
     return(tallies);

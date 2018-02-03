@@ -11,6 +11,7 @@
 Mesh::Mesh( std::string fileName, bool loud , Constants constantsin): constants(constantsin)
 {
     readFile( fileName, loud );
+	histCounter = 0;
 }
 
 void Mesh::readFile( std::string fileName, bool loud )
@@ -108,6 +109,7 @@ void Mesh::readFile( std::string fileName, bool loud )
         
         addTet(tempTet);
         tetVector.push_back(newTet);
+		tetHist.push_back(nullptr);
     }
     
     if ( loud ) { // provide extra information if "loud" is true
@@ -194,7 +196,7 @@ Tet_ptr Mesh::whereAmI( point pos )
     {
         if ( tet->amIHere( testPoint ) == true )
         {
-            hereIAm = tet;
+            return tet;
         }
     }
 
@@ -213,6 +215,15 @@ void Mesh::scoreTally(Part_ptr p, double xs) {
     if(t != nullptr) {
         //score the tally in that tet
         t->scoreTally(p , xs);
+		for(int i = 0; i < histCounter; i++)
+		{
+			if(t == tetHist[i])
+			{
+				return;
+			}
+		}
+		tetHist[histCounter] = t;
+		histCounter++;
     }
     else {
         std::cerr << "Particle could not be located in the Mesh, failed to score tally " << std::endl;
@@ -220,9 +231,12 @@ void Mesh::scoreTally(Part_ptr p, double xs) {
 }
 
 void Mesh::endTallyHist() {
-    for(auto tet : tetVector) {
-        tet->endTallyHist();
-    }
+    for(int i = 0; i < histCounter; i++)
+	{
+		tetHist[i]->endTallyHist();
+		tetHist[i] = nullptr;
+	}
+	histCounter = 0;
 }
 
 void Mesh::printMeshTallies(std::string fname) {
@@ -235,7 +249,7 @@ void Mesh::printMeshTallies(std::string fname) {
 
     for(auto tet : tetVector) {
         meshTallyStream << tet->getID();
-        for (auto tally : tet->getTally() ) {
+        for (auto tally : tet->getTally(constants.getNumHis()) ) {
             meshTallyStream << "   " << tally.first;
         }
         meshTallyStream << std::endl;

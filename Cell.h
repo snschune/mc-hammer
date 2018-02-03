@@ -69,7 +69,7 @@ public:
     // Estimator interface
     void scoreTally(Part_ptr p , double xs); 
     void endTallyHist();
-    std::pair< double , double > getSingleGroupTally(int group);
-    std::vector< std::pair< double , double > > getTally();
+    std::pair< double , double > getSingleGroupTally(int group, unsigned long long nHist);
+    std::vector< std::pair< double , double > > getTally(unsigned long long nHist);
 };
 #endif 

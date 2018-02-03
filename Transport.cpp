@@ -143,8 +143,8 @@ void Transport::output() {
         ++i;
         std::cout << "Collision tally in cell " << i << std::endl;
         for( int j = 1; j <= constants.getNumGroups(); ++j) {
-            std::cout << " group: " << j << ", tally = " << cell->getSingleGroupTally(j).first 
-                      << ", stddev = " << cell->getSingleGroupTally(j).second << std::endl;
+            std::cout << " group: " << j << ", tally = " << cell->getSingleGroupTally(j, numHis).first 
+                      << ", stddev = " << cell->getSingleGroupTally(j, numHis).second << std::endl;
         }
         cout << std::endl;
     }

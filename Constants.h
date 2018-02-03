@@ -16,7 +16,7 @@ class Constants
 {
 private:
     int numGroups;
-    int numHis;
+    unsigned long long numHis;
     double tolerance = std::numeric_limits<double>::epsilon();
     bool locked;
     

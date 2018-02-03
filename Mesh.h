@@ -30,6 +30,8 @@ class Mesh
 private:
     std::vector < std::pair<int,Point_ptr> > verticesVector;
     std::vector < Tet_ptr >   tetVector;
+	std::vector < Tet_ptr > tetHist;
+	int histCounter;
     int numVertices;
     int numTets;
     void readFile( std::string fileName, bool loud );
