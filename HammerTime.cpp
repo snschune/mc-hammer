@@ -1,12 +1,11 @@
 #include "HammerTime.h"
 
 void HammerTime::startHist() {
-    currentTimes["History"] = clock();
+    startTimer("History");
 }
 
 void HammerTime::endHist() {
-    clock_t time = clock() - currentTimes["History"];
-    results["History"].push_back( ((double)time) / CLOCKS_PER_SEC );
+    endTimer("History");
 }
 
 void HammerTime::startTimer( string key ) { 
@@ -22,7 +21,8 @@ void HammerTime::endTimer( string key ) {
     else {
         // if the key exists, add a result
         clock_t time = clock() - currentTimes[key];
-        results[key].push_back(((double)time) / CLOCKS_PER_SEC ); 
+        results[key] += ((double)time) / CLOCKS_PER_SEC ; 
+        calls[key]++;
     }
 }
 
@@ -34,12 +34,10 @@ std::map <string , double> HammerTime::getAvgResults() {
     else {
         // take the average of each result vector
         for (const auto& any : results) {
-            avgResults[any.first] = vecMean< double >( any.second );
+            avgResults[any.first] = any.second / calls[any.first];
         }
     }
-
     return(avgResults);
-
 }
 
 void HammerTime::printAvgResults(string fname) {
@@ -49,18 +47,15 @@ void HammerTime::printAvgResults(string fname) {
     if(avgResults.empty() ) {
         // take the average of each result vector
         for (const auto& any : results) {
-            avgResults[any.first] = vecMean< double >( any.second );
+            avgResults[any.first] = any.second / calls[any.first];
         }
     }
-
     // print the average results
     std::ofstream timeOut;
     timeOut.open( fname );
-
-    timeOut << "Timing results averaged over " <<  results["History"].size() << " histories:" << std::endl;
-    
+    timeOut << "Timing results averaged over " <<  calls["Histories"] << " histories:" << std::endl;
     for (const auto& any : avgResults) {
-        timeOut << any.first << "   " << any.second << "  This block ran " << results[any.first].size() << " times." << std::endl;
+        timeOut << any.first << "   " << any.second << "  This block ran " << calls[any.first] << " times." << std::endl;
     }
 }
 
@@ -68,7 +63,7 @@ double HammerTime::getAvgResult( string key ) {
     if(avgResults.empty() ) {
         // take the average of each result vector
         for (const auto& any : results) {
-            avgResults[any.first] = vecMean< double >( any.second );
+            avgResults[any.first] = any.second / calls[any.first];
         }
     }
     if ( avgResults.count(key) == 0 ) {
@@ -85,7 +80,7 @@ double HammerTime::getAvgHistoryTime() {
     if(avgResults.empty() ) {
         // take the average of each result vector
         for (const auto& any : results) {
-            avgResults[any.first] = vecMean< double >( any.second );
+            avgResults[any.first] = any.second / calls[any.first];
         }
     }
     return(avgResults["History"]);

@@ -45,14 +45,9 @@ void CollisionTally::score( double xs ) {
 };
 
 void CollisionTally::endHist() {
-  //get the square of the tally in this history
-  double square = pow( currentHistTally , 2 );
-  
-  // set the current history tally and square tally to their tracking vectors
-  //histTally.push_back(     currentHistTally );
-  //histTallySqr.push_back(  square           );
-	histTally += currentHistTally;
-	histTallySqr += square;
+  // set the current history tally and square tally running sums
+  histTally    += currentHistTally;
+  histTallySqr += pow( currentHistTally , 2 );
   
   // set the current hist tally to 0
   currentHistTally = 0;
@@ -62,31 +57,18 @@ void CollisionTally::endHist() {
 std::pair < double , double > CollisionTally::getScalarEstimator(unsigned long long nHist) {
 // This function returns the mean and std deviation in the number 
 // of collisions per history 
-
-    //double sumFlux;
-    //double sqrSumFlux;
-    //double nHist = histTally.size();
     std::pair < double , double >  fluxEstimator;
-    
     if (nHist > 1) {
-        // sum the tallies and square tallies over the histories
-        //sumFlux      = vecSum < double > ( histTally    );
-        //sqrSumFlux   = vecSum < double > ( histTallySqr );
-
         // find the standard deviation of the estimator
-        //double stdDev = pow( ( histTallySqr - pow( histTally , 2 ) / nHist ) / (nHist - 1) , 0.5);
         double stdDev = sqrt( 1.0 / nHist * ( histTallySqr / nHist - pow(histTally/nHist, 2 ))); 
         fluxEstimator.first  = histTally / nHist;
         fluxEstimator.second = stdDev;
-
         return(fluxEstimator); 
     }
     else {
         std::cout << "Not enough histories to calculate variance! Tallies unreliable." << std::endl;
-        
         fluxEstimator.first  = 0.0;
         fluxEstimator.second = 0.0;
-        
     }
     return(fluxEstimator);
 };

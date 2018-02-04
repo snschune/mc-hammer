@@ -25,9 +25,10 @@ class HammerTime {
     // At the beginning and end of each history, startHist() and endHist() should be called, so as to calculate average history time
     // There are multiple functions to get or print the results of the timer
     private:
-        std::map<string , vector<double> >  results;
-        std::map<string , clock_t >         currentTimes;
-        std::map<string , double>           avgResults;
+        std::map<string , double  >  results;
+        std::map<string , int     >  calls;
+        std::map<string , clock_t >  currentTimes;
+        std::map<string , double  >  avgResults;
     public:
         HammerTime() {};
        ~HammerTime() {};
