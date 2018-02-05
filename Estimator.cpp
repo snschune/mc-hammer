@@ -60,7 +60,7 @@ std::pair < double , double > CollisionTally::getScalarEstimator(unsigned long l
     std::pair < double , double >  fluxEstimator;
     if (nHist > 1) {
         // find the standard deviation of the estimator
-        double stdDev = sqrt( 1.0 / nHist * ( histTallySqr / nHist - pow(histTally/nHist, 2 ))); 
+        double stdDev = sqrt( ( 1.0 / (nHist-1) ) * ( histTallySqr  - ( 1.0 / nHist ) * pow( histTally , 2 )  ) ); 
         fluxEstimator.first  = histTally / nHist;
         fluxEstimator.second = stdDev;
         return(fluxEstimator); 
