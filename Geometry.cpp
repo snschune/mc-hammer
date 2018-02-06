@@ -4,6 +4,7 @@
  /////////// Start Revision Log ///////////
  ESG - 01/26/18: Pulled XS reading out of setup and into its own function
  ESG - 01/31/18: Exit program if xs file failed to open
+ ESG - 02/05/18: Fixed scatter_tot_xs vector in readXS().
  /////////// End Revision Log ///////////
  */
 
@@ -179,7 +180,7 @@ void Geometry::readXS( std::string filename , int num_groups, bool loud )
     std::vector< double >   fissionxs;
     std::vector< double >   nu;
     std::vector< double >   totalxs;
-    std::vector< vector< double > >   scatterxs;
+    std::vector< std::vector< double > >   scatterxs;
     std::vector< double > scatterxsTotal;
     std::vector< double >   absorptionxs;
     
@@ -243,35 +244,52 @@ void Geometry::readXS( std::string filename , int num_groups, bool loud )
             totalxs.push_back(temp_xs);
         }
         
-        for (int j=0; j < num_groups; ++j) {
-            double scatter_tot_xs = 0;
-            vector< double> tempxsVec;
-            for (int k=0; k < num_groups; ++k) {
-                // scatter
+        //create vector of vectors (GxG filled with zeroes)
+        for(int j = 0; j<num_groups; ++j)
+        {
+        	std::vector<double> tempVector;
+        	int tempVal = 0;
+        	for(int k = 0; k<num_groups; ++k)
+        	{
+        		tempVector.push_back(tempVal);
+        	}
+        	scatterxs.push_back(tempVector);
+        	tempVector.clear();
+        }
+
+        // fill scatter matrix
+        for (int j=0; j < num_groups; ++j) { // loop over rows
+            for (int k=0; k < num_groups; ++k) { // loop over collumns
                 xs_file >> temp_xs;
-                
-                tempxsVec.push_back(temp_xs);
-                scatter_tot_xs += temp_xs;
-                
+                scatterxs[k][j] = temp_xs;             
             }
+        }
+
+        // fill scatterTotal and absorption vectors
+        for (int j=0; j < num_groups; ++j) { // loop over rows
+            double scatter_tot_xs = 0;
+            for (int k=0; k < num_groups; ++k) { // loop over collumns
+                scatter_tot_xs += scatterxs[j][k];                         
+            }
+
             // absorption
-            scatterxs.push_back(tempxsVec);
-            tempxsVec.clear();
             scatterxsTotal.push_back(scatter_tot_xs);
             temp_xs = totalxs[j] - scatter_tot_xs;
             absorptionxs.push_back(temp_xs);
-            
         }
         
         Mat_ptr temp_material = std::make_shared<Material>( num_groups, totalxs, absorptionxs, scatterxs, scatterxsTotal );
         
         Geometry::addMaterial( temp_material );
+
+        std::cout << temp_material->getScaXS(1,1) << std::endl;
         
         // clear XS vectors
         fissionxs.clear();
         nu.clear();
         totalxs.clear();
         scatterxs.clear();
+        scatterxsTotal.clear();
         absorptionxs.clear();
         
     }
