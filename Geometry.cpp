@@ -281,8 +281,6 @@ void Geometry::readXS( std::string filename , int num_groups, bool loud )
         Mat_ptr temp_material = std::make_shared<Material>( num_groups, totalxs, absorptionxs, scatterxs, scatterxsTotal );
         
         Geometry::addMaterial( temp_material );
-
-        std::cout << temp_material->getScaXS(1,1) << std::endl;
         
         // clear XS vectors
         fissionxs.clear();
