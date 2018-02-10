@@ -11,7 +11,7 @@
 Mesh::Mesh( std::string fileName, bool loud , Constants constantsin): constants(constantsin)
 {
     readFile( fileName, loud );
-	histCounter = 0;
+    histCounter = 0;
 }
 
 void Mesh::readFile( std::string fileName, bool loud )
@@ -52,8 +52,8 @@ void Mesh::readFile( std::string fileName, bool loud )
         inFile>>idNumber;
         inFile>>xValue>>yValue>>zValue;
         
-        Mesh::setNumVertices(numVertices);
-        Mesh::setNumTets(numTets);
+        setNumVertices(numVertices);
+        setNumTets(numTets);
         
         
         Point_ptr tempPtr = std::make_shared<point>(point(xValue-101.6,yValue-101.6,zValue-101.6));
@@ -87,6 +87,11 @@ void Mesh::readFile( std::string fileName, bool loud )
         inFile>>tetIndex;
         inFile>>temp1>>temp2>>temp3>>temp4;
         
+        // need this for VTK output
+        connectivity.push_back(static_cast<double>(temp1-1));
+        connectivity.push_back(static_cast<double>(temp2-1));
+        connectivity.push_back(static_cast<double>(temp3-1));
+        connectivity.push_back(static_cast<double>(temp4-1));
         
         Tet_ptr tetToAdd;
         
@@ -96,7 +101,7 @@ void Mesh::readFile( std::string fileName, bool loud )
         // create a vector of estimators and fill it with collision tallies
         vector <Estimator_ptr> estimators;
         for(int i = 0; i < constants.getNumGroups(); ++i) {
-		   estimators.push_back( std::make_shared< CollisionTally >() );  
+           estimators.push_back( std::make_shared< CollisionTally >() );  
         }
         
         Tet newTet(p , estimators);
@@ -109,7 +114,7 @@ void Mesh::readFile( std::string fileName, bool loud )
         
         addTet(tempTet);
         tetVector.push_back(newTet);
-		tetHist.push_back(nullptr);
+        tetHist.push_back(nullptr);
     }
     
     if ( loud ) { // provide extra information if "loud" is true
@@ -210,20 +215,20 @@ Tet_ptr Mesh::whereAmI( point pos )
 void Mesh::scoreTally(Part_ptr p, double xs) {
     //what tet in the mesh did the particle collide in?
     Tet_ptr t = whereAmI( p->getPos() );
-	
+    
     // make sure its a valid mesh element
     if(t != nullptr) {
         //score the tally in that tet
         t->scoreTally(p , xs);
-		for(int i = 0; i < histCounter; i++)
-		{
-			if(t == tetHist[i])
-			{
-				return;
-			}
-		}
-		tetHist[histCounter] = t;
-		histCounter++;
+        for(int i = 0; i < histCounter; i++)
+        {
+            if(t == tetHist[i])
+            {
+                return;
+            }
+        }
+        tetHist[histCounter] = t;
+        histCounter++;
     }
     else {
         std::cerr << "Particle could not be located in the Mesh, failed to score tally " << std::endl;
@@ -232,11 +237,11 @@ void Mesh::scoreTally(Part_ptr p, double xs) {
 
 void Mesh::endTallyHist() {
     for(int i = 0; i < histCounter; i++)
-	{
-		tetHist[i]->endTallyHist();
-		tetHist[i] = nullptr;
-	}
-	histCounter = 0;
+    {
+        tetHist[i]->endTallyHist();
+        tetHist[i] = nullptr;
+    }
+    histCounter = 0;
 }
 
 void Mesh::printMeshTallies(std::string fname) {
@@ -254,6 +259,196 @@ void Mesh::printMeshTallies(std::string fname) {
         }
         meshTallyStream << std::endl;
     }
+    meshTallyStream.close();
 }
 
+void Mesh::writeToVTK( std::string vtkFileName ) {
 
+
+    std::cout << "Writing mesh tallies to " << vtkFileName << " ..." << std::endl;
+
+    std::ofstream vtkStream;
+    vtkStream.open( vtkFileName );
+
+    // Specify file type
+    XMLTag vtkfile( 0, "VTKFile" );
+    vtkfile.addAttribute( "type", "UnstructuredGrid" );
+    vtkfile.addAttribute( "version", "0.1" );
+    vtkfile.addAttribute( "byte_order", "LittleEndian" );
+    vtkfile.addAttribute( "compressor", "vtkZLibDataCompressor");
+
+    // Specify grid type
+    XMLTag unstGrid( 1, "UnstructuredGrid");
+
+    // Piece (has information for points and cells)
+    XMLTag piece( 2, "Piece" );
+    piece.addAttribute( "NumberOfPoints", std::to_string(numVertices) );
+    piece.addAttribute( "NumberOfCells", std::to_string(numTets) );
+
+    // Point Data (not currently using)
+    XMLTag pointData1( 3, "PointData" );
+
+    // CellData (xml calls them 'cells', hammer calls them 'tets')
+    // Need to find a way to loop through a tet's estimators
+    XMLTag cellData( 3, "CellData" );
+    cellData.addAttribute( "Scalars", "mesh_tallies");
+
+    for ( auto tally : tetVector[0]->getTally(constants.getNumHis()) ) {
+           std::vector<double> tempVec;
+           cellDataVec.push_back(tempVec);
+        }
+
+    for ( auto tet : tetVector ) {
+        int i = 0;
+        for (auto tally : tet->getTally(constants.getNumHis()) ) {
+            if ( i == constants.getNumGroups() ) {
+                i = 0;
+            }
+            cellDataVec[i].push_back(tally.first);
+            i++;
+        }
+    }
+
+    std::vector< std::shared_ptr< XMLTag > > tallyTags;
+    int i = 0;
+    double tallyMin, tallyMax;
+    for ( auto dataVec : cellDataVec ) {
+        std::string tallyName = "tally" + std::to_string(i);
+        XMLTag tallyTag( 4, "DataArray" );
+        tallyTag.addAttribute( "type", "Float64");
+        tallyTag.addAttribute( "Name", tallyName );
+        tallyTag.addAttribute( "format", "ascii" );
+        tallyMin = vecMin(dataVec);
+        tallyMax = vecMax(dataVec);
+        // the string stream is the only way I was able to retain precision
+        std::ostringstream maxStream, minStream;
+        maxStream << tallyMax;
+        minStream << tallyMin;
+        std::string maxString = maxStream.str();
+        std::string minString = minStream.str();
+        tallyTag.addAttribute( "RangeMin", minString );
+        tallyTag.addAttribute( "RangeMax", maxString );
+        tallyTag.addDataArray( dataVec );
+        std::shared_ptr< XMLTag > Tag_ptr = std::make_shared< XMLTag >( tallyTag );
+
+        tallyTags.push_back( Tag_ptr );
+
+        i++;
+    }
+
+    // Points and data array
+    XMLTag points( 3, "Points" );
+    XMLTag pointsData( 4, "DataArray" );
+    pointsData.addAttribute( "type", "Float64" );
+    pointsData.addAttribute( "Name", "Points" );
+    pointsData.addAttribute( "NumberOfComponents", "3" );
+    pointsData.addAttribute( "format", "ascii" );
+
+    // Find the max/min value vertex in the mesh
+    double maxCoor = verticesVector[0].second->x;
+    double minCoor = verticesVector[0].second->x;
+
+    std::vector< double > vtkPointVec;
+
+    for ( auto vert : verticesVector ) {
+        // Find max
+        if ( (vert.second->x) > maxCoor ) { maxCoor = vert.second->x; }
+        if ( (vert.second->y) > maxCoor ) { maxCoor = vert.second->y; }
+        if ( (vert.second->y) > maxCoor ) { maxCoor = vert.second->y; }
+        // Find min
+        if ( (vert.second->x) < minCoor ) { minCoor = vert.second->x; }
+        if ( (vert.second->y) < minCoor ) { minCoor = vert.second->y; }
+        if ( (vert.second->y) < minCoor ) { minCoor = vert.second->y; }
+
+        vtkPointVec.push_back(vert.second->x);
+        vtkPointVec.push_back(vert.second->y);
+        vtkPointVec.push_back(vert.second->z);
+    }
+
+    // the string stream is the only way I was able to retain precision
+    std::ostringstream maxCoorStream, minCoorStream;
+    maxCoorStream << maxCoor;
+    minCoorStream << minCoor;
+    std::string maxCoorString = maxCoorStream.str();
+    std::string minCoorString = minCoorStream.str();
+
+    pointsData.addAttribute( "RangeMin", minCoorString );
+    pointsData.addAttribute( "RangeMax", maxCoorString );
+    pointsData.addDataArray( vtkPointVec );
+
+    // Cells and data arrays
+    XMLTag cells( 3, "Cells" );
+    XMLTag cellsData1( 4, "DataArray" ); // tells vtk which points are associated with each tet
+    XMLTag cellsData2( 4, "DataArray" ); // tells vtk how to segment the the tet associations
+    XMLTag cellsData3( 4, "DataArray" ); // tells vtk which type of cell to build
+
+    cellsData1.addAttribute( "type", "Int64" );
+    cellsData1.addAttribute( "Name", "connectivity" );
+    cellsData1.addAttribute( "format", "ascii" );
+    cellsData1.addAttribute( "RangeMin", "0" );
+    cellsData1.addAttribute( "RangeMax", std::to_string(numVertices-1) );
+    cellsData1.addDataArray( connectivity );
+
+    cellsData2.addAttribute( "type", "Int64" );
+    cellsData2.addAttribute( "Name", "offsets" );
+    cellsData2.addAttribute( "format", "ascii" );
+    cellsData2.addAttribute( "RangeMin", "4" ); // 4 corresponds to number of verts in tet
+    cellsData2.addAttribute( "RangeMax", std::to_string(4*numTets) );
+
+    std::vector< double > offsets;
+    for ( int i = 0; i<numTets; i++ ) {
+        offsets.push_back( 4.0*(i+1) );
+    }
+
+    cellsData2.addDataArray( offsets );
+
+    cellsData3.addAttribute( "type", "UInt8" );
+    cellsData3.addAttribute( "Name", "types" );
+    cellsData3.addAttribute( "format", "ascii" );
+    cellsData3.addAttribute( "RangeMin", "10" ); // 10 corresponds to vtk cell type (tetrahedron)
+    cellsData3.addAttribute( "RangeMax", "10" ); // 10 corresponds to vtk cell type (tetrahedron)
+
+    std::vector< double > vtkCellType;
+    for ( int i = 0; i<numTets; i++) {
+        vtkCellType.push_back( 10 );
+    }
+
+    cellsData3.addDataArray( vtkCellType );
+
+    // Write all XMLTags and Data Arrays to file
+    vtkStream << "<?xml version=\"1.0\"?>" << std::endl;
+    vtkStream << vtkfile.getTagOpen() << std::endl;
+    vtkStream << unstGrid.getTagOpen() << std::endl;
+    vtkStream << piece.getTagOpen() << std::endl;
+    vtkStream << pointData1.getTagOpen() << std::endl;
+    vtkStream << pointData1.getTagClose() << std::endl;
+    vtkStream << cellData.getTagOpen() << std::endl;
+    // loop over the estimator tallies and write to file
+    for ( auto tag : tallyTags ) {
+        vtkStream << tag->getTagOpen() << std::endl;
+        tag->arrayToFile( vtkStream, 24, false );
+        vtkStream << tag->getTagClose() << std::endl;
+    }
+    vtkStream << cellData.getTagClose() << std::endl;
+    vtkStream << points.getTagOpen() << std::endl;
+    vtkStream << pointsData.getTagOpen() << std::endl;
+    pointsData.arrayToFile( vtkStream, 12, false );
+    vtkStream << pointsData.getTagClose() << std::endl;
+    vtkStream << points.getTagClose() << std::endl;
+    vtkStream << cells.getTagOpen() << std::endl;
+    vtkStream << cellsData1.getTagOpen() << std::endl;
+    cellsData1.arrayToFile( vtkStream, 24, true );
+    vtkStream << cellsData1.getTagClose() << std::endl;
+    vtkStream << cellsData2.getTagOpen() << std::endl;
+    cellsData2.arrayToFile( vtkStream, 16, true );
+    vtkStream << cellsData2.getTagClose() << std::endl;
+    vtkStream << cellsData3.getTagOpen() << std::endl;
+    cellsData3.arrayToFile( vtkStream, 32, true );
+    vtkStream << cellsData3.getTagClose() << std::endl;
+    vtkStream << cells.getTagClose() << std::endl;
+    vtkStream << piece.getTagClose() << std::endl;
+    vtkStream << unstGrid.getTagClose() << std::endl;
+    vtkStream << vtkfile.getTagClose() << std::endl;
+
+    vtkStream.close();
+}

@@ -12,10 +12,12 @@
 #include "Tet.h"
 #include "Point.h"
 #include "Utility.h"
+#include "XMLTag.h"
 #include <vector>
 #include <utility>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <memory>
 #include <string>
 
@@ -30,8 +32,10 @@ class Mesh
 private:
     std::vector < std::pair<int,Point_ptr> > verticesVector;
     std::vector < Tet_ptr >   tetVector;
-	std::vector < Tet_ptr > tetHist;
-	int histCounter;
+    std::vector < Tet_ptr > tetHist;
+    std::vector< double > connectivity; // need this vector for VTK output
+    std::vector< std::vector< double > > cellDataVec; // need this vector for VTK output
+    int histCounter;
     int numVertices;
     int numTets;
     void readFile( std::string fileName, bool loud );
@@ -39,12 +43,13 @@ private:
     
     
 public:
-    Mesh( std::string fileName, bool loud  , Constants constantsin);
+    Mesh( std::string fileName, bool loud, Constants constantsin );
     
     void addTet(Tet_ptr inTet);
     void addVertice(std::pair<int,Point_ptr> inVertice);
     int getTetID(Tet_ptr inTet);
     std::vector < std::pair<int,Point_ptr> > getVerticesVector();
+    //getThisTetVerticies();
     int getNumVertices();
     void setNumVertices(int inNumber);
     int getNumTets();
@@ -52,12 +57,14 @@ public:
     void printTets();
     void printVertices();
     Tet_ptr whereAmI( point pos );
-	
 
-    //estimator interface
+    // estimator interface
     void scoreTally(Part_ptr p , double xs );
     void endTallyHist();
     void printMeshTallies(string fname);
+
+    // VTK (xml) interface
+    void writeToVTK(std::string vtkFileName);
     
 };
 

@@ -63,4 +63,10 @@ This would correspond to 100000 histories, 2 energy groups, xs_filename='Berp.xs
 ## Mesh file formatted as:
 
 ## Output
-*  Output file is currently hardcoded as "mesh.out", located in the "OutFiles/" directory
+
+All output files are written to the "OutFiles/" directory
+
+*  Mesh tally file is currently hardcoded as "mesh.out"
+*  Timing results file is currently hardcoded as "time.out"
+*  Mesh tally xml-style VTK file is currently hardcoded as "mesh_tallies.vtu"
+	-  VTK files can be opened with ParaView. FaraView is an open-source, multi-platform data analysis and visualization application. You can [download Paraview here](https://www.paraview.org/download/).

@@ -17,7 +17,7 @@ using std::vector;
 
 double fourDeterminant(const std::vector< double >& row1, const std::vector< double >& row2,
                        const std::vector< double >& row3, const std::vector< double >& row4 );
-					   
+                       
 double threeDeterminant(const vector< double >& v1, const vector< double >& v2, const vector< double >& v3);
 
 bool sameSign( double a, double b );
@@ -46,6 +46,26 @@ template<class T>  T vecMean(std::vector<T> vec) {
         ++i;
     }
     return(sum/i);
+}
+
+template<class T> T vecMax(std::vector<T> vec) {
+    T temp = vec[0];
+    for ( auto v : vec ) {
+        if ( v > temp ) {
+            temp = v;
+        }
+    }
+    return temp;
+}
+
+template<class T> T vecMin(std::vector<T> vec) {
+    T temp = vec[0];
+    for ( auto v : vec ) {
+        if ( v < temp ) {
+            temp = v;
+        }
+    }
+    return temp;
 }
 
 #endif

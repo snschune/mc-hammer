@@ -54,31 +54,31 @@ void Transport::setup()
  
 void Transport::runTransport()
 {
-	double tally = 0;
+    double tally = 0;
     for(int i = 0; i < numHis ; i++)
     {
         //start a timer
         timer->startHist();
 
-		//sample src 
-		Part_ptr p_new = geometry.sampleSource();
-		//Part_ptr p_new = make_shared<Particle>(point(0,0,0), point(0,0,1), 1);
-		Cell_ptr startingCell = geometry.whereAmI(p_new->getPos());
-		p_new->setCell(startingCell);
-		pstack.push(p_new);
+        //sample src 
+        Part_ptr p_new = geometry.sampleSource();
+        //Part_ptr p_new = make_shared<Particle>(point(0,0,0), point(0,0,1), 1);
+        Cell_ptr startingCell = geometry.whereAmI(p_new->getPos());
+        p_new->setCell(startingCell);
+        pstack.push(p_new);
           
         //run history
         while(!pstack.empty())
         {
-	       Part_ptr p = pstack.top();
+           Part_ptr p = pstack.top();
             while(p->isAlive())
             {
-			//p->printState();
+            //p->printState();
                 Cell_ptr current_Cell = p->getCell();
 
                 double d2s = current_Cell->distToSurface(p);
                 double d2c = current_Cell->distToCollision(p);
-			//cout << "d2s: " << d2s << "  d2c: " << d2c << endl;
+            //cout << "d2s: " << d2s << "  d2c: " << d2c << endl;
                 
                 if(d2s > d2c) //collision!
                 {
@@ -104,21 +104,21 @@ void Transport::runTransport()
 
                     p->move(d2s + 0.00000001);
                     Cell_ptr newCell = geometry.whereAmI(p->getPos());
-				if(newCell == nullptr)
-				{
-					p->kill();
-				}
-				else
-				{
-					p->setCell(newCell);
-				}
+                if(newCell == nullptr)
+                {
+                    p->kill();
+                }
+                else
+                {
+                    p->setCell(newCell);
+                }
                 }
             }
             pstack.pop();
         }
-		//tell all estimators that the history has ended
+        //tell all estimators that the history has ended
          for( auto cell : geometry.getCells() ) {
-		cell->endTallyHist();
+        cell->endTallyHist();
          }
 
            // end histories in the mesh
@@ -131,8 +131,8 @@ void Transport::runTransport()
     cout << std::endl << "Transport finished!" << std::endl;
     cout << std::endl << "************************************************************************" << std::endl;
     cout << "************************************************************************" << std::endl;
-	tally /= numHis;
-	//cout << "tally " << tally << endl;
+    tally /= numHis;
+    //cout << "tally " << tally << endl;
 }
 
 void Transport::output() {
@@ -154,4 +154,5 @@ void Transport::output() {
 
     // print mesh estimators to file
     mesh->printMeshTallies("OutFiles/mesh.out");
+    mesh->writeToVTK("OutFiles/mesh_tallies.vtu");
 }
