@@ -40,7 +40,7 @@ private:
 	std::vector< Mat_ptr >       materials;
 	Source_ptr                   source; // do we want to turn this into a vector?
 
-    void readXS( std::string filename , int num_groups, bool loud );
+	void readXS( std::string filename , int num_groups, bool loud );
 
 public:
 	Geometry( std::string filename , int num_groups, int nhist, bool loud );
@@ -49,11 +49,11 @@ public:
 	// add/set
 	void addCell     ( Cell_ptr   newCell     );
 	void addSurface  ( Surf_ptr   newSurface  );
-    void addMaterial ( Mat_ptr    newMaterial );
-    void setSource   ( Source_ptr newSource   );
+	void addMaterial ( Mat_ptr    newMaterial );
+	void setSource   ( Source_ptr newSource   );
 
-    // get
-    std::vector< Mat_ptr >  getMaterials() { return materials; };
+	// get
+	std::vector< Mat_ptr >  getMaterials() { return materials; };
 	std::vector< Cell_ptr > getCells()     { return cells;     };
 	std::vector< Surf_ptr > getSurfaces()  { return surfaces;  };
 	Source_ptr              getSource()    { return source;    };

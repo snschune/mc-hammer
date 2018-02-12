@@ -14,12 +14,12 @@ int main(int argc , char *argv[])
 //TODO:
 
 {
-	std::string xmlFilename = "inputfiles/";
+    std::string xmlFilename = "inputfiles/";
 
     if ( argc > 1 ) 
-	{
+    {
         xmlFilename += argv[1];
-	}
+    }
 
     printLogo();
 
@@ -33,13 +33,12 @@ int main(int argc , char *argv[])
     std::shared_ptr< Mesh >       mesh      = input->getMesh();
     std::shared_ptr< HammerTime > timer     = input->getTimer();
 
-	T_ptr t = std::make_shared<Transport>( geometry, constants, mesh, timer );
+    T_ptr t = std::make_shared<Transport>( geometry, constants, mesh, timer );
 
-	cout << "running transport..." << endl;
-	t->runTransport();
-	cout << "Printing outputs..." << endl;
-	t->output();
+    cout << "running transport..." << endl;
+    t->runTransport();
+    cout << "Printing outputs..." << endl;
+    t->output();
 
-	return 0;
+    return 0;
 }
-
