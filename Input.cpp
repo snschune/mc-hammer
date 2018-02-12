@@ -202,10 +202,12 @@ void Input::readInput( std::string xmlFilename ) {
       }
       else {
         std::cout << " unknown apply type with name " << apply << " for estimator " << name << std::endl;
+        throw;
       }
     }
     else {
       std::cout << " unknown estimator type with name " << type << std::endl;
+      throw;
     }
   }
   // iterate over sources
@@ -235,6 +237,7 @@ void Input::readInput( std::string xmlFilename ) {
       }
       else {
         std::cout << " unknown distribution type with name " << dist << std::endl;
+        throw;
       }
     }
     else if ( type == "setSourcePoint" ) {
@@ -254,10 +257,12 @@ void Input::readInput( std::string xmlFilename ) {
       }
       else {
         std::cout << " unknown distribution type with name " << dist << std::endl;
+        throw;
       }
     }
     else {
       std::cout << " unnknown source type with name " << type << std::endl;
+      throw;
     }
     geometry->setSource( sourc );
   }
