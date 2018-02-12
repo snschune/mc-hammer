@@ -11,21 +11,23 @@
 using std::cout;
 using std::endl;
 //Constructor
-Material::Material(int ng, vector<double> total_XSi, vector<double> Sigai, vector<vector<double>> Sigsi, vector< double > Sigsti): num_g(ng), total_XS(total_XSi), Siga(Sigai), Sigs(Sigsi), Sigst(Sigsti) 
-{
-	/*
-	vector<double> gsvec; //group sum vector
-	for(int i = 0; i < ng; i++)
-	{
-		double rowsum = 0;
-		gsvec = Sigs[i];
-		for(int j = 0; j < ng; j++)
-		{
-			rowsum += gsvec[j];
-		}
-		Sigst.push_back(rowsum);
-	}
-	*/
+Material::Material( std::string label, int ng ): materialName(label), num_g(ng) {}
+
+
+void Material::addTotalXS( std::vector< double > newXS ) {
+	total_XS = newXS;
+}
+
+void Material::addAbsXS( std::vector< double > newXS ) {
+	Siga = newXS;
+}
+
+void Material::addScaXS( std::vector< std::vector< double > > newXS ) {
+	Sigs = newXS;
+}
+
+void Material::addScaTotXS( std::vector< double > newXS ) {
+	Sigst = newXS;
 }
 
 double Material::getTotalXS(int g)

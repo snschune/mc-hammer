@@ -29,9 +29,12 @@ class HammerTime {
         std::map<string , int     >  calls;
         std::map<string , clock_t >  currentTimes;
         std::map<string , double  >  avgResults;
+        string outFilename;
     public:
         HammerTime() {};
        ~HammerTime() {};
+
+       void setOutFilename( string filename ) { outFilename = filename; };
 
        void startHist();
        void endHist();
@@ -40,7 +43,7 @@ class HammerTime {
        void endTimer( string key );
 
        std::map<string , double> getAvgResults(); 
-       void printAvgResults(string fname);
+       void printAvgResults();
 
        double getAvgResult( string key );
        double getAvgHistoryTime();

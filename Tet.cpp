@@ -10,7 +10,7 @@
 
 //default cstr initializes a tet of zero size
 
-Tet::Tet( point p , vector <Estimator_ptr> estimatorsin): estimators(estimatorsin) {}
+Tet::Tet( std::string label, point p ): tetName( label ) {}
 
 std::vector< double > Tet::getVert1()
 {
@@ -170,4 +170,8 @@ std::vector< std::pair< double , double > > Tet::getTally(unsigned long long nHi
     }
 
     return(tallies);
+}
+
+void Tet::addEstimator( Estimator_ptr newEstimator ) {
+	estimators.push_back( newEstimator );
 }

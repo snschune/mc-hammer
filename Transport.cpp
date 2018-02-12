@@ -9,8 +9,7 @@
 using std::make_shared;
 
 //constructor
-Transport::Transport(Geometry geoin, Constants consti , int numhis , Mesh_ptr meshin , Time_ptr timein): geometry(geoin) , constants(consti) , 
-    numHis(numhis) , mesh(meshin) , timer(timein) {}
+Transport::Transport(Geom_ptr geoin, Cons_ptr consti, Mesh_ptr meshin , Time_ptr timein): geometry(geoin) , constants(consti), mesh(meshin) , timer(timein) {}
 
 /*
 void Transport::setup()
@@ -54,6 +53,7 @@ void Transport::setup()
  
 void Transport::runTransport()
 {
+    numHis = constants->getNumHis();
     double tally = 0;
     for(int i = 0; i < numHis ; i++)
     {
@@ -61,9 +61,9 @@ void Transport::runTransport()
         timer->startHist();
 
         //sample src 
-        Part_ptr p_new = geometry.sampleSource();
+        Part_ptr p_new = geometry->sampleSource();
         //Part_ptr p_new = make_shared<Particle>(point(0,0,0), point(0,0,1), 1);
-        Cell_ptr startingCell = geometry.whereAmI(p_new->getPos());
+        Cell_ptr startingCell = geometry->whereAmI(p_new->getPos());
         p_new->setCell(startingCell);
         pstack.push(p_new);
           
@@ -103,7 +103,7 @@ void Transport::runTransport()
                 {
 
                     p->move(d2s + 0.00000001);
-                    Cell_ptr newCell = geometry.whereAmI(p->getPos());
+                    Cell_ptr newCell = geometry->whereAmI(p->getPos());
                 if(newCell == nullptr)
                 {
                     p->kill();
@@ -117,7 +117,7 @@ void Transport::runTransport()
             pstack.pop();
         }
         //tell all estimators that the history has ended
-         for( auto cell : geometry.getCells() ) {
+         for( auto cell : geometry->getCells() ) {
         cell->endTallyHist();
          }
 
@@ -139,10 +139,10 @@ void Transport::output() {
     cout << std::endl << "Total Number of Histories: " << numHis << endl;
 
     int i = 0;
-    for( Cell_ptr cell : geometry.getCells() ) {
+    for( Cell_ptr cell : geometry->getCells() ) {
         ++i;
         std::cout << "Collision tally in cell " << i << std::endl;
-        for( int j = 1; j <= constants.getNumGroups(); ++j) {
+        for( int j = 1; j <= constants->getNumGroups(); ++j) {
             std::cout << " group: " << j << ", tally = " << cell->getSingleGroupTally(j, numHis).first 
                       << ", stddev = " << cell->getSingleGroupTally(j, numHis).second << std::endl;
         }
@@ -150,9 +150,11 @@ void Transport::output() {
     }
 
     // print timing information
-    timer->printAvgResults("OutFiles/time.out");
+    timer->printAvgResults();
 
     // print mesh estimators to file
-    mesh->printMeshTallies("OutFiles/mesh.out");
-    mesh->writeToVTK("OutFiles/mesh_tallies.vtu");
+    mesh->printMeshTallies();
+    if ( constants->getAllTets() ) {
+        mesh->writeToVTK();
+    }
 }

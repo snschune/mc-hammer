@@ -8,7 +8,7 @@
 
 #include "Mesh.h"
 
-Mesh::Mesh( std::string fileName, bool loud , Constants constantsin): constants(constantsin)
+Mesh::Mesh( std::string fileName, bool loud , Constants_ptr constantsin ): constants(constantsin)
 {
     readFile( fileName, loud );
     histCounter = 0;
@@ -16,7 +16,7 @@ Mesh::Mesh( std::string fileName, bool loud , Constants constantsin): constants(
 
 void Mesh::readFile( std::string fileName, bool loud )
 {
-    std::string meshDirectory = "MeshFiles/";
+    std::string meshDirectory = "meshfiles/";
     std::ifstream inFile;
     inFile.open(meshDirectory+fileName);
     
@@ -97,14 +97,20 @@ void Mesh::readFile( std::string fileName, bool loud )
         
         
         point p(0,0,0);  //our zero point for initalization
+        std::string tetName = "tet" + std::to_string( tetIndex );
+
+        Tet newTet( tetName, p );
 
         // create a vector of estimators and fill it with collision tallies
         vector <Estimator_ptr> estimators;
-        for(int i = 0; i < constants.getNumGroups(); ++i) {
-           estimators.push_back( std::make_shared< CollisionTally >() );  
+
+        /*
+        for(int i = 0; i < constants->getNumGroups(); ++i) {
+            Estimator_ptr newTally = std::make_shared< CollisionTally > ( "tallyname" );
+            newTet.addEstimator( newTally );  
         }
-        
-        Tet newTet(p , estimators);
+        */
+
         newTet.setVertices(verticesVector[temp1-1].second,verticesVector[temp2-1].second,
                            verticesVector[temp3-1].second,verticesVector[temp4-1].second);
         newTet.setID( tetIndex );
@@ -244,17 +250,17 @@ void Mesh::endTallyHist() {
     histCounter = 0;
 }
 
-void Mesh::printMeshTallies(std::string fname) {
-    std::cout << "Printing mesh tallies to " << fname << " ..." << std::endl;
+void Mesh::printMeshTallies() {
+    std::cout << "Printing mesh tallies to " << "outfiles/" << outFilename << "..." << std::endl;
 
     std::ofstream meshTallyStream;
-    meshTallyStream.open(fname);
+    meshTallyStream.open( "outfiles/" + outFilename );
 
     meshTallyStream << "Mesh tally output" << std::endl;
 
     for(auto tet : tetVector) {
         meshTallyStream << tet->getID();
-        for (auto tally : tet->getTally(constants.getNumHis()) ) {
+        for (auto tally : tet->getTally(constants->getNumHis()) ) {
             meshTallyStream << "   " << tally.first;
         }
         meshTallyStream << std::endl;
@@ -262,13 +268,13 @@ void Mesh::printMeshTallies(std::string fname) {
     meshTallyStream.close();
 }
 
-void Mesh::writeToVTK( std::string vtkFileName ) {
+void Mesh::writeToVTK() {
 
 
-    std::cout << "Writing mesh tallies to " << vtkFileName << " ..." << std::endl;
+    std::cout << "Writing mesh tallies to " << "outfiles/" << vtkFilename << "..." << std::endl;
 
     std::ofstream vtkStream;
-    vtkStream.open( vtkFileName );
+    vtkStream.open( "outfiles/" + vtkFilename );
 
     // Specify file type
     XMLTag vtkfile( 0, "VTKFile" );
@@ -293,15 +299,15 @@ void Mesh::writeToVTK( std::string vtkFileName ) {
     XMLTag cellData( 3, "CellData" );
     cellData.addAttribute( "Scalars", "mesh_tallies");
 
-    for ( auto tally : tetVector[0]->getTally(constants.getNumHis()) ) {
+    for ( auto tally : tetVector[0]->getTally(constants->getNumHis()) ) {
            std::vector<double> tempVec;
            cellDataVec.push_back(tempVec);
         }
 
     for ( auto tet : tetVector ) {
         int i = 0;
-        for (auto tally : tet->getTally(constants.getNumHis()) ) {
-            if ( i == constants.getNumGroups() ) {
+        for (auto tally : tet->getTally(constants->getNumHis()) ) {
+            if ( i == constants->getNumGroups() ) {
                 i = 0;
             }
             cellDataVec[i].push_back(tally.first);
@@ -313,7 +319,8 @@ void Mesh::writeToVTK( std::string vtkFileName ) {
     int i = 0;
     double tallyMin, tallyMax;
     for ( auto dataVec : cellDataVec ) {
-        std::string tallyName = "tally" + std::to_string(i);
+
+        std::string tallyName = tetVector[0]->getEstimators()[i]->name();
         XMLTag tallyTag( 4, "DataArray" );
         tallyTag.addAttribute( "type", "Float64");
         tallyTag.addAttribute( "Name", tallyName );

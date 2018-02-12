@@ -38,6 +38,8 @@ typedef std::shared_ptr<Material>   Mat_ptr;
 typedef std::shared_ptr<surface>    Surf_ptr;
 typedef std::shared_ptr<Mesh>       Mesh_ptr;
 typedef std::shared_ptr<HammerTime> Time_ptr;
+typedef std::shared_ptr<Geometry>   Geom_ptr;
+typedef std::shared_ptr<Constants>  Cons_ptr;
 
 class Transport {
 private:
@@ -47,14 +49,14 @@ private:
     //vector<Surf_ptr> surfaces; //vector of surfaces '
     stack<Part_ptr> pstack;
     vector<double> tallies;
-    Constants constants;
-    Geometry geometry; 
+    Cons_ptr constants;
+    Geom_ptr geometry; 
     Mesh_ptr mesh;
     Time_ptr timer;
     
 public:
     //constructor
-    Transport(Geometry geoin , Constants consti , int numhis , Mesh_ptr meshin , Time_ptr timein);
+    Transport( Geom_ptr geoin, Cons_ptr consti, Mesh_ptr meshin , Time_ptr timein );
    ~Transport() {}; 
         //to be altered once input is added
     

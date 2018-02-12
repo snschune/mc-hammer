@@ -18,6 +18,7 @@ private:
     int numGroups;
     unsigned long long numHis;
     double tolerance = std::numeric_limits<double>::epsilon();
+    bool allTets = false;
     bool locked;
     
 public:
@@ -31,6 +32,11 @@ public:
     {
         return numGroups;
     }
+
+    bool getAllTets()
+    {
+        return allTets;
+    } 
     
     double tol()
     {
@@ -54,6 +60,17 @@ public:
         if(!locked)
         {
             numHis = numHisi;
+        }
+        else
+        {
+            cout << "Access denied. Constants are locked." << endl;
+        }
+    }
+    void setAllTets()
+    {
+        if(!locked)
+        {
+            allTets = true;
         }
         else
         {

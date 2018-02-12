@@ -27,6 +27,7 @@ class Material
 {
 	private:
 		int num_g;
+		std::string materialName;
 		vector<double> total_XS; //size g
 		vector<double> Siga; //size g
 		vector<vector<double>> Sigs; //size g^2
@@ -34,17 +35,24 @@ class Material
 
 
 	public:
-	//Constructor
-		Material(int, vector<double>, vector<double>, vector<vector<double>>, vector<double>);
-	//Functions
-	double getTotalXS(int g);
-	double getAbsXS(int g);
-	double getScaXS(int gi, int gf);
+		//Constructor (will need to change with continuous energy)
+		Material( std::string label, int ng );
 
-	void processRxn(Part_ptr p, stack<Part_ptr> &pstack, int g);
+		void addTotalXS( std::vector< double > newXS );
+		void addAbsXS( std::vector< double > newXS );
+		void addScaXS( std::vector< std::vector< double > > newXS );
+		void addScaTotXS( std::vector< double > newXS );
 
-	void scatter(Part_ptr p, int g);
+		//Functions
+		double getTotalXS(int g);
+		double getAbsXS(int g);
+		double getScaXS(int gi, int gf);
+		std::string name() { return materialName; };
 
-	void rotate(Part_ptr p, double mu0, double rand);
+		void processRxn(Part_ptr p, stack<Part_ptr> &pstack, int g);
+
+		void scatter(Part_ptr p, int g);
+
+		void rotate(Part_ptr p, double mu0, double rand);
 };
 #endif

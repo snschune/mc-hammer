@@ -40,8 +40,8 @@ std::map <string , double> HammerTime::getAvgResults() {
     return(avgResults);
 }
 
-void HammerTime::printAvgResults(string fname) {
-    std::cout << std::endl << "Printing timing results to " << fname << ".." << std::endl;
+void HammerTime::printAvgResults() {
+    std::cout << std::endl << "Printing timing results to " << "outfiles/" << outFilename << "..." << std::endl;
     
     // check if the average has already been calculated
     if(avgResults.empty() ) {
@@ -52,11 +52,12 @@ void HammerTime::printAvgResults(string fname) {
     }
     // print the average results
     std::ofstream timeOut;
-    timeOut.open( fname );
+    timeOut.open( "outfiles/" + outFilename );
     timeOut << "Timing results averaged over " <<  calls["Histories"] << " histories:" << std::endl;
     for (const auto& any : avgResults) {
         timeOut << any.first << "   " << any.second << "  This block ran " << calls[any.first] << " times." << std::endl;
     }
+    timeOut.close();
 }
 
 double HammerTime::getAvgResult( string key ) {

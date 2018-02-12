@@ -34,19 +34,22 @@ class Estimator {
     double               currentHistTally;
     //vector < double >    histTally;
     //vector < double >    histTallySqr;
-	double histTally;
-	double histTallySqr;
-	
+    double histTally;
+    double histTallySqr;
+    std::string estimatorName;
+
+
     std::pair < double , double >  fluxEstimator;
 
   public:
-     Estimator() { histTally = 0.0; histTallySqr = 0.0;}; 
+    Estimator( std::string label ) : estimatorName(label) { histTally = 0.0; histTallySqr = 0.0;}; 
     ~Estimator() {};
     
     // set/gets
     virtual double getCurrentHistTally() { return( currentHistTally ); };
-    virtual double getHistTally()    	 { return( histTally        ); };
-    virtual double getHistTallySqr() 	 { return( histTallySqr     ); };
+    virtual double getHistTally()    	   { return( histTally        ); };
+    virtual double getHistTallySqr() 	   { return( histTallySqr     ); };
+    virtual std::string name()           { return( estimatorName    ); };
     
     // estimator methods
     virtual void endHist();
@@ -60,7 +63,7 @@ class MeshTally : public Estimator {
     vector < vector < vector < double > > > mesh;
 
   public:
-    MeshTally(vector<int> numBins): Estimator() {};
+    MeshTally( std::string label, vector<int> numBins ): Estimator( label ) {};
    ~MeshTally() {};
 
     void score(Part_ptr pi , Part_ptr pf );
@@ -72,7 +75,7 @@ class SurfaceTally : public Estimator {
     Surf_ptr surf;
 
   public:
-    SurfaceTally(): Estimator() {};
+    SurfaceTally( std::string label ): Estimator( label ) {};
    ~SurfaceTally() {};
     
     void score(Part_ptr pi , Part_ptr pf );
@@ -84,7 +87,7 @@ class CellTally : public Estimator {
     Cell_ptr   cell;
 
   public:
-    CellTally(): Estimator() {};
+    CellTally( std::string label ): Estimator( label ) {};
    ~CellTally() {};
 
     void score(Part_ptr pi , Part_ptr pf);
@@ -97,7 +100,7 @@ class CollisionTally : public Estimator {
     double    histTallySqr;
           
   public:
-    CollisionTally(): Estimator() ,  currentHistTally(0.0) {histTally = 0.0; histTallySqr = 0.0; };
+    CollisionTally( std::string label ): Estimator( label ) ,  currentHistTally(0.0) {histTally = 0.0; histTallySqr = 0.0; };
    ~CollisionTally() {};
       
     // set/gets

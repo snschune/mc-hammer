@@ -31,30 +31,36 @@ class Tet
 private:
     int    TetID;
     double d0; //sign of the D0 deternminant (false = negative, true = positive)
+    std::string tetName;
     vector< double > vert1;
     vector< double > vert2;
     vector< double > vert3;
     vector< double > vert4;
-	vector< double > A1,A2,A3,A4;; //3x3 determinants precomp
+	vector< double > A1, A2, A3, A4;; //3x3 determinants precomp
 
     // Estimators
     vector< Estimator_ptr > estimators;
     
 public:
     
-    Tet(point p , vector<Estimator_ptr> estimatorsin);
+    Tet( std::string label, point p );
+
+    std::string name() { return tetName; };
+    
+    void setVertices( std::shared_ptr<point> p1, std::shared_ptr<point> p2,
+                      std::shared_ptr<point> p3, std::shared_ptr<point> p4 );
+    
+    void addVertice( std::shared_ptr< point > inVertice );
+    void addEstimator( Estimator_ptr newEstimator );
+    void setID( int tetID );
+
+    int              getID();
     vector< double > getVert1();
     vector< double > getVert2();
     vector< double > getVert3();
     vector< double > getVert4();
-	vector< double > getCentroid();
-    void setVertices(std::shared_ptr<point> p1, std::shared_ptr<point> p2,
-                     std::shared_ptr<point> p3, std::shared_ptr<point> p4);
-    
-    void addVertice(std::shared_ptr<point> inVertice);
-    void setID( int tetID );
-
-    int getID();
+    vector< double > getCentroid();
+    std::vector< Estimator_ptr > getEstimators() { return estimators; };
     
     bool amIHere( const std::vector< double >& testPoint );
 

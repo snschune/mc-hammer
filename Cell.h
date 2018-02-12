@@ -40,6 +40,7 @@ class Cell
 //NOTE: create all other objects before constructing a cell, or it leads to a pain in the butt
 {
 private:
+    std::string cellName;
     Mat_ptr mat; //material properties within cell
     //vector<Surf_ptr> surfaces; //surfaces that enclose cell
     //vector<bool> inside; //1 = inside cooresponding surface, 0 = outside
@@ -49,13 +50,18 @@ private:
     vector< Estimator_ptr > estimators;
    
 public: 
-	std::string name;
     //Constructor:
-    Cell(Mat_ptr mati, vector< pair< Surf_ptr, bool > > surfacesi , vector< Estimator_ptr > estimi);
+    Cell( std::string label );
     //Functions:
     //vector<Surf_ptr> getSurfaces();
     //vector<bool> getInside();
     Mat_ptr getMat();
+
+    void addSurfacePair( std::pair< Surf_ptr, bool > newSurfacePair );
+    void addEstimator( Estimator_ptr newEstimator );
+    void setMaterial( Mat_ptr newMaterial );
+    std::string name() { return cellName; };
+    std::vector< Estimator_ptr > getEstimators() { return estimators; };
     
     //operations
     double distToSurface(Part_ptr pi);

@@ -6,14 +6,7 @@
 #include "Cell.h"
 
 //constructor
-Cell::Cell(Mat_ptr mati, vector<pair<Surf_ptr, bool>> surfacePairsi ,  vector< Estimator_ptr > estimi): mat(mati) , estimators(estimi)
-{
-    for(auto surfacePair: surfacePairsi) //learn auto
-    {
-        surfacePairs.push_back(surfacePair);
-    }
-
-}
+Cell::Cell( std::string label ): cellName(label) {}
 
 //functions
 //vector<Surf_ptr> Cell::getSurfaces()
@@ -28,6 +21,18 @@ Cell::Cell(Mat_ptr mati, vector<pair<Surf_ptr, bool>> surfacePairsi ,  vector< E
 Mat_ptr Cell::getMat()
 {
     return mat;
+}
+
+void Cell::addSurfacePair( std::pair< Surf_ptr, bool > newSurfacePair ) {
+    surfacePairs.push_back( newSurfacePair );
+}
+
+void Cell::addEstimator( Estimator_ptr newEstimator ) {
+    estimators.push_back( newEstimator );
+}
+
+void Cell::setMaterial( Mat_ptr newMaterial ) {
+    mat = newMaterial;
 }
 
 

@@ -4,16 +4,17 @@
 This is a 3D Monte Carlo neutron transport code developed at the University of Michigan.
 
 called from command line as:
-> ./a.out number_of_histories number_of_groups xs_filename mesh_filename
+`./a.out xml_input_filename`
 
 ## Example
-> ./a.out 100000 2 Berp.xs coarse.thrm
+`./a.out berpinpolyinair.xml`
 
-This would correspond to 100000 histories, 2 energy groups, xs_filename='Berp.xs', mesh_filename='coarse.thrm'
+All simulation parameters are specified in the xml input file.
 
 ### Note
-*   Cross section file must be located in the directory "XSFiles/".
-*   Mesh file must be located in the directory "MeshFiles/"
+*   XML input file must be located in the directory "inputfiles/".
+*   Cross section file (specified in xml input file) must be located in the directory "xsfiles/".
+*   Mesh (specified in xml input file) file must be located in the directory "meshfiles/".
 
 ## Cross section file formatted as:
 
@@ -64,9 +65,9 @@ This would correspond to 100000 histories, 2 energy groups, xs_filename='Berp.xs
 
 ## Output
 
-All output files are written to the "OutFiles/" directory
+All output files are written to the "outfiles/" directory
 
-*  Mesh tally file is currently hardcoded as "mesh.out"
-*  Timing results file is currently hardcoded as "time.out"
-*  Mesh tally xml-style VTK file is currently hardcoded as "mesh_tallies.vtu"
-	-  VTK files can be opened with ParaView. FaraView is an open-source, multi-platform data analysis and visualization application. You can [download Paraview here](https://www.paraview.org/download/).
+*  Mesh tally file (filename specified in xml input file)
+*  Timing results file (filename specified in xml input file)
+*  Mesh tally xml-style VTK file (filename specified in xml input file)
+	-  VTK files can be opened with ParaView. ParaView is an open-source, multi-platform data analysis and visualization application. You can [download Paraview here](https://www.paraview.org/download/).
