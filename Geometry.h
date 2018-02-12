@@ -59,8 +59,7 @@ public:
 	Source_ptr              getSource()    { return source;    };
 
 	// methods
-	bool     amIHere  ( point, Cell_ptr );
-	Cell_ptr whereAmI ( point           );
+	Cell_ptr whereAmI( point );
 	Part_ptr sampleSource() { return source->sample(); };	
 };
 
