@@ -1,11 +1,11 @@
 exec    = a.out
 cc      = g++
 opt     = -g
-cflags  = -std=c++0x $(opt)
+cflags  = -std=c++14 $(opt) 
 testdir = Testing
 pwd     = $(shell pwd)
 
-main    = Transport.cpp
+main    = Main.cpp
 objects = $(patsubst %.cpp,%.o,$(filter-out $(main), $(wildcard *.cpp)))
 
 .PHONY : all test clean
@@ -23,5 +23,5 @@ $(exec) : $(main)
 	$(cc) $(cflags) $(objects) $< -o $@
 
 clean :
-	rm -f $(objects) $(exec)
-	@ cd $(testdir) && $(MAKE) clean
+	rm -f $(objects) $(exec) Main.o
+	@ cd  $(testdir) && $(MAKE) clean
