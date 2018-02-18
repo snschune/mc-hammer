@@ -320,7 +320,9 @@ void Mesh::writeToVTK() {
     double tallyMin, tallyMax;
     for ( auto dataVec : cellDataVec ) {
 
-        std::string tallyName = tetVector[0]->getEstimators()[i]->name();
+        //std::string tallyName = tetVector[0]->getEstimators()[i]->name();
+        //TODO fix this
+        std::string tallyName = "";
         XMLTag tallyTag( 4, "DataArray" );
         tallyTag.addAttribute( "type", "Float64");
         tallyTag.addAttribute( "Name", tallyName );

@@ -122,6 +122,5 @@ std::vector< std::pair< double , double > > Cell::getTally(unsigned long long nH
     for( auto est : estimators) {
         tallies.push_back( est->getScalarEstimator(nHist) );
     }
-
     return(tallies);
 }

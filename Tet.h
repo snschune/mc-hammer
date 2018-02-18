@@ -15,6 +15,7 @@
 #include "Point.h"
 #include "Utility.h"
 #include "Estimator.h"
+#include "Particle.h"
 #include "Constants.h"
 
 //Tet Class includes 4 points which define a given tetrahedra

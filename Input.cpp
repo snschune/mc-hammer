@@ -137,17 +137,21 @@ void Input::readInput( std::string xmlFilename ) {
     std::string apply     = e.attribute("apply").value();
     std::string applyName = e.attribute("applyName").value();
 
+    //TODO template sets gets
     if ( type == "CollisionTally" ) {
       if ( apply == "cell" ) {
+        // initialize a pointer to a cell tally groupestimator  
+        CellGroupTally cellTally(name);
+            
         // special case "all_cells"
         if ( applyName == "all_cells" ) {
           for ( auto cel : geometry->getCells() ) {
             for ( int i=0; i<nGroups; i++ ) {
-              name += "_g" + std::to_string( i + 1 );
-              std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >( name );
+              std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >();
               cel->addEstimator( Est );
-              name = e.attribute("name").value();
+              cellTally.addToGroup( Est );
             }
+            cellTally.addCell(cel);
           }
         }
         else {
@@ -155,19 +159,27 @@ void Input::readInput( std::string xmlFilename ) {
 
           if ( cel ) {
             for ( int i=0; i<nGroups; i++ ) {
-              name += "_g" + std::to_string(i+1);
-              std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >( name );
+              std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >();
               cel->addEstimator( Est );
-              name = e.attribute("name").value();
+              cellTally.addToGroup( Est );
             }
+            cellTally.addCell(cel);
           }
           else {
             std::cout << " unknown cell with name " << applyName << " for estimator " << name << std::endl;
             throw;
           }
         }
+        // make a pointer to a group estimator
+        GroupEst_ptr groupEst = std::make_shared<CellGroupTally>(cellTally);
+        // add the group estimator to geometry
+        geometry->addEstimator(groupEst);
       }
       else if ( apply == "tet" ) {
+        // initialize a pointer to a mesh tally groupestimator  
+        MeshGroupTally meshTally(name);
+        GroupEst_ptr groupEst = std::make_shared<MeshGroupTally>(meshTally);
+
         // special case "all_tets"
         if ( applyName == "all_tets" ) {
           constants->setAllTets();
@@ -176,23 +188,25 @@ void Input::readInput( std::string xmlFilename ) {
           }
           for ( auto t : mesh->getTets() ) {
             for ( int i=0; i<nGroups; i++ ) {
-              name += "_g" + std::to_string( i + 1 );
-              std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >( name );
+              std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >();
               t->addEstimator( Est );
-              name = e.attribute("name").value();
+              groupEst->addToGroup( Est );
             }
+            groupEst->pushGroups();
           }
+          // add the group estimator to geometry
+          geometry->addEstimator(groupEst);
         }
         else {
           std::shared_ptr< Tet > tet = findByName( mesh->getTets(), applyName );
 
           if ( tet ) {
             for ( int i=0; i<nGroups; i++ ) {
-              name += "_g" + std::to_string(i+1);
-              std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >( name );
+              std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >();
               tet->addEstimator( Est );
-              name = e.attribute("name").value();
+              groupEst->addToGroup( Est );
             }
+            groupEst->pushGroups();
           }
           else {
             std::cout << " unknown tet with name " << applyName << " for estimator " << name << std::endl;
@@ -209,6 +223,8 @@ void Input::readInput( std::string xmlFilename ) {
       std::cout << " unknown estimator type with name " << type << std::endl;
       throw;
     }
+  
+
   }
   // iterate over sources
   pugi::xml_node input_sources = input_file.child("sources");

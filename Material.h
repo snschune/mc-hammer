@@ -30,7 +30,7 @@ class Material
 		std::string materialName;
 		vector<double> total_XS; //size g
 		vector<double> Siga; //size g
-		vector<vector<double>> Sigs; //size g^2
+		vector<vector<double > > Sigs; //size g^2
 		vector<double> Sigst; //size g-> the total for each group (s11+s12+s13...+s1g)
 
 
