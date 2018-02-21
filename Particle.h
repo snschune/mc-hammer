@@ -8,6 +8,7 @@
 #define __PARTICLE_H__
 
 #include "Point.h"
+#include "Random.h"
 #include <memory>
 #include <iostream>
 #include <cmath>
@@ -32,7 +33,6 @@ public:
     Cell_ptr getCell();
     point getPos();
     point getDir();
-    //r_ptr getray();
     int   getGroup();
 
     void setCell(Cell_ptr);
@@ -43,6 +43,8 @@ public:
     void setDir(double ui, double vi, double wi);
     void move(double dist);
     void kill();
+    void scatter( int gf );
+    void rotate( double mu0, double rand );
     
     void printState();
 };

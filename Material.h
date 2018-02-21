@@ -14,45 +14,41 @@
 #include <cmath>
 #include <string>
 #include "Particle.h"
+#include "Nuclide.h"
 
 
 using std::vector;
 using std::stack;
 
-typedef std::shared_ptr<Particle> Part_ptr;
+typedef std::shared_ptr< Particle > Part_ptr;
+typedef std::shared_ptr< Nuclide  > Nuclide_ptr;
 
 class Material
 //Material in which neutrons transport through. Contains all x-sec data and processes reactions
 //Multigroup compatible. Fission not added yet.
 {
-	private:
-		int num_g;
-		std::string materialName;
-		vector<double> total_XS; //size g
-		vector<double> Siga; //size g
-		vector<vector<double>> Sigs; //size g^2
-		vector<double> Sigst; //size g-> the total for each group (s11+s12+s13...+s1g)
+  private:
+    std::string                                     materialName;
+    double                                          atomDensity; // for homogeneous, set to 1
+    std::vector< std::pair< Nuclide_ptr, double > > nuclides;
 
+    double getMicroXS( Part_ptr p );
 
-	public:
-		//Constructor (will need to change with continuous energy)
-		Material( std::string label, int ng );
+  public:
+    // Constructor/Destructor
+    Material( std::string label, double atomDensityi ) : materialName(label), atomDensity(atomDensityi) {};
+   ~Material() {};
 
-		void addTotalXS( std::vector< double > newXS );
-		void addAbsXS( std::vector< double > newXS );
-		void addScaXS( std::vector< std::vector< double > > newXS );
-		void addScaTotXS( std::vector< double > newXS );
+    // Adders
+    void addNuclide( Nuclide_ptr newNuclide, double atomFrac );
 
-		//Functions
-		double getTotalXS(int g);
-		double getAbsXS(int g);
-		double getScaXS(int gi, int gf);
-		std::string name() { return materialName; };
+    // Getters
+    std::string name()           { return materialName; };
+    double      getAtomDensity() { return atomDensity;  };
+    double      getMacroXS( Part_ptr p );
 
-		void processRxn(Part_ptr p, stack<Part_ptr> &pstack, int g);
-
-		void scatter(Part_ptr p, int g);
-
-		void rotate(Part_ptr p, double mu0, double rand);
+    // Functions
+    Nuclide_ptr sampleNuclide   ( Part_ptr p                          );
+    void        sampleCollision ( Part_ptr p, stack< Part_ptr > &bank );
 };
 #endif

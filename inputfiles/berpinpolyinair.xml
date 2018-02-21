@@ -6,6 +6,44 @@
 <setup nhistories="10" ngroups="2" xsfile="berpinpolyinair.xs" meshfile="berpinpolyinair.thrm" loud="true"/>
 <outfiles outfile="berpinpolyinair.out" vtkfile="berpinpolyinair.vtu" timefile="time.out"/>
 
+<nuclides>
+  <nuclide name="nuc1"> 
+    <Capture>
+      <xs g1="1.0" g2="1.0"/>
+    </Capture>
+    <Scatter>
+      <xs g1to1="1.0" g1to2="1.0" g2to1="1.0" g2to2="1.0"/>
+    </Scatter>
+    <Fission>
+      <xs g1="1.0" g2="1.0"/>
+      <nu g1="1.0" g2="1.0"/>
+      <chi g1="1.0" g2="0.0"/>
+    </Fission>
+  </nuclide>
+  <nuclide name="nuc2">
+    <Capture>
+      <xs g1="1.0" g2="1.0"/>
+    </Capture>
+  </nuclide>
+  <nuclide name="nuc3">
+    <Capture>
+      <xs g1="1.0" g2="1.0"/>
+    </Capture>
+  </nuclide>
+</nuclides>
+
+<materials>
+  <material name="mat1" density="1.0">
+    <nuclide name="nuc1" frac="1.0"/>
+  </material>
+  <material name="mat2" density="1.0">
+    <nuclide name="nuc2" frac="1.0"/>
+  </material>
+  <material name="mat3" density="1.0">
+    <nuclide name="nuc3" frac="1.0"/>
+  </material>
+</materials>
+
 <surfaces>
   <sphere name="sphere1" x0="0.0" y0="0.0" z0="0.0" rad="3.79349"/>
   <sphere name="sphere2" x0="0.0" y0="0.0" z0="0.0" rad="11.41349"/>

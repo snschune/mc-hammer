@@ -10,46 +10,6 @@ using std::make_shared;
 
 //constructor
 Transport::Transport(Geom_ptr geoin, Cons_ptr consti, Mesh_ptr meshin , Time_ptr timein): geometry(geoin) , constants(consti), mesh(meshin) , timer(timein) {}
-
-/*
-void Transport::setup()
- {
- 
- //read input file if it existed
- //plane at x = 0 and at x = 10 -> cell1
- //material
- vector<double> sigt;
- vector<double> siga;
- vector<double> sigsi;
- vector<vector<double>> sigso;
- sigt.push_back(1.0);
- siga.push_back(0.5);
- sigsi.push_back(0.5);
- sigso.push_back(sigsi);
- Material mat1 = Material(1, sigt, siga, sigso);
- 
- 
- //bounds
- Surf_ptr plane1 = plane1("plane1", 0.0, 0.0, 1.0, 0.0);
- Surf_ptr plane2 = make_shared<plane>("plane2", 0.0, 0.0, 1.0, 5.0);
- //vector<bool> inside1;
- //inside1.push_back(false); //false -> outside, true -> inside
- //inside1.push_back(true);
- //vector<Surf_ptr> cellSurfaces1;
- vector<pair<Surf_ptr, bool>> cellSurfaces1;
- cellSurfaces1.push_back(plane1);
- cellSurfaces1.push_back(plane2);
- 
- //create cell 
- Cell_ptr cell1 = make_shared<Cell>(mat1, cellSurfaces1, inside1);
- 
- //add to the geometry
- geometry.addMaterial(mat1);
- surfaces.push_back(plane1);
- surfaces.push_back(plane2);
- cells.push_back(cell1);
- }
-*/
  
 void Transport::runTransport()
 {
@@ -84,19 +44,19 @@ void Transport::runTransport()
                 {
                     // score collision tally in current cell
                     timer->startTimer("scoring collision tally");
-                    current_Cell->scoreTally(p , current_Cell->getMat()->getTotalXS( p->getGroup() ) ); 
+                    current_Cell->scoreTally(p , current_Cell->getMat()->getMacroXS( p ) ); 
                     tally++;
                     timer->endTimer("scoring collision tally");
 
                     timer->startTimer("scoring mesh tally");
                     //std::cout << "About to score mesh tally " << std::endl;
                     // score mesh tally
-                    mesh->scoreTally( p , current_Cell->getMat()->getTotalXS( p->getGroup() ) );
+                    mesh->scoreTally( p , current_Cell->getMat()->getMacroXS( p ) );
                     //std::cout << "We scored that mesh tally! " << std::endl;
                     timer->endTimer("scoring mesh tally");
 
                     p->move(d2c);
-                    current_Cell->processRxn(p, pstack);
+                    current_Cell->getMat()->sampleCollision( p, pstack );
                     p->kill(); //TODO: make this not awful
                 }
                 else //hit surface

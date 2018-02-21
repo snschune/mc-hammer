@@ -101,15 +101,68 @@ void Particle::kill()
     return;
 }
 
+void Particle::scatter( int gf )
+{
+  setGroup(gf);
+
+  //change direction (isotropic scattering)
+  double rand = Urand();
+  double mu0 = 2*Urand()-1;
+  rotate( mu0,rand );
+}
+
+void Particle::rotate( double mu0, double rand )
+{
+  //xout << "Rotation! mu = " << mu0 << " rand = " << rand << endl;
+  if(mu0 == 1)
+    return; //no scattering
+  
+  double pi = 3.1415926535897;
+  
+  point d = getDir();
+  double u = d.x;
+  double v = d.y;
+  double w = d.z;
+  
+  double phi = 2*pi*rand; 
+  double us = cos(phi);
+  double vs = sin(phi);  
+  
+  double sts = sqrt((1-mu0)*(1+mu0)); //sin(theta)
+  
+  us = us*sts;
+  vs = vs*sts;
+  
+  double u2v2 = u*u+v*v;
+  
+  if(u2v2 == 0) //if particle is (0,0,1)
+  {
+    //cout << "z-direction!" << endl;
+    setDir(us,vs,mu0);
+    return;
+  }
+  
+  double sintheta = sqrt(u2v2);
+  double sinthetai = 1.0/sintheta;
+  double cosphi = u*sinthetai;
+  double sinphi = v*sinthetai;
+  
+  double u_new = u*mu0 + us*w*cosphi - vs*sinphi;
+  double v_new = v*mu0 + us*w*sinphi + vs*cosphi;
+  double w_new = w*mu0 - us*sintheta;
+  
+  setDir(u_new,v_new,w_new);
+  return;
+}
+
 void Particle::printState()
 {
     cout << "Position: " << pos.x << " " << pos.y << " " << pos.z << endl;
     cout << "Direction: " << dir.x << " " << dir.y << " " << dir.z << endl;
-	double radius = std::sqrt(pos.x*pos.x + pos.y*pos.y + pos.z*pos.z);
-	cout << "distance from origin: " << radius << endl;
+    double radius = std::sqrt(pos.x*pos.x + pos.y*pos.y + pos.z*pos.z);
+    cout << "distance from origin: " << radius << endl;
     cout << "Group: " << group;
     cout << " Alive: " << alive << endl;
     cout << endl;
     
 }
-
