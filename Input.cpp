@@ -182,6 +182,9 @@ void Input::readInput( std::string xmlFilename ) {
         if ( fissionXS.size() == nuXS.size() && nuXS.size() == chiXS.size() ) 
         {
           Nuc->addReaction( std::make_shared< Fission > ( nGroups, fissionXS, nuXS, chiXS ) );
+          fissionXS.clear();
+          nuXS.clear();
+          chiXS.clear();
         }
         else 
         {
