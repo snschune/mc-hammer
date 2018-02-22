@@ -14,6 +14,8 @@
 #include <utility>
 
 #include "pugixml.hpp"
+#include "Reaction.h"
+#include "Nuclide.h"
 #include "Material.h"
 #include "Surface.h"
 #include "Cell.h"
@@ -41,7 +43,7 @@ class Input
 
   public:
     Input() {};
-    ~Input() {};    
+   ~Input() {};    
     void readInput( std::string xmlFilename );    
     std::shared_ptr< Geometry >   getGeometry()  { return geometry;  };
     std::shared_ptr< Mesh >       getMesh()      { return mesh;      };
