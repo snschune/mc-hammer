@@ -35,7 +35,7 @@ void Input::readInput( std::string xmlFilename ) {
   constants->setNumHis( nHist );
 
   // initialize geometry and mesh objects
-  geometry = std::make_shared< Geometry >   ( xsFilename, nGroups, nHist, loud );
+  geometry = std::make_shared< Geometry >   ();
   mesh     = std::make_shared< Mesh >       ( meshFilename, loud, constants );
   timer    = std::make_shared< HammerTime > ();
 
@@ -56,28 +56,33 @@ void Input::readInput( std::string xmlFilename ) {
     // iterate over its reactions
     for ( auto r : n.children() ) 
     {
+      double tempXS;
       std::shared_ptr< Reaction > Rxn;
       std::string rxnType = r.name();
-      int elementCounter = 0;
       if ( rxnType == "Capture" ) 
       {
         std::vector< double > captureXS;
         pugi::xml_node xs = r.child("xs");
         if ( xs )
         {
-          for ( pugi::xml_attribute groupXS : xs.attributes() )
+          pugi::xml_attribute xsList = xs.attribute("value");
+          if ( xsList ) 
           {
-            captureXS.push_back( groupXS.as_double() );
-            ++elementCounter;
+            std::istringstream inString( xsList.value() );
+            while ( inString >> tempXS ) { captureXS.push_back( tempXS ); }
           }
-          if ( elementCounter != nGroups )
+          else
+          {
+            std::cout << " unknown attribute type for caputre xs vector in nuclide " << name << std::endl;
+            throw;
+          }
+          if ( captureXS.size() != nGroups )
           {
             std::cout << " the number of elements in the capture xs vector for nuclide " 
                       << name << " does not equal nGroups." << std::endl;
             throw;
           }
           Nuc->addReaction( std::make_shared< Capture > ( nGroups, captureXS ) );
-          elementCounter = 0;
           captureXS.clear();
         }
         else
@@ -88,39 +93,48 @@ void Input::readInput( std::string xmlFilename ) {
       }
       else if ( rxnType == "Scatter" ) 
       {
+        std::vector< double > tempXSVec;
         std::vector< std::vector< double > > scatterXS;
-        pugi::xml_node xs = r.child("xs");
-        if ( xs ) 
+
+        for ( pugi::xml_node groupXS : r.children() )
         {
-          int incidentCounter = 0;
-          std::vector< double > incident;
-          for ( pugi::xml_attribute groupXS: xs.attributes() )
+          std::string dataType = groupXS.name();
+          if ( dataType == "xs" )
           {
-            ++incidentCounter;
-            incident.push_back( groupXS.as_double() );
-            if ( incidentCounter == nGroups )
+            pugi::xml_attribute xsList = groupXS.attribute("value");
+            if ( xsList )
             {
-              scatterXS.push_back( incident );
-              incident.clear();
-              ++elementCounter;
-              incidentCounter = 0;
+              std::istringstream inString( xsList.value() );
+              while ( inString >> tempXS ) { tempXSVec.push_back( tempXS ); }
             }
+            else
+            {
+              std::cout << " unknown attribute type for scatter xs vector in nuclide " << name << std::endl;
+              throw;
+            }
+            if ( tempXSVec.size() != nGroups )
+            {
+              std::cout << " the number of elements in the capture xs vector for nuclide " 
+                        << name << " does not equal nGroups." << std::endl;
+              throw;
+            }
+            scatterXS.push_back( tempXSVec );
+            tempXSVec.clear();
           }
-          if ( elementCounter != nGroups )
+          else
           {
-            std::cout << " the number of elements in the scatter xs vector for nuclide " 
-                      << name << " does not equal nGroups." << std::endl;
+            std::cout << " unknown xs vector type for scatter reaction in nuclide " << name << std::endl;
             throw;
           }
-          Nuc->addReaction( std::make_shared< Scatter > ( nGroups, scatterXS ) );
-          elementCounter = 0;
-          scatterXS.clear();
         }
-        else 
+        if ( scatterXS.size() != nGroups )
         {
-          std::cout << " unknown xs vector type for scatter reaction in nuclide " << name << std::endl;
+          std::cout << " the number of elements in the scatter xs vector for nuclide " 
+                    << name << " does not equal nGroups." << std::endl;
           throw;
         }
+        Nuc->addReaction( std::make_shared< Scatter > ( nGroups, scatterXS ) );
+        scatterXS.clear();
       }
       else if ( rxnType == "Fission" ) 
       {
@@ -130,48 +144,63 @@ void Input::readInput( std::string xmlFilename ) {
           std::string name = xs.name();
           if ( name == "xs" )
           {
-            for ( pugi::xml_attribute groupXS : xs.attributes() )
+            pugi::xml_attribute xsList = xs.attribute("value");
+            if ( xsList ) 
             {
-              fissionXS.push_back( groupXS.as_double() );
-              ++elementCounter;
+              std::istringstream inString( xsList.value() );
+              while ( inString >> tempXS ) { fissionXS.push_back( tempXS ); }
             }
-            if ( elementCounter != nGroups )
+            else
+            {
+              std::cout << " unknown attribute type for caputre xs vector in nuclide " << name << std::endl;
+              throw;
+            }
+            if ( fissionXS.size() != nGroups )
             {
               std::cout << " the number of elements in the fission xs vector for nuclide " 
                         << name << " does not equal nGroups." << std::endl;
               throw;
             }
-            elementCounter = 0;
           }
           else if ( name == "nu" )
           {
-            for ( pugi::xml_attribute groupXS : xs.attributes() )
+            pugi::xml_attribute xsList = xs.attribute("value");
+            if ( xsList ) 
             {
-              nuXS.push_back( groupXS.as_double() );
-              ++elementCounter;
+              std::istringstream inString( xsList.value() );
+              while ( inString >> tempXS ) { nuXS.push_back( tempXS ); }
             }
-            if ( elementCounter != nGroups )
+            else
+            {
+              std::cout << " unknown attribute type for caputre xs vector in nuclide " << name << std::endl;
+              throw;
+            }
+            if ( nuXS.size() != nGroups )
             {
               std::cout << " the number of elements in the nu vector for nuclide " 
                         << name << " does not equal nGroups." << std::endl;
               throw;
             }
-            elementCounter = 0;
           }
           else if ( name == "chi" )
           {
-            for ( pugi::xml_attribute groupXS : xs.attributes() )
+            pugi::xml_attribute xsList = xs.attribute("value");
+            if ( xsList ) 
             {
-              chiXS.push_back( groupXS.as_double() );
-              ++elementCounter;
+              std::istringstream inString( xsList.value() );
+              while ( inString >> tempXS ) { chiXS.push_back( tempXS ); }
             }
-            if ( elementCounter != nGroups )
+            else
+            {
+              std::cout << " unknown attribute type for caputre xs vector in nuclide " << name << std::endl;
+              throw;
+            }
+            if ( chiXS.size() != nGroups )
             {
               std::cout << " the number of elements in the chi vector for nuclide " 
                         << name << " does not equal nGroups." << std::endl;
               throw;
             }
-            elementCounter = 0;
           }
           else
           {

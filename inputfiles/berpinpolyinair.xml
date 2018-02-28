@@ -9,31 +9,34 @@
 <nuclides>
   <nuclide name="berpball_homo"> 
     <Capture>
-      <xs g1="3.667E-04" g2="2.2431901E-02"/>
+      <xs value="3.667E-04 2.2431901E-02"/>
     </Capture>
-    <Scatter>
-      <xs g1to1="3.26855E-01" g1to2="1.37999E-05" g2to1="3.16534E-03" g2to2="9.02867E-01"/>
+    <Scatter> <!-- xs vectors are arranged by incident energy, ( g->1, g->2, ..., g->G ) -->
+      <xs value="3.26855E-01 1.37999E-05"/>
+      <xs value="3.16534E-03 9.02867E-01"/>
     </Scatter>
     <Fission>
-      <xs g1="8.64299E-02" g2="3.32690E-01"/>
-      <nu g1="3.18911E+00" g2="2.89500E+00"/>
-      <chi g1="1.0" g2="0.0"/>
+      <xs value="8.64299E-02 3.32690E-01"/>
+      <nu value="3.18911E+00 2.89500E+00"/>
+      <chi value="1.0 0.0"/>
     </Fission>
   </nuclide>
   <nuclide name="polyball_homo">
     <Capture>
-      <xs g1="1.59983001E-02" g2="1.096257766E+01"/>
+      <xs value="1.59983001E-02 1.096257766E+01"/>
     </Capture>
-    <Scatter>
-      <xs g1to1="9.87386E-01" g1to2="5.16173E-02" g2to1="1.38099E-04" g2to2="2.46461E+00"/>
+    <Scatter> <!-- xs vectors are arranged by incident energy, ( g->1, g->2, ..., g->G ) -->
+      <xs value="9.87386E-01 5.16173E-02"/>
+      <xs value="1.38099E-04 2.46461E+00"/>
     </Scatter>
   </nuclide>
   <nuclide name="air_homo">
     <Capture>
-      <xs g1="5.86724E-06" g2="5.75445902E-05"/>
+      <xs value="5.86724E-06 5.75445902E-05"/>
     </Capture>
-    <Scatter>
-      <xs g1to1="1.93542E-04" g1to2="1.38576E-06" g2to1="6.84098E-08" g2to2="4.41404E-04"/>
+    <Scatter> <!-- xs vectors are arranged by incident energy, ( g->1, g->2, ..., g->G ) -->
+      <xs value="1.93542E-04 1.38576E-06"/>
+      <xs value="6.84098E-08 4.41404E-04"/>
     </Scatter>
   </nuclide>
 </nuclides>

@@ -14,6 +14,7 @@
 #include <memory>
 #include <utility>
 #include <string>
+#include <cassert>
 
 #include "Random.h"
 #include "Utility.h"
@@ -43,7 +44,7 @@ private:
   Source_ptr                   source; // do we want to turn this into a vector?
 
 public:
-  Geometry( std::string filename , int nGroups, int nHist, bool loud );
+  Geometry() {};
  ~Geometry() {};
 
   // Adders/Setters
@@ -60,7 +61,7 @@ public:
 
   // Functions
   void     readXS   ( std::string filename , int nGroups, bool loud );
-  Cell_ptr whereAmI ( point );
+  Cell_ptr whereAmI ( point pos );
   Part_ptr sampleSource() { return source->sample(); };	
 };
 

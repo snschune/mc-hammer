@@ -51,11 +51,11 @@ public:
   //Constructor:
   Cell( std::string label ) : cellName( label ) {};
  ~Cell() {};
-  
-  Mat_ptr getMat();  
-  void    addSurfacePair ( std::pair< Surf_ptr, bool > newSurfacePair );
-  void    addEstimator   ( Estimator_ptr newEstimator                 );
-  void    setMaterial    ( Mat_ptr newMaterial                        );
+    
+  void    addSurfacePair ( std::pair< Surf_ptr, bool > newSurfacePair ) { surfacePairs.push_back( newSurfacePair ); };
+  void    addEstimator   ( Estimator_ptr newEstimator                 ) { estimators.push_back( newEstimator );     };
+  void    setMaterial    ( Mat_ptr newMaterial                        ) { mat = newMaterial;                        };
+  Mat_ptr                      getMat()        { return mat;        };
   std::string                  name()          { return cellName;   };
   std::vector< Estimator_ptr > getEstimators() { return estimators; };
   
@@ -64,7 +64,7 @@ public:
   double                 distToCollision ( Part_ptr pi );
   pair<Surf_ptr, double> closestSurface  ( Part_ptr p  );
   
-  bool amIHere( point pos );
+  bool amIHere( const point& pos );
 
   // Estimator interface
   void scoreTally(Part_ptr p , double xs); 

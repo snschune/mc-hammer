@@ -5,28 +5,6 @@
 
 #include "Cell.h"
 
-Mat_ptr Cell::getMat()
-{
-  return mat;
-}
-
-void Cell::addSurfacePair( std::pair< Surf_ptr, bool > newSurfacePair ) 
-{
-  surfacePairs.push_back( newSurfacePair );
-}
-
-void Cell::addEstimator( Estimator_ptr newEstimator ) 
-{
-  estimators.push_back( newEstimator );
-}
-
-void Cell::setMaterial( Mat_ptr newMaterial ) 
-{
-  mat = newMaterial;
-}
-
-
-
 double Cell::distToCollision(Part_ptr pi)
 {
   double total_xs = mat->getMacroXS(pi);
@@ -34,7 +12,7 @@ double Cell::distToCollision(Part_ptr pi)
   return dist;
 }
 
-bool Cell::amIHere(point pos)
+bool Cell::amIHere( const point& pos )
 {
   bool isWithin = true;
   //cycle through each surface and if there is one that has a incorrect eval, you are not in this cell
@@ -61,7 +39,7 @@ pair<Surf_ptr, double> Cell::closestSurface(Part_ptr p)
 		if(dist < min_val && dist >  0)
 		{
 			min_surf = cur_surf;
-			min_val = dist;
+			min_val  = dist;
 		}
 	}
 	if(min_surf == nullptr)
