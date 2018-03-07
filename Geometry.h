@@ -21,7 +21,6 @@
 #include "Cell.h"
 #include "Surface.h"
 #include "Estimator.h"
-#include "GroupEstimator.h"
 #include "Source.h"
 
 using std::vector;
@@ -31,7 +30,6 @@ typedef std::shared_ptr< Cell >           Cell_ptr;
 typedef std::shared_ptr< Material >       Mat_ptr;
 typedef std::shared_ptr< surface >        Surf_ptr;
 typedef std::shared_ptr< Estimator >      Estimator_ptr;
-typedef std::shared_ptr< GroupEstimator > GroupEst_ptr;
 typedef std::shared_ptr< Source >         Source_ptr;
 
 class Geometry
@@ -41,7 +39,6 @@ private:
 	std::vector< Surf_ptr >      surfaces;
 	std::vector< Mat_ptr >       materials;
 	Source_ptr                   source; // do we want to turn this into a vector?
-    std::vector < GroupEst_ptr>  estimators;
 
 	void readXS( std::string filename , int num_groups, bool loud );
 
@@ -54,7 +51,6 @@ public:
 	void addSurface   ( Surf_ptr   newSurface  );
 	void addMaterial  ( Mat_ptr    newMaterial );
 	void setSource    ( Source_ptr newSource   );
-    void addEstimator ( GroupEst_ptr estimator ) {estimators.push_back(estimator); };
 
 	// get
 	std::vector< Mat_ptr >  getMaterials() { return materials; };
