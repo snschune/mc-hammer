@@ -6,14 +6,14 @@ public:
     double x, y, z;
     
     point( double a, double b, double c ) : x(a), y(b), z(c) {};
-    ~point() {};
+    point( const point &p): x(p.x) , y(p.y) , z(p.z) {};
+   ~point() {};
 };
 
 class ray {
 public:
     ray( point p, point d );
-    //ray( point p, point d ) : pos(p), dir(d) {};
-    ~ray() {};
+   ~ray() {};
     
     point pos;
     point dir;

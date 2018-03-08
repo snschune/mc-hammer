@@ -9,43 +9,26 @@ using std::cout;
 using std::endl;
 
 //constructors
-Particle::Particle(point posi, point diri, int gi): pos(posi), dir(diri), group(gi), alive(1)
+
+// copy constructor -- for fission
+Particle::Particle( const Particle &p) {
+  pos              = p.getPos();
+  dir              = p.getDir();
+  alive            = true;
+  group            = p.getGroup();
+  cell             = p.getCell();
+  collisionCounter = p.getNumCollisions(); 
+}
+
+// default constructor -- for source
+Particle::Particle(point posi, point diri, int gi): pos(posi), dir(diri), group(gi), alive(true) , collisionCounter(0) 
 {
     double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
     dir.x *= norm; dir.y *= norm; dir.z *= norm;
 }
 
-bool Particle::isAlive()
-{
-    return alive;
-}
-
-Cell_ptr Particle::getCell()
-{
-    return cell;
-}
-
-point Particle::getPos()
-{
-    return pos;
-}
-
-point Particle::getDir()
-{
-    return dir;
-}
-
-/*ray Particle::getray()
- {
- return r;
- }
- */
-
-int Particle::getGroup()
-{
-    return group;
-}
-
+// functions
+// sets
 void Particle::setCell(Cell_ptr celli)
 {
 	cell = celli;

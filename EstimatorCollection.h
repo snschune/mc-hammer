@@ -10,8 +10,8 @@
  *  The accessor functional is 
  */
 
-#ifndef _GROUPESTIMATOR_HEADER_
-#define _GROUPESTIMATOR_HEADER_
+#ifndef _ESTIMATORCOLLECTION_HEADER_
+#define _ESTIMATORCOLLECTION_HEADER_
 
 #include <functional>
 #include <map>

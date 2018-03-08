@@ -24,18 +24,26 @@ private:
     point dir;
     Cell_ptr cell; //still need to change this
     int group;
+    int collisionCounter;
+
 public:
     //constructor
     Particle(point posi, point diri, int gi);
+    Particle( const Particle &p);
+   ~Particle() {}; 
+    
     //functions
-    bool isAlive();
-    Cell_ptr getCell();
-    point getPos();
-    point getDir();
-    //r_ptr getray();
-    int   getGroup();
+    // gets
+    bool isAlive()           const { return(alive);            };
+    Cell_ptr getCell()       const { return(cell);             };
+    point getPos()           const { return(pos);              };
+    point getDir()           const { return(dir);              };   
+    int   getGroup()         const { return(group);            };
+    int   getNumCollisions() const { return(collisionCounter); };
 
-    void setCell(Cell_ptr);
+    // sets
+    void countCollision() {collisionCounter++; };
+    void setCell(Cell_ptr celli);
     void setGroup(int g);
     void setPos(point posi);
     void setDir(point diri);
@@ -44,6 +52,7 @@ public:
     void move(double dist);
     void kill();
     
+    // prints
     void printState();
 };
 

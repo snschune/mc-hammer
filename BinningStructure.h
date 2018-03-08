@@ -40,7 +40,7 @@ class GroupBinningStructure : public BinningStructure<int> {
    ~GroupBinningStructure();
     
     int getSize();
-    virtual std::pair< int , bool> getIndex(int group);
+    virtual std::pair< int , bool > getIndex( int group );
 };
  
 
@@ -59,7 +59,7 @@ class CollisionOrderBinningStructure : public BinningStructure<int> {
    ~CollisionOrderBinningStructure() {};
     
     int getSize();
-    virtual std::pair< int , bool> getIndex( int collisionOrder );
+    virtual std::pair< int , bool > getIndex( int collisionOrder );
 };
 
 /* ****************************************************************************************************** * 
