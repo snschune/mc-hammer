@@ -35,7 +35,7 @@ void Input::readInput( std::string xmlFilename ) {
   constants->setNumHis( nHist );
 
   // initialize geometry and mesh objects
-  geometry = std::make_shared< Geometry >   ( xsFilename, nGroups, nHist, loud );
+  geometry = std::make_shared< Geometry >   ();
   mesh     = std::make_shared< Mesh >       ( meshFilename, loud, constants );
   timer    = std::make_shared< HammerTime > ();
 
@@ -43,6 +43,216 @@ void Input::readInput( std::string xmlFilename ) {
   mesh->setOutFilename( outFilename );
   mesh->setVTKFilename( vtkFilename );
   timer->setOutFilename( timeFilename );
+
+  // iterate over nuclides
+  std::vector< std::shared_ptr< Nuclide > > nuclides;
+  pugi::xml_node inputNuclides = input_file.child("nuclides");
+  for ( auto n : inputNuclides ) {
+    std::string name = n.attribute("name").value();
+
+    std::shared_ptr< Nuclide > Nuc = std::make_shared< Nuclide > ( n.attribute("name").value() );
+    nuclides.push_back( Nuc );
+
+    // iterate over its reactions
+    for ( auto r : n.children() ) 
+    {
+      double tempXS;
+      std::shared_ptr< Reaction > Rxn;
+      std::string rxnType = r.name();
+      if ( rxnType == "Capture" ) 
+      {
+        std::vector< double > captureXS;
+        pugi::xml_node xs = r.child("xs");
+        if ( xs )
+        {
+          pugi::xml_attribute xsList = xs.attribute("value");
+          if ( xsList ) 
+          {
+            std::istringstream inString( xsList.value() );
+            while ( inString >> tempXS ) { captureXS.push_back( tempXS ); }
+          }
+          else
+          {
+            std::cout << " unknown attribute type for caputre xs vector in nuclide " << name << std::endl;
+            throw;
+          }
+          if ( captureXS.size() != nGroups )
+          {
+            std::cout << " the number of elements in the capture xs vector for nuclide " 
+                      << name << " does not equal nGroups." << std::endl;
+            throw;
+          }
+          Nuc->addReaction( std::make_shared< Capture > ( nGroups, captureXS ) );
+          captureXS.clear();
+        }
+        else
+        {
+          std::cout << " unknown xs vector type for capture reaction in nuclide " << name << std::endl;
+          throw;
+        }
+      }
+      else if ( rxnType == "Scatter" ) 
+      {
+        std::vector< double > tempXSVec;
+        std::vector< std::vector< double > > scatterXS;
+
+        for ( pugi::xml_node groupXS : r.children() )
+        {
+          std::string dataType = groupXS.name();
+          if ( dataType == "xs" )
+          {
+            pugi::xml_attribute xsList = groupXS.attribute("value");
+            if ( xsList )
+            {
+              std::istringstream inString( xsList.value() );
+              while ( inString >> tempXS ) { tempXSVec.push_back( tempXS ); }
+            }
+            else
+            {
+              std::cout << " unknown attribute type for scatter xs vector in nuclide " << name << std::endl;
+              throw;
+            }
+            if ( tempXSVec.size() != nGroups )
+            {
+              std::cout << " the number of elements in the capture xs vector for nuclide " 
+                        << name << " does not equal nGroups." << std::endl;
+              throw;
+            }
+            scatterXS.push_back( tempXSVec );
+            tempXSVec.clear();
+          }
+          else
+          {
+            std::cout << " unknown xs vector type for scatter reaction in nuclide " << name << std::endl;
+            throw;
+          }
+        }
+        if ( scatterXS.size() != nGroups )
+        {
+          std::cout << " the number of elements in the scatter xs vector for nuclide " 
+                    << name << " does not equal nGroups." << std::endl;
+          throw;
+        }
+        Nuc->addReaction( std::make_shared< Scatter > ( nGroups, scatterXS ) );
+        scatterXS.clear();
+      }
+      else if ( rxnType == "Fission" ) 
+      {
+        std::vector< double > fissionXS, nuXS, chiXS;
+        for ( pugi::xml_node xs: r.children() )
+        {
+          std::string name = xs.name();
+          if ( name == "xs" )
+          {
+            pugi::xml_attribute xsList = xs.attribute("value");
+            if ( xsList ) 
+            {
+              std::istringstream inString( xsList.value() );
+              while ( inString >> tempXS ) { fissionXS.push_back( tempXS ); }
+            }
+            else
+            {
+              std::cout << " unknown attribute type for caputre xs vector in nuclide " << name << std::endl;
+              throw;
+            }
+            if ( fissionXS.size() != nGroups )
+            {
+              std::cout << " the number of elements in the fission xs vector for nuclide " 
+                        << name << " does not equal nGroups." << std::endl;
+              throw;
+            }
+          }
+          else if ( name == "nu" )
+          {
+            pugi::xml_attribute xsList = xs.attribute("value");
+            if ( xsList ) 
+            {
+              std::istringstream inString( xsList.value() );
+              while ( inString >> tempXS ) { nuXS.push_back( tempXS ); }
+            }
+            else
+            {
+              std::cout << " unknown attribute type for caputre xs vector in nuclide " << name << std::endl;
+              throw;
+            }
+            if ( nuXS.size() != nGroups )
+            {
+              std::cout << " the number of elements in the nu vector for nuclide " 
+                        << name << " does not equal nGroups." << std::endl;
+              throw;
+            }
+          }
+          else if ( name == "chi" )
+          {
+            pugi::xml_attribute xsList = xs.attribute("value");
+            if ( xsList ) 
+            {
+              std::istringstream inString( xsList.value() );
+              while ( inString >> tempXS ) { chiXS.push_back( tempXS ); }
+            }
+            else
+            {
+              std::cout << " unknown attribute type for caputre xs vector in nuclide " << name << std::endl;
+              throw;
+            }
+            if ( chiXS.size() != nGroups )
+            {
+              std::cout << " the number of elements in the chi vector for nuclide " 
+                        << name << " does not equal nGroups." << std::endl;
+              throw;
+            }
+          }
+          else
+          {
+            std::cout << " unknown xs vector type for fission reaction in nuclide " << name << std::endl;
+            throw;
+          }
+        }
+        if ( fissionXS.size() == nuXS.size() && nuXS.size() == chiXS.size() ) 
+        {
+          Nuc->addReaction( std::make_shared< Fission > ( nGroups, fissionXS, nuXS, chiXS ) );
+          fissionXS.clear();
+          nuXS.clear();
+          chiXS.clear();
+        }
+        else 
+        {
+          std::cout << " the number of elements in the xs vectors for fission reaction in nuclide " 
+                    << name << " are not equivalent" << std::endl;
+          throw;
+        }
+      }
+      else 
+      {
+        std::cout << "unknown reaction type " << rxnType << std::endl;
+        throw;
+      }
+    }
+  } 
+
+  // iterate over materials
+  std::vector< std::shared_ptr< Material > > materials;
+  pugi::xml_node inputMaterials = input_file.child("materials");
+  for ( auto m : inputMaterials ) 
+  {
+    std::string name = m.attribute("name").value();
+    double      aden = m.attribute("density").as_double();
+    
+    std::shared_ptr< Material > Mat = std::make_shared< Material > ( name, aden );    
+    materials.push_back( Mat );
+
+    // iterate over nuclides
+    for ( auto n : m.children() ) 
+    {
+      if ( (std::string) n.name() == "nuclide" ) 
+      {
+        std::string nuclideName = n.attribute("name").value();
+        double      frac         = n.attribute("frac").as_double();
+        
+        Mat->addNuclide( findByName( nuclides, nuclideName ), frac );
+      }
+    }
+  }
 
   // iterate over surfaces
   pugi::xml_node input_surfaces = input_file.child("surfaces");
@@ -83,7 +293,7 @@ void Input::readInput( std::string xmlFilename ) {
 
     // cell material
     if ( c.attribute("material") ) {
-      std::shared_ptr< Material > matPtr = findByName( geometry->getMaterials(), c.attribute("material").value() );
+      std::shared_ptr< Material > matPtr = findByName( materials, c.attribute("material").value() );
       if ( matPtr ) {
         Cel->setMaterial( matPtr );
       }

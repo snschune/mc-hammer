@@ -6,6 +6,53 @@
 <setup nhistories="10" ngroups="2" xsfile="berpinpolyinair.xs" meshfile="berpinpolyinair.thrm" loud="true"/>
 <outfiles outfile="berpinpolyinair.out" vtkfile="berpinpolyinair.vtu" timefile="time.out"/>
 
+<nuclides>
+  <nuclide name="berpball_homo"> 
+    <Capture>
+      <xs value="3.667E-04 2.2431901E-02"/>
+    </Capture>
+    <Scatter> <!-- xs vectors are arranged by incident energy, ( g->1, g->2, ..., g->G ) -->
+      <xs value="3.26855E-01 1.37999E-05"/>
+      <xs value="3.16534E-03 9.02867E-01"/>
+    </Scatter>
+    <Fission>
+      <xs value="8.64299E-02 3.32690E-01"/>
+      <nu value="3.18911E+00 2.89500E+00"/>
+      <chi value="1.0 0.0"/>
+    </Fission>
+  </nuclide>
+  <nuclide name="polyball_homo">
+    <Capture>
+      <xs value="1.59983001E-02 1.096257766E+01"/>
+    </Capture>
+    <Scatter> <!-- xs vectors are arranged by incident energy, ( g->1, g->2, ..., g->G ) -->
+      <xs value="9.87386E-01 5.16173E-02"/>
+      <xs value="1.38099E-04 2.46461E+00"/>
+    </Scatter>
+  </nuclide>
+  <nuclide name="air_homo">
+    <Capture>
+      <xs value="5.86724E-06 5.75445902E-05"/>
+    </Capture>
+    <Scatter> <!-- xs vectors are arranged by incident energy, ( g->1, g->2, ..., g->G ) -->
+      <xs value="1.93542E-04 1.38576E-06"/>
+      <xs value="6.84098E-08 4.41404E-04"/>
+    </Scatter>
+  </nuclide>
+</nuclides>
+
+<materials>
+  <material name="berpball" density="1.0">
+    <nuclide name="berpball_homo" frac="1.0"/>
+  </material>
+  <material name="polyball" density="1.0">
+    <nuclide name="polyball_homo" frac="1.0"/>
+  </material>
+  <material name="air" density="1.0">
+    <nuclide name="air_homo" frac="1.0"/>
+  </material>
+</materials>
+
 <surfaces>
   <sphere name="sphere1" x0="0.0" y0="0.0" z0="0.0" rad="3.79349"/>
   <sphere name="sphere2" x0="0.0" y0="0.0" z0="0.0" rad="11.41349"/>
@@ -18,14 +65,14 @@
 </surfaces>
 
 <cells>
-  <cell name="berpball" material="mat1">
+  <cell name="berpball" material="berpball">
     <surface name="sphere1" sense="-1"/>
   </cell>
-  <cell name="polyball" material="mat2">
+  <cell name="polyball" material="polyball">
     <surface name="sphere1" sense="+1"/>
     <surface name="sphere2" sense="-1"/>
   </cell>
-  <cell name="air" material="mat3">
+  <cell name="air" material="air">
     <surface name="sphere2" sense="+1"/>
     <surface name="xplane1" sense="+1"/>
     <surface name="xplane2" sense="-1"/>
