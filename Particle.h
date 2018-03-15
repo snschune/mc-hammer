@@ -30,7 +30,7 @@ private:
 public:
     //constructor
     Particle(point posi, point diri, int gi);
-    Particle( const Particle &p);
+    Particle( const Particle &p );
    ~Particle() {}; 
     
     //functions

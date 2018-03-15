@@ -99,6 +99,7 @@ void Transport::output() {
     cout << std::endl << "Total Number of Histories: " << numHis << endl;
 
     int i = 0;
+    /*
     for( Cell_ptr cell : geometry->getCells() ) {
         ++i;
         std::cout << "Collision tally in cell " << i << std::endl;
@@ -108,6 +109,7 @@ void Transport::output() {
         }
         cout << std::endl;
     }
+    */
 
     // print timing information
     timer->printAvgResults();

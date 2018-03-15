@@ -11,8 +11,8 @@
  *
  */
 
-#ifndef _BINNINGSTRUCTURE_HEADER_
-#define _BINNINGSTRUCTURE_HEADER_
+#ifndef _PARTICLEATTRIBUTEBINNINGSTRUCTURE_HEADER_
+#define _PARTICLEATTRIBUTEBINNINGSTRUCTURE_HEADER_
 
 #include <utility>
 #include <iostream>
@@ -39,7 +39,7 @@ class GroupBinningStructure : public ParticleAttributeBinningStructure {
     Utility::BinningStructure<int> binning;
   public:
     GroupBinningStructure(int numGroups): ParticleAttributeBinningStructure(numGroups) , binning(0 , numGroups , numGroups) {};
-   ~GroupBinningStructure();
+   ~GroupBinningStructure() {};
     
     std::pair< int , bool > getIndex( Part_ptr p ) { return(binning.getIndex( p->getGroup() ) ); };
 };
@@ -81,7 +81,7 @@ class AngleBinningStructure : public HistogramBinningStructure {
 
 std::pair< int , bool > AngleBinningStructure::getIndex( Part_ptr p ) {
   // calculates the cosine of the angle between dir and the direction of p, and gets the corresponding index from binningStructure
-  return( binning.getIndex( Utility::pointL2( p->getDir() , dir ) ) );
+  return( binning.getIndex(  p->getDir() * dir  ) );
 };
 
 #endif

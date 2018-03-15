@@ -14,8 +14,7 @@ point point::operator - (point const &pt) {
 }
 
 double point::operator * (point const &pt) {
-  point p(x * pt.x  , y * pt.y, z * pt.z);
-  return(p);
+  return( x * pt.x + y * pt.y + z * pt.z );
 }
 
 point point::operator / (double scalar) {

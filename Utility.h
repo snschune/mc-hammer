@@ -161,7 +161,6 @@ namespace Utility {
     return( (a - b)*(a - b) );
   }
 
-
 /* ****************************************************************************************************** * 
  * Miscellaneous                      
  *
@@ -173,6 +172,10 @@ namespace Utility {
   // return largest positive root of quadratic equation with coefficients a, b, c
   // if both roots negative or complex, return a really big number
   double quadSolve( double a, double b, double c );
+  
+  // translates n-dimensional indices on an n-dimensional array to a scalar index on an unraveled array 
+  // holding the same values
+  int linearizeIndices( std::vector<int> indices , std::vector<int> binSizes );
 
 };
 #endif

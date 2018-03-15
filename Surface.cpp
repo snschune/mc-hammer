@@ -3,6 +3,19 @@
 
 #include "Surface.h"
 
+void surface::scoreTally(Part_ptr p , double xs) {
+  // for each EstimatorCollection
+    // for each attribute
+      // get the index of the Estimator to score
+      // score the estimator
+};
+
+void surface::endTallyHist() {
+    for(auto est : estimators) {
+        est->endHist();
+    }
+};
+
 double plane::eval( point p ) {
     return a * p.x  +  b * p.y  +  c * p.z  - d;
 }
@@ -26,6 +39,6 @@ double sphere::distance( point p, point u ) {
     double b = 2.0 * ( q.x * u.x  +  q.y * u.y  +  q.z * u.z);
     double c = eval( p );
     
-    return quadSolve( 1.0, b, c );
+    return Utility::quadSolve( 1.0, b, c );
     
 }

@@ -5,19 +5,34 @@
 
 #include "Point.h"
 #include "Utility.h"
+#include "EstimatorCollection.h"
+
+typedef std::shared_ptr<EstimatorCollection> EstCol_ptr;
 
 class surface {
 private:
     std::string surface_name;
     
+    // EstimatorCollections
+    vector< EstCol_ptr > estimators;
+    
 public:
     surface( std::string label ) : surface_name(label) {};
     ~surface() {};
+    
+    // Estimator sets/gets
+    void addEstimator( EstCol_ptr newEstimator) { estimators.push_back( newEstimator ); };
+    std::vector< EstCol_ptr > getEstimators() { return estimators; };
     
     virtual std::string name() { return surface_name; };
     
     virtual double eval( point p )   = 0;
     virtual double distance( point p, point u ) = 0;
+    
+    // Estimator interface
+    void scoreTally(Part_ptr p , double xs); 
+    void endTallyHist();
+    // TODO get Tally output
 };
 
 class plane : public surface {

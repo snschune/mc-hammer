@@ -11,9 +11,7 @@ using std::endl;
 //constructors
 
 // copy constructor -- for fission
-Particle::Particle( const Particle &p) {
-  pos              = p.getPos();
-  dir              = p.getDir();
+Particle::Particle( const Particle &p): pos(p.getPos()) , dir(p.getDir())  {
   alive            = true;
   group            = p.getGroup();
   cell             = p.getCell();

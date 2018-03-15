@@ -25,7 +25,7 @@ class Estimator {
    ~Estimator() {};
     
     // set/gets
-    double getCurrentHistTally()   { return( currentHistTally ); };
+    double getCurrentHistTally() { return( currentHistTally ); };
     double getHistTally()    	   { return( histTally        ); };
     double getHistTallySqr() 	   { return( histTallySqr     ); };
     
@@ -37,8 +37,8 @@ class Estimator {
     virtual void score( double val);
 
 };
-
-class SurfaceTally : public Estimator {
+/*
+class SurfaceCurrentTally : public Estimator {
   public:
     SurfaceTally(): Estimator() {};
    ~SurfaceTally() {};
@@ -62,5 +62,5 @@ class CollisionTally : public Estimator {
     
     void score(double xs);
 };
-
+*/
 #endif

@@ -17,13 +17,14 @@
 #include "Estimator.h"
 #include "Particle.h"
 #include "Constants.h"
+#include "EstimatorCollection.h"
 
 //Tet Class includes 4 points which define a given tetrahedra
 //Tets have ID's associated with them.
 
-typedef std::shared_ptr<point>     point_ptr;
-typedef std::shared_ptr<Estimator> Estimator_ptr;
-typedef std::shared_ptr<Particle>  Part_ptr; 
+typedef std::shared_ptr<point>                point_ptr;
+typedef std::shared_ptr<EstimatorCollection>  EstCol_ptr;
+typedef std::shared_ptr<Particle>             Part_ptr; 
 
 using std::vector;
 
@@ -40,7 +41,7 @@ private:
 	vector< double > A1, A2, A3, A4;; //3x3 determinants precomp
 
     // Estimators
-    vector< Estimator_ptr > estimators;
+    vector< EstCol_ptr > estimators;
     
 public:
     
@@ -52,7 +53,7 @@ public:
                       std::shared_ptr<point> p3, std::shared_ptr<point> p4 );
     
     void addVertice( std::shared_ptr< point > inVertice );
-    void addEstimator( Estimator_ptr newEstimator );
+    void addEstimator( EstCol_ptr newEstimator );
     void setID( int tetID );
 
     int              getID();
@@ -61,15 +62,13 @@ public:
     vector< double > getVert3();
     vector< double > getVert4();
     vector< double > getCentroid();
-    std::vector< Estimator_ptr > getEstimators() { return estimators; };
+    std::vector< EstCol_ptr > getEstimators() { return estimators; };
     
     bool amIHere( const std::vector< double >& testPoint );
 
     // Estimator interface
     void scoreTally(Part_ptr p , double xs); 
     void endTallyHist();
-    std::pair< double , double > getSingleGroupTally(int group, unsigned long long nHist);
-    vector< std::pair< double , double > > getTally(unsigned long long nHist);
   
 };
 
