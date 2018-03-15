@@ -6,7 +6,13 @@
 #include "Utility.h"
 #include <vector>
 
+using namespace Utility;
 using std::vector;
+
+/* ****************************************************************************************************** * 
+ * Fast Matrix Operations
+ *   Functions for calculating determinants of double-typed matrices
+ * ****************************************************************************************************** */ 
 
 double fourDeterminant(const vector< double >& v1, const vector< double >& v2, const vector< double >& v3, const vector< double >& v4) {
     
@@ -24,6 +30,24 @@ double threeDeterminant(const vector< double >& v1, const vector< double >& v2, 
 	double det = v1[0] * (v2[1] * v3[2] - v2[2] * v3[1]) - v1[1] * (v2[0] * v3[2] - v2[2] * v3[0]) + v1[2] * (v2[0] * v3[1] - v2[1] * v3[0]);
 	return det;
 }
+
+std::vector< double > pointFourVec( point pos )
+{
+    // Takes a point and returns a vector (length 4) with a "1.0" appended
+    std::vector< double > fourVec;
+    
+    fourVec.push_back( pos.x );
+    fourVec.push_back( pos.y );
+    fourVec.push_back( pos.z );
+    fourVec.push_back( 1.0 );
+    
+    return fourVec;
+}
+
+/* ****************************************************************************************************** * 
+ * Miscellaneous                      
+ *
+ * ****************************************************************************************************** */ 
 
 double dist(point p1 , point p2) {
   return std::sqrt(
@@ -77,15 +101,3 @@ double quadSolve( double a, double b, double c ) {
     
 }
 
-std::vector< double > pointFourVec( point pos )
-{
-    // Takes a point and returns a vector (length 4) with a "1.0" appended
-    std::vector< double > fourVec;
-    
-    fourVec.push_back( pos.x );
-    fourVec.push_back( pos.y );
-    fourVec.push_back( pos.z );
-    fourVec.push_back( 1.0 );
-    
-    return fourVec;
-}

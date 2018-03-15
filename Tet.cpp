@@ -8,6 +8,8 @@
 
 #include "Tet.h"
 
+using namespace Utility;
+
 //default cstr initializes a tet of zero size
 
 Tet::Tet( std::string label, point p ): tetName( label ) {}

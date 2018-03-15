@@ -20,14 +20,14 @@
 #include "Utility.h"
 #include "Particle.h"
 #include "Estimator.h"
-#include "BinningStructure.h"
+#include "ParticleAttributeBinningStructure.h"
 
 using std::vector;
 using std::string;
 
-typedef std::shared_ptr<Estimator>        Estimator_ptr;
-typedef std::shared_ptr<Particle>         Part_ptr;
-typedef std::shared_ptr<BinningStructure> Bin_ptr;
+typedef std::shared_ptr<Estimator>                         Estimator_ptr;
+typedef std::shared_ptr<Particle>                          Part_ptr;
+typedef std::shared_ptr<ParticleAttributeBinningStructure> Bin_ptr;
 
 /* ****************************************************************************************************** * 
  * Base Estimator Collection                                   

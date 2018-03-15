@@ -8,9 +8,8 @@
 #define _ESTIMATOR_HEADER_
 
 #include <iostream>
+#include <vector>
 #include <memory> 
-
-#include "Utility.h"
 
 using std::vector;
 using std::string;
