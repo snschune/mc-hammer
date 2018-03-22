@@ -37,6 +37,9 @@ int main(int argc , char *argv[])
 
     cout << "running transport..." << endl;
     t->runTransport();
+    cout << std::endl << "Transport finished!" << std::endl;
+    cout << std::endl << "************************************************************************" << std::endl;
+    cout << "************************************************************************" << std::endl;
     cout << "Printing outputs..." << endl;
     t->output();
 

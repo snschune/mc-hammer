@@ -57,7 +57,6 @@ void Input::readInput( std::string xmlFilename ) {
     for ( auto r : n.children() ) 
     {
       double tempXS;
-      std::shared_ptr< Reaction > Rxn;
       std::string rxnType = r.name();
       if ( rxnType == "Capture" ) 
       {

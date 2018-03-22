@@ -26,6 +26,6 @@ double sphere::distance( point p, point u ) {
     double b = 2.0 * ( q.x * u.x  +  q.y * u.y  +  q.z * u.z);
     double c = eval( p );
     
-    return quadSolve( 1.0, b, c );
+    return Utility::quadSolve( 1.0, b, c );
     
 }

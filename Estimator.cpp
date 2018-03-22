@@ -35,7 +35,7 @@ void SurfaceTally::score(Part_ptr pi , Part_ptr pf ) {
 
 //functions
 void CellTally::score(Part_ptr pi , Part_ptr pf ) {
-  tally +=  dist(pi->getPos() , pf->getPos());
+  tally +=  Utility::dist(pi->getPos() , pf->getPos());
 };
 
 

@@ -201,7 +201,7 @@ Tet_ptr Mesh::whereAmI( point pos )
 {
     Tet_ptr hereIAm = nullptr;
 
-    std::vector< double > testPoint = pointFourVec( pos );
+    std::vector< double > testPoint = Utility::pointFourVec( pos );
     
     for( auto tet : tetVector )
     {
@@ -325,8 +325,8 @@ void Mesh::writeToVTK() {
         tallyTag.addAttribute( "type", "Float64");
         tallyTag.addAttribute( "Name", tallyName );
         tallyTag.addAttribute( "format", "ascii" );
-        tallyMin = vecMin(dataVec);
-        tallyMax = vecMax(dataVec);
+        tallyMin = Utility::vecMin(dataVec);
+        tallyMax = Utility::vecMax(dataVec);
         // the string stream is the only way I was able to retain precision
         std::ostringstream maxStream, minStream;
         maxStream << tallyMax;

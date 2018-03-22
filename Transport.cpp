@@ -51,7 +51,7 @@ void Transport::runTransport()
                     timer->startTimer("scoring mesh tally");
                     //std::cout << "About to score mesh tally " << std::endl;
                     // score mesh tally
-                    mesh->scoreTally( p , current_Cell->getMat()->getMacroXS( p ) );
+                    //mesh->scoreTally( p , current_Cell->getMat()->getMacroXS( p ) ); // TODO: uncomment this line (for testing only)
                     //std::cout << "We scored that mesh tally! " << std::endl;
                     timer->endTimer("scoring mesh tally");
 
@@ -87,10 +87,6 @@ void Transport::runTransport()
         // end the history timer
         timer->endHist();
     }
-
-    cout << std::endl << "Transport finished!" << std::endl;
-    cout << std::endl << "************************************************************************" << std::endl;
-    cout << "************************************************************************" << std::endl;
     tally /= numHis;
     //cout << "tally " << tally << endl;
 }
