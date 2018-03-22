@@ -7,6 +7,7 @@ public:
     
     point( double a, double b, double c ) : x(a), y(b), z(c) {};
     ~point() {};
+    point operator=(const point &rhs);
 };
 
 class ray {

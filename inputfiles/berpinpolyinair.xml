@@ -3,7 +3,7 @@
 <!-- This is how a comment is written in xml -->
 
 <!-- Setup Parameters -->
-<setup nhistories="10" ngroups="2" xsfile="berpinpolyinair.xs" meshfile="berpinpolyinair.thrm" loud="true"/>
+<setup nhistories="1000" ngroups="2" xsfile="berpinpolyinair.xs" meshfile="berpinpolyinair.thrm" loud="true"/>
 <outfiles outfile="berpinpolyinair.out" vtkfile="berpinpolyinair.vtu" timefile="time.out"/>
 
 <surfaces>

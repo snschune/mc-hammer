@@ -9,11 +9,27 @@ using std::cout;
 using std::endl;
 
 //constructors
+
+
+//copy cstr
+Particle::Particle(Particle &p1): pos(p1.pos),dir(p1.dir),group(p1.group),alive(1),collisionCounter(p1.collisionCounter)
+{
+  //newParticle.alive = true;
+  //if using for fission events
+  //newParticle.pos = p1.pos;
+  // will have to sample new diriections
+}
+
+
+
 Particle::Particle(point posi, point diri, int gi): pos(posi), dir(diri), group(gi), alive(1)
 {
     double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
     dir.x *= norm; dir.y *= norm; dir.z *= norm;
+    collisionCounter = 0;
 }
+
+
 
 bool Particle::isAlive()
 {
@@ -44,6 +60,11 @@ point Particle::getDir()
 int Particle::getGroup()
 {
     return group;
+}
+
+int Particle::getCollisionCounter()
+{
+  return collisionCounter;
 }
 
 void Particle::setCell(Cell_ptr celli)
@@ -100,6 +121,17 @@ void Particle::kill()
     alive = 0;
     return;
 }
+
+void Particle::incrementCollision()
+{
+  collisionCounter ++;
+}
+
+void Particle::resetCounter()
+{
+  collisionCounter = 0;
+}
+
 
 void Particle::printState()
 {

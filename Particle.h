@@ -24,9 +24,14 @@ private:
     point dir;
     Cell_ptr cell; //still need to change this
     int group;
+    int collisionCounter;
 public:
-    //constructor
+    //constructor..initialize coll counter to zero
     Particle(point posi, point diri, int gi);
+    //copy constructor
+    Particle(Particle &p1);
+
+
     //functions
     bool isAlive();
     Cell_ptr getCell();
@@ -34,7 +39,7 @@ public:
     point getDir();
     //r_ptr getray();
     int   getGroup();
-
+    int getCollisionCounter();
     void setCell(Cell_ptr);
     void setGroup(int g);
     void setPos(point posi);
@@ -43,7 +48,8 @@ public:
     void setDir(double ui, double vi, double wi);
     void move(double dist);
     void kill();
-    
+    void incrementCollision();
+    void resetCounter();
     void printState();
 };
 
