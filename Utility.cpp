@@ -122,3 +122,12 @@ int Utility::linearizeIndices( std::vector<int> indices , std::vector<int> binSi
   return(n);
 }
 
+/* ****************************************************************************************************** * 
+ * Generic Vector and Point Operations
+ *
+ * ****************************************************************************************************** */ 
+
+// L2 norm of two points
+double pointL2( point a , point b ) {
+  return( (a - b)*(a - b) );
+}

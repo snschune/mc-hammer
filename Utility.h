@@ -157,9 +157,7 @@ namespace Utility {
   }
   
   // L2 norm of two points
-  double pointL2( point a , point b ) {
-    return( (a - b)*(a - b) );
-  }
+  double pointL2( point a , point b );
 
 /* ****************************************************************************************************** * 
  * Miscellaneous                      

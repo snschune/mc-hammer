@@ -34,10 +34,6 @@ typedef std::shared_ptr<ParticleAttributeBinningStructure> Bin_ptr;
  * ****************************************************************************************************** */ 
 
 class EstimatorCollection {
-  private:
-    const static std::vector< std::string > validAttributes;
-    const static std::string                estimatorType;
-  
   protected:
     int                            size;
     vector <int>                   binSizes;
@@ -50,15 +46,8 @@ class EstimatorCollection {
     EstimatorCollection(std::map< string , Bin_ptr > attributesin);
    ~EstimatorCollection() {};
 
-    // initial check of validity of attribute names during input
-//    bool checkValidAttributeName( std::string name);
-//    void checkAttributeNames();
-    
     // find index of estimator to score
     int  getLinearIndex(Part_ptr p);
-
-    // get/sets
-    std::string getType() { return( estimatorType); };
 
     // interface for wrappers of score() for derived EstimatorCollection classes
     virtual void scoreCollision(Part_ptr , double)     = 0;
@@ -68,19 +57,12 @@ class EstimatorCollection {
     void endHist();
 };
 
-//const std::vector< std::string > EstimatorCollection::validAttributes = {""};
-//const std::string  EstimatorCollection::estimatorType = "";
-
 /* ****************************************************************************************************** * 
  * Collision Estimator Collection                                   
  *  Scoring function wrapped by scoreCollision
  * ****************************************************************************************************** */ 
 
 class CollisionEstimatorCollection: public EstimatorCollection {
-  private:
-    const static std::vector< std::string > validAttributes;
-    const static std::string estimatorType;
-  
   public:
     CollisionEstimatorCollection(std::map< string , Bin_ptr > attributesin): EstimatorCollection(attributesin) {};
    ~CollisionEstimatorCollection() {}; 
@@ -90,20 +72,12 @@ class CollisionEstimatorCollection: public EstimatorCollection {
     void scoreSurfaceFluence(Part_ptr , point) {};
 };
 
-//const std::vector< std::string > CollisionEstimatorCollection::validAttributes = {"Group" , "CollisionOrder" };
-//const std::string CollisionEstimatorCollection::estimatorType = "Collision";
-
-
 /* ****************************************************************************************************** * 
  * Surface Estimator Collection                                   
  *  scoring function virtual, lower derived classes have different wrappers
  * ****************************************************************************************************** */ 
 
 class SurfaceEstimatorCollection: public EstimatorCollection {
-  private:
-    const static std::vector< std::string > validAttributes;
-    const static std::string estimatorType;
-  
   public:
     SurfaceEstimatorCollection(std::map< string , Bin_ptr > attributesin): EstimatorCollection(attributesin) {}; 
    ~SurfaceEstimatorCollection() {};
@@ -131,6 +105,5 @@ class SurfaceCurrentEstimatorCollection : public SurfaceEstimatorCollection {
     void scoreSurfaceFluence(Part_ptr , point) {};
     void scoreSurfaceCurrent(Part_ptr p)   { score(p , 1.0); }; // tally 1 particle
 };
-
 
 #endif

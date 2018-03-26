@@ -79,9 +79,4 @@ class AngleBinningStructure : public HistogramBinningStructure {
     std::pair< int , bool > getIndex( Part_ptr p );
 };
 
-std::pair< int , bool > AngleBinningStructure::getIndex( Part_ptr p ) {
-  // calculates the cosine of the angle between dir and the direction of p, and gets the corresponding index from binningStructure
-  return( binning.getIndex(  p->getDir() * dir  ) );
-};
-
 #endif
