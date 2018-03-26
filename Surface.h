@@ -19,6 +19,10 @@ private:
 public:
     surface( std::string label ) : surface_name(label) {};
     ~surface() {};
+
+    // returns a normal vector given a point on the surface
+    // and a crossing direction
+    virtual point getNormal(ray r) = 0;
     
     // Estimator sets/gets
     void addEstimator( EstCol_ptr newEstimator) { estimators.push_back( newEstimator ); };
@@ -42,6 +46,7 @@ public:
     plane( std::string label, double p1, double p2, double p3, double p4 ) : surface(label), a(p1), b(p2), c(p3), d(p4) {};
     ~plane() {};
     
+    point  getNormal(ray r);
     double eval( point p );
     double distance( point p, point u );
 };
@@ -53,6 +58,7 @@ public:
     sphere( std::string label, double p1, double p2, double p3, double p4 ) : surface(label), x0(p1), y0(p2), z0(p3), rad(p4) {};
     ~sphere() {};
     
+    point  getNormal(ray r);
     double eval( point p );
     double distance( point p, point u );
 };
