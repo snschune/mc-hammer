@@ -12,7 +12,7 @@ bool close(double a , double b) {
 
 TEST_CASE( "Estimator base class set/gets", "[Estimator]" ) {
 
-    CollisionTally est;
+    Estimator est;
 
     est.score(1.0);
     est.score(1.0);
@@ -50,7 +50,7 @@ TEST_CASE( "Estimator base class set/gets", "[Estimator]" ) {
 
 TEST_CASE( "collision estimator std dev", "[Estimator]" ) {
 
-    CollisionTally est2;
+    Estimator est2;
 
     est2.score(0.17);
     est2.score(0.12);
@@ -72,7 +72,7 @@ TEST_CASE( "collision estimator std dev", "[Estimator]" ) {
 
 TEST_CASE( "Estimator with no scores" , "[Estimator]" ) {
 
-    CollisionTally est;
+    Estimator est;
     est.endHist();
     
     // history tallies work
