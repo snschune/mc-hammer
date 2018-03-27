@@ -24,13 +24,14 @@
 using std::vector;
 using std::string;
 
+typedef std::shared_ptr<surface>                           Surf_ptr;
+typedef std::shared_ptr<Cell>                              Cell_ptr;
 typedef std::shared_ptr<Estimator>                         Estimator_ptr;
 typedef std::shared_ptr<Particle>                          Part_ptr;
 typedef std::shared_ptr<ParticleAttributeBinningStructure> Bin_ptr;
 
 /* ****************************************************************************************************** * 
  * Base Estimator Collection                                   
- *
  * ****************************************************************************************************** */ 
 
 class EstimatorCollection {
@@ -40,26 +41,25 @@ class EstimatorCollection {
     std::map < string , Bin_ptr >  attributes;
     vector   < Estimator_ptr    >  estimators;
     
-    void score(Part_ptr , double); 
+    void scoreTally(Part_ptr , double d); 
 
   public:
     EstimatorCollection(std::map< string , Bin_ptr > attributesin);
    ~EstimatorCollection() {};
 
     // find index of estimator to score
-    int  getLinearIndex(Part_ptr p);
+    // the second boolean value in the pair is true of the particle has all it's 
+    // attributes within the range of binning structures for this tally
+    int getLinearIndex(Part_ptr p);
 
-    // interface for wrappers of score() for derived EstimatorCollection classes
-    virtual void scoreCollision(Part_ptr , double)     = 0;
-    virtual void scoreSurfaceCurrent(Part_ptr)         = 0;
-    virtual void scoreSurfaceFluence(Part_ptr , point) = 0;
+    // interface for wrapper of scoreTally() for derived EstimatorCollection classes
+    virtual void score(Part_ptr)  = 0;
 
     void endHist();
 };
 
 /* ****************************************************************************************************** * 
  * Collision Estimator Collection                                   
- *  Scoring function wrapped by scoreCollision
  * ****************************************************************************************************** */ 
 
 class CollisionEstimatorCollection: public EstimatorCollection {
@@ -67,14 +67,12 @@ class CollisionEstimatorCollection: public EstimatorCollection {
     CollisionEstimatorCollection(std::map< string , Bin_ptr > attributesin): EstimatorCollection(attributesin) {};
    ~CollisionEstimatorCollection() {}; 
 
-    void scoreCollision(Part_ptr p , double xs) { score(p , 1.0 / xs); }; // tally 1 / cross section
-    void scoreSurfaceCurrent(Part_ptr)  {};
-    void scoreSurfaceFluence(Part_ptr , point) {};
+    void score(Part_ptr p );
 };
 
 /* ****************************************************************************************************** * 
- * Surface Estimator Collection                                   
- *  scoring function virtual, lower derived classes have different wrappers
+ * Surface Estimator Collection
+ *  * scoring function virtual to allow for multiple inherited types for scoring on surfaces
  * ****************************************************************************************************** */ 
 
 class SurfaceEstimatorCollection: public EstimatorCollection {
@@ -83,27 +81,20 @@ class SurfaceEstimatorCollection: public EstimatorCollection {
    ~SurfaceEstimatorCollection() {};
 };
 
-//const std::vector< std::string >  SurfaceEstimatorCollection::validAttributes = {"Group" , "CollisionOrder"  , "Angle" };
-//const std::string  SurfaceEstimatorCollection::estimatorType = "Collision";
-
 class SurfaceFluenceEstimatorCollection : public SurfaceEstimatorCollection {
   public:
     SurfaceFluenceEstimatorCollection(std::map< string , Bin_ptr > attributesin): SurfaceEstimatorCollection(attributesin) {};
    ~SurfaceFluenceEstimatorCollection() {};
 
-    void scoreCollision(Part_ptr , double) {};
-    void scoreSurfaceCurrent(Part_ptr)     {};
-    void scoreSurfaceFluence(Part_ptr p , point surfNormal); // tally 1 /  cos of angle between p direction and surfNormal
+    void score(Part_ptr p);
 };
 
 class SurfaceCurrentEstimatorCollection : public SurfaceEstimatorCollection {
   public:
     SurfaceCurrentEstimatorCollection(std::map< string , Bin_ptr > attributesin): SurfaceEstimatorCollection(attributesin) {};
    ~SurfaceCurrentEstimatorCollection() {};
-
-    void scoreCollision(Part_ptr , double)     {};
-    void scoreSurfaceFluence(Part_ptr , point) {};
-    void scoreSurfaceCurrent(Part_ptr p)   { score(p , 1.0); }; // tally 1 particle
+    
+   void score(Part_ptr p);
 };
 
 #endif

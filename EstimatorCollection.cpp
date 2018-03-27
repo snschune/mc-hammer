@@ -19,46 +19,19 @@ EstimatorCollection::EstimatorCollection(std::map< string , Bin_ptr > attributes
 // default constructor calculates number of estimators required
   size = 1;
   for (const auto &vals : attributes) {
+    // determine the total number of estimators
+    // and the number needed for each attribute
     size *= vals.second->getSize();
     binSizes.push_back( vals.second->getSize() );
+    for(int i = 0; i < vals.second->getSize(); ++i) {
+      // push back an estimator pointer for each bin in this attribute
+      Estimator tally;
+      Estimator_ptr estimator = std::make_shared<Estimator>(tally);
+      estimators.push_back(estimator);
+    }
   }
-  
-  for(int i = 0; i < size; ++i) {
-    Estimator tally;
-    Estimator_ptr estimator = std::make_shared<Estimator>(tally);
-    estimators.push_back(estimator);
-  }
-
 };
-/*
-bool EstimatorCollection::checkValidAttributeName( std::string name) 
-{
-  bool valid = false;
-  for(auto attribute : validAttributes) {
-    if( name == attribute) {
-      valid = true;
-    }
-  }
-  return(valid);
-};  
 
-void EstimatorCollection::checkAttributeNames() 
-{
-  bool valid;
-  for(auto const& val : attributes) {
-    valid = checkValidAttributeName( val.first );
-    if( valid == false ) {
-      std::cout << "Error while parsing tally attributes!" << std::endl;
-      std::cout << val.first << " is not a valid attribute for a " << estimatorType << " tally!" << std::endl;
-      std::cout << "It will be ignored." << std::endl;
-
-      // remove this attribute from the attribute map
-      attributes.erase(val.first);
-    }
-
-  }
-};  
-*/
 void EstimatorCollection::endHist() {
   for(auto estimator : estimators) {
     estimator->endHist();
@@ -74,15 +47,20 @@ int EstimatorCollection::getLinearIndex(Part_ptr p ) {
       indices.push_back( index.first );
     }
     else { 
-      // if one of the particle attributes is outisde the binning range, return from the function and don't score any estimators
-      return(0);
+      // if one of the particle attributes is outisde the binning range, return -1 from the function 
+      return(-1);
     }
   }
   return( Utility::linearizeIndices( indices ,  binSizes ) );
 };
 
-void EstimatorCollection::score(Part_ptr p  , double d) {
-  estimators.at( getLinearIndex(p) )->score(d);
+void EstimatorCollection::scoreTally(Part_ptr p  , double d) {
+  int i =  getLinearIndex(p);
+  if( i >= 0  ) { 
+    // if the particle attributes are within the binning range
+    // score the particle at the correct index
+    estimators.at(i)->score(d);
+  }
 }
 
 /* ****************************************************************************************************** * 
@@ -90,14 +68,26 @@ void EstimatorCollection::score(Part_ptr p  , double d) {
  *
  * ****************************************************************************************************** */ 
 
+void CollisionEstimatorCollection::score(Part_ptr p) {
+  // tallies 1 / the total cross section of the material the particle is currently in
+  // A collision tally must be scored right after the collision is sampled
+  // before altering any of the particle properties as a result of the collision
+  scoreTally(p , 1.0 / p->getCell()->getMat()->getMacroXS(p) );
+};
 
 /* ****************************************************************************************************** * 
  * Surface Estimator Collection                                   
  *
  * ****************************************************************************************************** */ 
 
+void SurfaceFluenceEstimatorCollection::score(Part_ptr p) {
+  // tallies 1 / the cos of the angle between the particles direction
+  // and the surface normal where it last crossed a surface
+  
+  scoreTally(p , 1.0 / (p->getDir() * p->getSurf()->getNormal()) );
+};
 
-void SurfaceFluenceEstimatorCollection::scoreSurfaceFluence(Part_ptr p , point surfNormal ) {
-  // score the cos of the angle bt particle direction and surface normal
-  estimators.at( getLinearIndex(p) )->score( 1 / ( p->getDir() * surfNormal ) );
+void SurfaceCurrentEstimatorCollection::score(Part_ptr p) {
+  // tallies 1 
+  scoreTally(p , 1.0 ) ;
 };

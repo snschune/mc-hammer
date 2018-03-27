@@ -41,7 +41,7 @@ class GroupBinningStructure : public ParticleAttributeBinningStructure {
     GroupBinningStructure(int numGroups): ParticleAttributeBinningStructure(numGroups) , binning(0 , numGroups , numGroups) {};
    ~GroupBinningStructure() {};
     
-    std::pair< int , bool > getIndex( Part_ptr p ) { return(binning.getIndex( p->getGroup() ) ); };
+    std::pair< int , bool > getIndex( Part_ptr p );
 };
  
 class CollisionOrderBinningStructure : public ParticleAttributeBinningStructure {
@@ -52,7 +52,7 @@ class CollisionOrderBinningStructure : public ParticleAttributeBinningStructure 
     CollisionOrderBinningStructure(int order        ): ParticleAttributeBinningStructure( 1       ) , binning(order , order , 1             ) {};
    ~CollisionOrderBinningStructure() {};
     
-    std::pair< int , bool > getIndex( Part_ptr p ) { return(binning.getIndex( p->getNumCollisions() ) ); };
+    std::pair< int , bool > getIndex( Part_ptr p );
 };
 
 /* Continous Particle Attributes */

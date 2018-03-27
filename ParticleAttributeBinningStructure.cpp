@@ -13,6 +13,18 @@
 
 #include "ParticleAttributeBinningStructure.h"
 
+/* Integer Particle Attributes */
+
+std::pair< int , bool > GroupBinningStructure::getIndex( Part_ptr p ) {
+  return(binning.getIndex( p->getGroup() ) );
+};
+
+std::pair< int , bool > CollisionOrderBinningStructure::getIndex( Part_ptr p ) {
+  return(binning.getIndex( p->getNumCollisions() ) );
+};
+
+/* Continous Particle Attributes */
+
 std::pair< int , bool > AngleBinningStructure::getIndex( Part_ptr p ) {
   // calculates the cosine of the angle between dir and the direction of p, and gets the corresponding index from binningStructure
   return( binning.getIndex(  p->getDir() * dir  ) );

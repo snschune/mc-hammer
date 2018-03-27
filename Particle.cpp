@@ -32,6 +32,11 @@ void Particle::setCell(Cell_ptr celli)
 	cell = celli;
 	return;
 }
+void Particle::setSurf(Surf_ptr surfi)
+{
+	surf = surfi;
+	return;
+}
 void Particle::setGroup(int g)
 {
     group = g;

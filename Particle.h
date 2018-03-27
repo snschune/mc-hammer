@@ -14,8 +14,10 @@
 #include <cmath>
 
 class Cell;
+class surface;
 
-typedef std::shared_ptr<Cell> Cell_ptr;
+typedef std::shared_ptr<Cell>    Cell_ptr;
+typedef std::shared_ptr<surface> Surf_ptr;
 
 class Particle
 {
@@ -23,7 +25,8 @@ private:
     bool alive;
     point pos;
     point dir;
-    Cell_ptr cell; //still need to change this
+    Cell_ptr cell; // the cell the particle is currently in
+    Surf_ptr surf; // the surface the particle most recently crossed
     int group;
     int collisionCounter;
 
@@ -37,6 +40,7 @@ public:
     // gets
     bool isAlive()           const { return(alive);            };
     Cell_ptr getCell()       const { return(cell);             };
+    Surf_ptr getSurf()       const { return(surf);             };
     point getPos()           const { return(pos);              };
     point getDir()           const { return(dir);              };   
     int   getGroup()         const { return(group);            };
@@ -45,6 +49,7 @@ public:
     // sets
     void countCollision() {collisionCounter++; };
     void setCell(Cell_ptr celli);
+    void setSurf(Surf_ptr surfi);
     void setGroup(int g);
     void setPos(point posi);
     void setDir(point diri);

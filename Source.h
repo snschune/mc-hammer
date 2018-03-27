@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include "Particle.h"
+
 #ifndef _SOURCE_HEADER_
 #define _SOURCE_HEADER_
 typedef std::shared_ptr<Particle> Part_ptr;
