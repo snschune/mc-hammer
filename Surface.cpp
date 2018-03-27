@@ -31,13 +31,13 @@ double plane::distance( point p, point u ) {
 point plane::getNormal(point pt){
   if(eval(pt) == 0) {
     point normal(a , b , c);
-    return( normal / std::sqrt(normal * normal) )
+    return( normal / std::sqrt(normal * normal) );
   }
   else {
     // if the point is not on the surface, return a null vector
     // client must check for this condition
-    Point p(0 , 0 ,0)
-    return(p)
+    point p(0 , 0 ,0);
+    return(p);
   }
 }
 
@@ -68,6 +68,6 @@ point sphere::getNormal(point pt){
     // if the point is not on the surface, return a null vector
     // client must check for this condition
     point p(0 , 0 ,0);
-    return(p)
+    return(p);
   }
 }
