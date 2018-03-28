@@ -17,10 +17,10 @@ class Constants
 private:
     int numGroups;
     unsigned long long numHis;
-    double tolerance    = std::numeric_limits<double>::epsilon();
-    bool allTets        = false;
-    bool killAfterNColl;
-    bool locked;
+    double tolerance       = std::numeric_limits<double>::epsilon();
+    bool   allTets         = false;
+    bool   locked;
+    int    killAfterNColl;
     
 public:
     Constants() {};
@@ -84,7 +84,7 @@ public:
         }
     }
 
-    void setKillAfterNColl( bool killAfterNColli )
+    void setKillAfterNColl( int killAfterNColli )
     {
         if(!locked)
         {

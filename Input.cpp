@@ -22,7 +22,7 @@ void Input::readInput( std::string xmlFilename ) {
   nGroups        = input_setup.attribute("ngroups").as_int();
   nHist          = input_setup.attribute("nhistories").as_int();
   loud           = input_setup.attribute("loud").as_bool();
-  killAfterNColl = input_setup.attribute("killAfterNColl").as_bool();
+  killAfterNColl = input_setup.attribute("killAfterNColl").as_int();
 
   // get outfile parameters
   pugi::xml_node input_outfiles = input_file.child("outfiles");
@@ -34,7 +34,7 @@ void Input::readInput( std::string xmlFilename ) {
   constants = std::make_shared< Constants > ();
   constants->setNumGroups( nGroups );
   constants->setNumHis( nHist );
-  constants->setKillAfterNColl( killAfterNColl );
+  if ( killAfterNColl ) { constants->setKillAfterNColl( killAfterNColl ); }
 
   // initialize geometry and mesh objects
   geometry = std::make_shared< Geometry >   ();
