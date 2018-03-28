@@ -17,8 +17,9 @@ class Constants
 private:
     int numGroups;
     unsigned long long numHis;
-    double tolerance = std::numeric_limits<double>::epsilon();
-    bool allTets = false;
+    double tolerance    = std::numeric_limits<double>::epsilon();
+    bool allTets        = false;
+    bool killAfterNColl;
     bool locked;
     
 public:
@@ -31,6 +32,11 @@ public:
     int getNumGroups()
     {
         return numGroups;
+    }
+
+    int getKillAfterNColl()
+    {
+        return killAfterNColl;
     }
 
     bool getAllTets()
@@ -71,6 +77,18 @@ public:
         if(!locked)
         {
             allTets = true;
+        }
+        else
+        {
+            cout << "Access denied. Constants are locked." << endl;
+        }
+    }
+
+    void setKillAfterNColl( bool killAfterNColli )
+    {
+        if(!locked)
+        {
+            killAfterNColl = killAfterNColli;
         }
         else
         {

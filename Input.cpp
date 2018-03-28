@@ -17,11 +17,12 @@ void Input::readInput( std::string xmlFilename ) {
 
   // get setup parameters
   pugi::xml_node input_setup = input_file.child("setup");
-  xsFilename   = input_setup.attribute("xsfile").value();
-  meshFilename = input_setup.attribute("meshfile").value();
-  nGroups      = input_setup.attribute("ngroups").as_int();
-  nHist        = input_setup.attribute("nhistories").as_int();
-  loud         = input_setup.attribute("loud").as_bool();
+  xsFilename     = input_setup.attribute("xsfile").value();
+  meshFilename   = input_setup.attribute("meshfile").value();
+  nGroups        = input_setup.attribute("ngroups").as_int();
+  nHist          = input_setup.attribute("nhistories").as_int();
+  loud           = input_setup.attribute("loud").as_bool();
+  killAfterNColl = input_setup.attribute("killAfterNColl").as_bool();
 
   // get outfile parameters
   pugi::xml_node input_outfiles = input_file.child("outfiles");
@@ -33,6 +34,7 @@ void Input::readInput( std::string xmlFilename ) {
   constants = std::make_shared< Constants > ();
   constants->setNumGroups( nGroups );
   constants->setNumHis( nHist );
+  constants->setKillAfterNColl( killAfterNColl );
 
   // initialize geometry and mesh objects
   geometry = std::make_shared< Geometry >   ();
@@ -342,10 +344,11 @@ void Input::readInput( std::string xmlFilename ) {
   // iterate over estimators
   pugi::xml_node input_estimators = input_file.child("estimators");
   for ( auto e : input_estimators ) {
-    std::string type      = e.name();
-    std::string name      = e.attribute("name").value();
-    std::string apply     = e.attribute("apply").value();
-    std::string applyName = e.attribute("applyName").value();
+    std::string type           = e.name();
+    std::string name           = e.attribute("name").value();
+    std::string apply          = e.attribute("apply").value();
+    std::string applyName      = e.attribute("applyName").value();
+    int         collisionOrder = e.attribute("collisonOrder").as_int();
 
     if ( type == "CollisionTally" ) {
       if ( apply == "cell" ) {

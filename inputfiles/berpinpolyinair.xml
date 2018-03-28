@@ -3,7 +3,7 @@
 <!-- This is how a comment is written in xml -->
 
 <!-- Setup Parameters -->
-<setup nhistories="10" ngroups="2" xsfile="berpinpolyinair.xs" meshfile="berpinpolyinair.thrm" loud="true"/>
+<setup nhistories="10" ngroups="2" killAfter="1" xsfile="berpinpolyinair.xs" meshfile="berpinpolyinair.thrm" loud="true"/>
 <outfiles outfile="berpinpolyinair.out" vtkfile="berpinpolyinair.vtu" timefile="time.out"/>
 
 <nuclides>
@@ -84,8 +84,8 @@
 </cells>
 
 <estimators> <!-- Right now we can only read in CollisionTally estimators, will add more as needed -->
-  <CollisionTally name="uncollidedFlux" apply="cell" applyName="all_cells"/>
-  <CollisionTally name="uncollidedFlux" apply="tet" applyName="all_tets"/>
+  <CollisionTally name="uncollidedFlux" apply="cell" applyName="all_cells" collisionOrder="1"/>
+  <CollisionTally name="uncollidedFlux" apply="tet" applyName="all_tets" collisionOrder="1"/>
   <!-- ************* These examples are in-progress **************************** -->
   <!-- <CollisionTally name="uncollidedFlux" apply="cell" applyName="berpball"/> -->
   <!-- <CollisionTally name="uncollidedFlux" apply="tet" applyName="tet1"/>      -->

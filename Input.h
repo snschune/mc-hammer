@@ -38,6 +38,7 @@ class Input
     std::string                   outFilename;
     std::string                   vtkFilename;
     std::string                   timeFilename;
+    bool                          killAfterNColl;
     bool                          loud;
     int                           nHist;
     int                           nGroups;
