@@ -149,8 +149,12 @@ bool Tet::amIHere( const std::vector< double >& testPoint )
 
 // Estimator interface
 
-void Tet::scoreTally(Part_ptr p , double xs) {
+void Tet::scoreTally(Part_ptr p , double xs) 
+{
+  if ( estimators.at( p->getGroup() - 1 )->getCollisionOrder() == p->getNCollisions() )
+  {
     estimators.at( p->getGroup() - 1 )->score(xs);
+  }
 }
 
 void Tet::endTallyHist() {

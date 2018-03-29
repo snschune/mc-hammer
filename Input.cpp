@@ -348,7 +348,7 @@ void Input::readInput( std::string xmlFilename ) {
     std::string name           = e.attribute("name").value();
     std::string apply          = e.attribute("apply").value();
     std::string applyName      = e.attribute("applyName").value();
-    int         collisionOrder = e.attribute("collisonOrder").as_int();
+    int         collisionOrder = e.attribute("collisionOrder").as_int();
 
     if ( type == "CollisionTally" ) {
       if ( apply == "cell" ) {
@@ -358,6 +358,7 @@ void Input::readInput( std::string xmlFilename ) {
             for ( int i=0; i<nGroups; i++ ) {
               name += "_g" + std::to_string( i + 1 );
               std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >( name );
+              Est->setCollisionOrder( collisionOrder );
               cel->addEstimator( Est );
               name = e.attribute("name").value();
             }
@@ -370,6 +371,7 @@ void Input::readInput( std::string xmlFilename ) {
             for ( int i=0; i<nGroups; i++ ) {
               name += "_g" + std::to_string(i+1);
               std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >( name );
+              Est->setCollisionOrder( collisionOrder );
               cel->addEstimator( Est );
               name = e.attribute("name").value();
             }
@@ -391,6 +393,7 @@ void Input::readInput( std::string xmlFilename ) {
             for ( int i=0; i<nGroups; i++ ) {
               name += "_g" + std::to_string( i + 1 );
               std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >( name );
+              Est->setCollisionOrder( collisionOrder );
               t->addEstimator( Est );
               name = e.attribute("name").value();
             }
@@ -403,6 +406,7 @@ void Input::readInput( std::string xmlFilename ) {
             for ( int i=0; i<nGroups; i++ ) {
               name += "_g" + std::to_string(i+1);
               std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >( name );
+              Est->setCollisionOrder( collisionOrder );
               tet->addEstimator( Est );
               name = e.attribute("name").value();
             }

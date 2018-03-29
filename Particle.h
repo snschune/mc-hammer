@@ -25,6 +25,8 @@ private:
     point dir;
     Cell_ptr cell; //still need to change this
     int group;
+    int nCollisions;
+
 public:
     //constructor
     Particle(point posi, point diri, int gi);
@@ -34,6 +36,7 @@ public:
     point getPos();
     point getDir();
     int   getGroup();
+    int   getNCollisions();
 
     void setCell(Cell_ptr);
     void setGroup(int g);
@@ -44,7 +47,7 @@ public:
     void move(double dist);
     void kill();
     void scatter( int gf );
-    void rotate( double mu0, double rand );
+    void rotate( double mu0 );
     
     void printState();
 };

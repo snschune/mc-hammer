@@ -223,21 +223,23 @@ void Mesh::scoreTally(Part_ptr p, double xs) {
     Tet_ptr t = whereAmI( p->getPos() );
     
     // make sure its a valid mesh element
-    if(t != nullptr) {
-        //score the tally in that tet
-        t->scoreTally(p , xs);
-        for(int i = 0; i < histCounter; i++)
+    if(t != nullptr) 
+    {
+      //score the tally in that tet
+      t->scoreTally(p , xs);
+      for ( int i = 0; i < histCounter; i++ )
+      {
+        if( t == tetHist[i] )
         {
-            if(t == tetHist[i])
-            {
-                return;
-            }
+          return;
         }
-        tetHist[histCounter] = t;
-        histCounter++;
+      }
+      tetHist[histCounter] = t;
+      histCounter++;
     }
-    else {
-        std::cerr << "Particle could not be located in the Mesh, failed to score tally " << std::endl;
+    else 
+    {
+      std::cerr << "Particle could not be located in the Mesh, failed to score tally " << std::endl;
     }
 }
 

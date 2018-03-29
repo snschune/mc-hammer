@@ -13,61 +13,30 @@ Particle::Particle(point posi, point diri, int gi): pos(posi), dir(diri), group(
 {
     double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
     dir.x *= norm; dir.y *= norm; dir.z *= norm;
+    nCollisions = 0;
 }
 
-bool Particle::isAlive()
-{
-    return alive;
-}
+bool Particle::isAlive() { return alive; }
 
-Cell_ptr Particle::getCell()
-{
-    return cell;
-}
+Cell_ptr Particle::getCell() { return cell; }
 
-point Particle::getPos()
-{
-    return pos;
-}
+point Particle::getPos() { return pos; }
 
-point Particle::getDir()
-{
-    return dir;
-}
+point Particle::getDir() { return dir; }
 
-/*ray Particle::getray()
- {
- return r;
- }
- */
+int Particle::getGroup() { return group; }
 
-int Particle::getGroup()
-{
-    return group;
-}
+int Particle::getNCollisions() { return nCollisions; }
 
-void Particle::setCell(Cell_ptr celli)
-{
-	cell = celli;
-	return;
-}
-void Particle::setGroup(int g)
-{
-    group = g;
-    return;
-}
+void Particle::setCell(Cell_ptr celli) { cell = celli; return; }
 
-void Particle::setPos(point posi)
-{
-    setPos(posi.x,posi.y,posi.z);
-}
+void Particle::setGroup( int g ) { group = g; return; }
 
-void Particle::setDir(point diri)
-{
-    setDir(diri.x,diri.y,diri.z);
-}
+void Particle::setPos( point posi ) { setPos( posi.x, posi.y, posi.z ); }
 
-void Particle::setPos(double xi, double yi, double zi)
+void Particle::setDir( point diri ) { setDir( diri.x, diri.y, diri.z ); }
+
+void Particle::setPos( double xi, double yi, double zi )
 {
     pos.x = xi;
     pos.y = yi;
@@ -95,23 +64,19 @@ void Particle::move(double dist)
     return;
 }
 
-void Particle::kill()
-{
-    alive = 0;
-    return;
-}
+void Particle::kill() { alive = 0; return; }
 
 void Particle::scatter( int gf )
 {
   setGroup(gf);
 
   //change direction (isotropic scattering)
-  double rand = Urand();
   double mu0 = 2*Urand()-1;
-  rotate( mu0,rand );
+  rotate( mu0 );
+  nCollisions++; // increment the number of collisions
 }
 
-void Particle::rotate( double mu0, double rand )
+void Particle::rotate( double mu0 )
 {
   //xout << "Rotation! mu = " << mu0 << " rand = " << rand << endl;
   if(mu0 == 1)
@@ -124,7 +89,7 @@ void Particle::rotate( double mu0, double rand )
   double v = d.y;
   double w = d.z;
   
-  double phi = 2*pi*rand; 
+  double phi = 2*pi*Urand(); 
   double us = cos(phi);
   double vs = sin(phi);  
   

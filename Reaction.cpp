@@ -65,6 +65,10 @@ double Fission::getXS( Part_ptr p )
 }
 
 void  Fission::sample( Part_ptr p, std::stack< Part_ptr > &bank ) {
+
+  p->kill();
+
+  /*
   // create random number of secondaries from multiplicity distributon and
   // push all but one of them into the bank, and set working particle to the last one
   // if no secondaries, kill the particle
@@ -94,5 +98,6 @@ void  Fission::sample( Part_ptr p, std::stack< Part_ptr > &bank ) {
     q->setCell( p->getCell() );
     *p = *q; // figure out how to do this
   }
+  */
   
 }

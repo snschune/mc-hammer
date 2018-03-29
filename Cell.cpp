@@ -53,38 +53,40 @@ pair<Surf_ptr, double> Cell::closestSurface(Part_ptr p)
 
 double Cell::distToSurface(Part_ptr pi)
 {
-    Surf_ptr close_surface;
-    double dist;
-    tie(close_surface,dist) = closestSurface(pi);
-    return dist;
+  Surf_ptr close_surface;
+  double dist;
+  tie(close_surface,dist) = closestSurface(pi);
+  return dist;
 }
 
 // Estimator interface
 
 void Cell::scoreTally(Part_ptr p , double xs) 
 {
+  if ( estimators.at( p->getGroup() - 1 )->getCollisionOrder() == p->getNCollisions() )
+  {
     estimators.at( p->getGroup() - 1 )->score(xs);
+  }
 }
 
 void Cell::endTallyHist() 
 {
-    for(auto est : estimators) 
-    {
-        est->endHist();
-    }
+  for(auto est : estimators) 
+  {
+    est->endHist();
+  }
 }
 
 std::pair< double , double > Cell::getSingleGroupTally(int group, unsigned long long nHist) 
 {
-    return( estimators.at(group - 1)->getScalarEstimator(nHist) );
+  return( estimators.at(group - 1)->getScalarEstimator(nHist) );
 }
 
 std::vector< std::pair< double , double > > Cell::getTally(unsigned long long nHist) {
-    std::vector< std::pair< double , double > > tallies;
-    for( auto est : estimators) 
-    {
-        tallies.push_back( est->getScalarEstimator(nHist) );
-    }
-
-    return(tallies);
+  std::vector< std::pair< double , double > > tallies;
+  for( auto est : estimators) 
+  {
+    tallies.push_back( est->getScalarEstimator(nHist) );
+  }
+  return(tallies);
 }

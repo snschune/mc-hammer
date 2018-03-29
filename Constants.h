@@ -20,7 +20,7 @@ private:
     double tolerance       = std::numeric_limits<double>::epsilon();
     bool   allTets         = false;
     bool   locked;
-    int    killAfterNColl;
+    int    killAfterNColl  = std::numeric_limits<int>::max();
     
 public:
     Constants() {};
