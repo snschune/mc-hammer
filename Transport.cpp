@@ -36,7 +36,7 @@ void Transport::runTransport()
 
                 double d2s = current_Cell->distToSurface(p);
                 double d2c = current_Cell->distToCollision(p);
-                
+
                 if(d2s > d2c) //collision!
                 {
                     // move particle
