@@ -13,6 +13,7 @@ Particle::Particle(point posi, point diri, int gi): pos(posi), dir(diri), group(
 {
     double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
     dir.x *= norm; dir.y *= norm; dir.z *= norm;
+    numColl = 0;
 }
 
 bool Particle::isAlive()
@@ -46,6 +47,10 @@ int Particle::getGroup()
     return group;
 }
 
+int Particle::getNumColl()
+{
+    return numColl;
+}
 void Particle::setCell(Cell_ptr celli)
 {
 	cell = celli;
@@ -109,6 +114,7 @@ void Particle::scatter( int gf )
   double rand = Urand();
   double mu0 = 2*Urand()-1;
   rotate( mu0,rand );
+  numColl++;
 }
 
 void Particle::rotate( double mu0, double rand )

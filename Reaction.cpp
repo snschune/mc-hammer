@@ -30,6 +30,7 @@ Scatter::Scatter( int ng, std::vector< std::vector< double > > scatterXSi ) : Re
     }  
     scatterTotalXS.push_back(scatterTotInc);
   }
+
 }
 
 double Scatter::getXS( Part_ptr p )

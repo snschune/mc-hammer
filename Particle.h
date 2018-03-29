@@ -24,6 +24,7 @@ private:
     point pos;
     point dir;
     Cell_ptr cell; //still need to change this
+    int numColl;
     int group;
 public:
     //constructor
@@ -34,6 +35,7 @@ public:
     point getPos();
     point getDir();
     int   getGroup();
+    int   getNumColl();
 
     void setCell(Cell_ptr);
     void setGroup(int g);

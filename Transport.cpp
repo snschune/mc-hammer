@@ -39,7 +39,7 @@ void Transport::runTransport()
                 double d2s = current_Cell->distToSurface(p);
                 double d2c = current_Cell->distToCollision(p);
             //cout << "d2s: " << d2s << "  d2c: " << d2c << endl;
-                
+                cout << "here 42:" << constants->getKillAfterNColl() << endl;
                 if(d2s > d2c) //collision!
                 {
                     // score collision tally in current cell
@@ -57,7 +57,9 @@ void Transport::runTransport()
 
                     p->move(d2c);
                     current_Cell->getMat()->sampleCollision( p, pstack );
-                    p->kill(); //TODO: make this not awful
+                    cout << "here: " << constants->getKillAfterNColl() << endl;
+                    if(constants->getKillAfterNColl() == p->getNumColl())
+                       p->kill();
                 }
                 else //hit surface
                 {
