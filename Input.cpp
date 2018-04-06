@@ -339,36 +339,55 @@ void Input::readInput( std::string xmlFilename ) {
   }
 
   // iterate over estimators
+
   pugi::xml_node input_estimators = input_file.child("estimators");
   for ( auto e : input_estimators ) {
     std::string type      = e.name();
     std::string name      = e.attribute("name").value();
     std::string apply     = e.attribute("apply").value();
     std::string applyName = e.attribute("applyName").value();
+    
+  
+    // TODO parse particle attribute binning
+    // TODO write an input function that generates a map if attribute name strings to binning structures
+    // and throws an exception if a name is not recognized or the binning structue format is wrong
+    
+    // Initialize a shared pointer to the correct ParticleAttributeBinningStructure given the input
+    // all EstimatorCollections specified together share a single ParticleAttributeBinningStructure
+    // so that if adaptive binning is implemented it will apply uniformly over all EstimatorCollections
+    // for now default to GroupBinningStructure
+    Bin_ptr binning = std::make_shared<GroupBinningStructure>(nGroups);
+    
+    // initialize attribute map 
+    std::map< string , Bin_ptr> attributeMap;
+    // For now just make one with the group binning as the only attribute
+    attributeMap["Group"] = binning;
 
+      
     if ( type == "CollisionTally" ) {
+      // make sure all attributes in the attribute map are consistent with a CollisionTally
+      // by creating a dummy collision tally and doing an attribute check
+      //CollisionEstimatorCollection col(attributeMap);
+      //col.checkAttributeNames();
+
       if ( apply == "cell" ) {
         // special case "all_cells"
         if ( applyName == "all_cells" ) {
           for ( auto cel : geometry->getCells() ) {
-            for ( int i=0; i<nGroups; i++ ) {
-              name += "_g" + std::to_string( i + 1 );
-              std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >( name );
-              cel->addEstimator( Est );
-              name = e.attribute("name").value();
-            }
+            // make a CollisionEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
+            // use the attributeMap for this estimator as the constructor
+            EstCol_ptr est = std::make_shared<CollisionEstimatorCollection>( attributeMap );
+            cel->addEstimator(est);
           }
         }
         else {
-          std::shared_ptr< Cell > cel = findByName( geometry->getCells(), applyName );
+          std::shared_ptr< Cell > cel = findByName( geometry->getCells() , applyName );
 
           if ( cel ) {
-            for ( int i=0; i<nGroups; i++ ) {
-              name += "_g" + std::to_string(i+1);
-              std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >( name );
-              cel->addEstimator( Est );
-              name = e.attribute("name").value();
-            }
+            // make a CollisionEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
+            // use the attributeMap for this estimator as the constructor
+            EstCol_ptr est = std::make_shared<CollisionEstimatorCollection>( attributeMap );
+            cel->addEstimator(est);
           }
           else {
             std::cout << " unknown cell with name " << applyName << " for estimator " << name << std::endl;
@@ -384,27 +403,95 @@ void Input::readInput( std::string xmlFilename ) {
             std::cout << "Success!" << std::endl;
           }
           for ( auto t : mesh->getTets() ) {
-            for ( int i=0; i<nGroups; i++ ) {
-              name += "_g" + std::to_string( i + 1 );
-              std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >( name );
-              t->addEstimator( Est );
-              name = e.attribute("name").value();
-            }
+            // make a CollisionEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
+            // use the attributeMap for this estimator as the constructor
+            EstCol_ptr est = std::make_shared<CollisionEstimatorCollection>( attributeMap );
+            t->addEstimator(est);
           }
         }
         else {
           std::shared_ptr< Tet > tet = findByName( mesh->getTets(), applyName );
 
           if ( tet ) {
-            for ( int i=0; i<nGroups; i++ ) {
-              name += "_g" + std::to_string(i+1);
-              std::shared_ptr< Estimator > Est = std::make_shared< CollisionTally >( name );
-              tet->addEstimator( Est );
-              name = e.attribute("name").value();
-            }
+            // make a CollisionEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
+            // use the attributeMap for this estimator as the constructor
+            EstCol_ptr est = std::make_shared<CollisionEstimatorCollection>( attributeMap );
+            tet->addEstimator(est);
           }
           else {
             std::cout << " unknown tet with name " << applyName << " for estimator " << name << std::endl;
+            throw;
+          }
+        }
+      }
+      else {
+        std::cout << " unknown apply type with name " << apply << " for estimator " << name << std::endl;
+        throw;
+      }
+    }
+    else if ( type == "SurfaceFluenceTally" ) {
+      // make sure all attributes in the attribute map are consistent with a SurfaceTally
+      // by creating a dummy surface tally and doing an attribute check
+      //SurfaceFluenceEstimatorCollection surf(attributeMap);
+      //surf.checkAttributeNames();
+
+      if ( apply == "surface" ) {
+        // special case "all_cells"
+        if ( applyName == "all_surfaces" ) {
+          for ( auto surf : geometry->getSurfaces() ) {
+            // make a SurfaceEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
+            // use the attributeMap for this estimator as the constructor
+            EstCol_ptr est = std::make_shared<SurfaceFluenceEstimatorCollection>( attributeMap );
+            surf->addEstimator(est);
+          }
+        }
+        else {
+          std::shared_ptr< surface > surf = findByName( geometry->getSurfaces() , applyName );
+
+          if ( surf ) {
+            // make a SurfaceEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
+            // use the attributeMap for this estimator as the constructor
+            EstCol_ptr est = std::make_shared<SurfaceFluenceEstimatorCollection>( attributeMap );
+            surf->addEstimator(est);
+          }
+          else {
+            std::cout << " unknown surface with name " << applyName << " for estimator " << name << std::endl;
+            throw;
+          }
+        }
+      }
+      else {
+        std::cout << " unknown apply type with name " << apply << " for estimator " << name << std::endl;
+        throw;
+      }
+    }
+    else if ( type == "SurfaceCurrentTally" ) {
+      // make sure all attributes in the attribute map are consistent with a SurfaceTally
+      // by creating a dummy surface tally and doing an attribute check
+      // SurfaceCurrentEstimatorCollection surf(attributeMap);
+      // surf.checkAttributeNames();
+
+      if ( apply == "surface" ) {
+        // special case "all_cells"
+        if ( applyName == "all_surfaces" ) {
+          for ( auto surf : geometry->getSurfaces() ) {
+            // make a SurfaceEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
+            // use the attributeMap for this estimator as the constructor
+            EstCol_ptr est = std::make_shared<SurfaceCurrentEstimatorCollection>( attributeMap );
+            surf->addEstimator(est);
+          }
+        }
+        else {
+          std::shared_ptr< surface > surf = findByName( geometry->getSurfaces() , applyName );
+
+          if ( surf ) {
+            // make a SurfaceEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
+            // use the attributeMap for this estimator as the constructor
+            EstCol_ptr est = std::make_shared<SurfaceCurrentEstimatorCollection>( attributeMap );
+            surf->addEstimator(est);
+          }
+          else {
+            std::cout << " unknown surface with name " << applyName << " for estimator " << name << std::endl;
             throw;
           }
         }
@@ -418,6 +505,8 @@ void Input::readInput( std::string xmlFilename ) {
       std::cout << " unknown estimator type with name " << type << std::endl;
       throw;
     }
+  
+
   }
   // iterate over sources
   pugi::xml_node input_sources = input_file.child("sources");

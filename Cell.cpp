@@ -63,28 +63,16 @@ double Cell::distToSurface(Part_ptr pi)
 
 void Cell::scoreTally(Part_ptr p , double xs) 
 {
-    estimators.at( p->getGroup() - 1 )->score(xs);
+  // for each EstimatorCollection
+    // for each attribute
+      // get the index of the Estimator to score
+      // score the estimator
 }
 
 void Cell::endTallyHist() 
 {
-    for(auto est : estimators) 
-    {
-        est->endHist();
-    }
+  for(auto est : estimators) {
+      est->endHist();
+  }
 }
 
-std::pair< double , double > Cell::getSingleGroupTally(int group, unsigned long long nHist) 
-{
-    return( estimators.at(group - 1)->getScalarEstimator(nHist) );
-}
-
-std::vector< std::pair< double , double > > Cell::getTally(unsigned long long nHist) {
-    std::vector< std::pair< double , double > > tallies;
-    for( auto est : estimators) 
-    {
-        tallies.push_back( est->getScalarEstimator(nHist) );
-    }
-
-    return(tallies);
-}

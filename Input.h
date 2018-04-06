@@ -25,6 +25,10 @@
 #include "Tet.h"
 #include "Mesh.h"
 #include "HammerTime.h"
+#include "ParticleAttributeBinningStructure.h"
+#include "EstimatorCollection.h"
+
+typedef std::shared_ptr<EstimatorCollection> EstCol_ptr;
 
 class Input
 {

@@ -8,6 +8,8 @@
 
 #include "Tet.h"
 
+using namespace Utility;
+
 //default cstr initializes a tet of zero size
 
 Tet::Tet( std::string label, point p ): tetName( label ) {}
@@ -150,7 +152,10 @@ bool Tet::amIHere( const std::vector< double >& testPoint )
 // Estimator interface
 
 void Tet::scoreTally(Part_ptr p , double xs) {
-    estimators.at( p->getGroup() - 1 )->score(xs);
+  // for each EstimatorCollection
+    // for each attribute
+      // get the index of the Estimator to score
+      // score the estimator
 }
 
 void Tet::endTallyHist() {
@@ -159,19 +164,7 @@ void Tet::endTallyHist() {
     }
 }
 
-std::pair< double , double > Tet::getSingleGroupTally(int group, unsigned long long nHist) {
-    return( estimators.at(group - 1)->getScalarEstimator(nHist) );
-}
 
-std::vector< std::pair< double , double > > Tet::getTally(unsigned long long nHist) {
-    std::vector< std::pair< double , double > > tallies;
-    for( auto est : estimators) {
-        tallies.push_back( est->getScalarEstimator(nHist) );
-    }
-
-    return(tallies);
-}
-
-void Tet::addEstimator( Estimator_ptr newEstimator ) {
+void Tet::addEstimator( EstCol_ptr newEstimator ) {
 	estimators.push_back( newEstimator );
 }

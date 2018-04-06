@@ -21,7 +21,7 @@
 #include "Random.h"
 #include "Particle.h"
 #include "Geometry.h"
-#include "Estimator.h"
+#include "EstimatorCollection.h"
 
 using std::vector;
 using std::stack;
@@ -30,10 +30,10 @@ using std::time;
 using std::cout;
 using std::endl;
 
-typedef std::shared_ptr<Particle>  Part_ptr; //found in Particle.h -> Material.h
-typedef std::shared_ptr<Material>  Mat_ptr;
-typedef std::shared_ptr<surface>   Surf_ptr;
-typedef std::shared_ptr<Estimator> Estimator_ptr;
+typedef std::shared_ptr<Particle>            Part_ptr; //found in Particle.h -> Material.h
+typedef std::shared_ptr<Material>            Mat_ptr;
+typedef std::shared_ptr<surface>             Surf_ptr;
+typedef std::shared_ptr<EstimatorCollection> EstCol_ptr;
 
 class Cell
 //Region in space, bounded by surfaces/
@@ -42,10 +42,10 @@ class Cell
 private:
     std::string cellName;
     Mat_ptr mat; //material properties within cell
-    vector<pair<Surf_ptr, bool>> surfacePairs;
+    vector< pair< Surf_ptr, bool > > surfacePairs;
     
-    // Estimators
-    vector< Estimator_ptr > estimators;
+    // EstimatorCollections
+    vector< EstCol_ptr > estimators;
    
 public: 
   //Constructor:
@@ -53,11 +53,12 @@ public:
  ~Cell() {};
     
   void    addSurfacePair ( std::pair< Surf_ptr, bool > newSurfacePair ) { surfacePairs.push_back( newSurfacePair ); };
-  void    addEstimator   ( Estimator_ptr newEstimator                 ) { estimators.push_back( newEstimator );     };
+  void    addEstimator   ( EstCol_ptr newEstimator                    ) { estimators.push_back( newEstimator );     };
   void    setMaterial    ( Mat_ptr newMaterial                        ) { mat = newMaterial;                        };
-  Mat_ptr                      getMat()        { return mat;        };
-  std::string                  name()          { return cellName;   };
-  std::vector< Estimator_ptr > getEstimators() { return estimators; };
+
+  Mat_ptr                   getMat()        { return mat;        };
+  std::string               name()          { return cellName;   };
+  std::vector< EstCol_ptr > getEstimators() { return estimators; };
   
   //operations
   double                 distToSurface   ( Part_ptr pi );
@@ -69,7 +70,6 @@ public:
   // Estimator interface
   void scoreTally(Part_ptr p , double xs); 
   void endTallyHist();
-  std::pair< double , double > getSingleGroupTally(int group, unsigned long long nHist);
-  std::vector< std::pair< double , double > > getTally(unsigned long long nHist);
+  // TODO get Tally output
 };
 #endif 

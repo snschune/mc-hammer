@@ -27,6 +27,7 @@ class Material
 //Material in which neutrons transport through. Contains all x-sec data and processes reactions
 //Multigroup compatible. Fission not added yet.
 {
+
   private:
     std::string                                     materialName;
     double                                          atomDensity; // for homogeneous, set to 1

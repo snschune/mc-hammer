@@ -258,6 +258,7 @@ void Mesh::printMeshTallies() {
 
     meshTallyStream << "Mesh tally output" << std::endl;
 
+    /*
     for(auto tet : tetVector) {
         meshTallyStream << tet->getID();
         for (auto tally : tet->getTally(constants->getNumHis()) ) {
@@ -265,6 +266,8 @@ void Mesh::printMeshTallies() {
         }
         meshTallyStream << std::endl;
     }
+    */
+
     meshTallyStream.close();
 }
 
@@ -298,7 +301,7 @@ void Mesh::writeToVTK() {
     // Need to find a way to loop through a tet's estimators
     XMLTag cellData( 3, "CellData" );
     cellData.addAttribute( "Scalars", "mesh_tallies");
-
+/*
     for ( auto tally : tetVector[0]->getTally(constants->getNumHis()) ) {
            std::vector<double> tempVec;
            cellDataVec.push_back(tempVec);
@@ -314,13 +317,15 @@ void Mesh::writeToVTK() {
             i++;
         }
     }
-
+*/
     std::vector< std::shared_ptr< XMLTag > > tallyTags;
     int i = 0;
     double tallyMin, tallyMax;
     for ( auto dataVec : cellDataVec ) {
 
-        std::string tallyName = tetVector[0]->getEstimators()[i]->name();
+        //std::string tallyName = tetVector[0]->getEstimators()[i]->name();
+        //TODO fix this
+        std::string tallyName = "";
         XMLTag tallyTag( 4, "DataArray" );
         tallyTag.addAttribute( "type", "Float64");
         tallyTag.addAttribute( "Name", tallyName );
