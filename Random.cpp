@@ -83,7 +83,7 @@
 REAL   Urand(void);
 ULONG  RN_skip_ahead( ULONG* seed, LONG* nskip );
 void   RN_init_problem( ULONG* new_seed,    int* print_info );
-void   RN_init_particle( ULONG* nps );
+void   RN_init_particle( ULONG nps );
 void   RN_test_basic(void);
 
 //-------------------------------------
@@ -193,13 +193,13 @@ void RN_init_problem( ULONG* new_seed,
 }
 //----------------------------------------------------------------------
 //
-void    RN_init_particle( ULONG* nps ) {
+void    RN_init_particle( ULONG nps ) {
     // initialize MCNP random number parameters for particle "nps"
     //
     //     * generate a new particle seed from the base seed
     //       & particle index
     //     * set the RN count to zero
-    LONG  nskp = *nps * RN_STRIDE;
+    LONG  nskp = nps * RN_STRIDE;
     RN_SEED  = RN_skip_ahead( &RN_SEED0, &nskp );
 }
 //----------------------------------------------------------------------
