@@ -15,11 +15,12 @@ void Transport::runTransport()
 {
     numHis = constants->getNumHis();
     double tally = 0;
-    for(int i = 0; i < numHis ; i++)
+
+    for( unsigned long long i = 0; i < numHis; i++ )
     {
         //start a timer
         timer->startHist();
-
+	RN_init_particle(i);
         //sample src 
         Part_ptr p_new = geometry->sampleSource();
         //Part_ptr p_new = make_shared<Particle>(point(0,0,0), point(0,0,1), 1);
