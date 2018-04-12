@@ -1,8 +1,3 @@
-/*
- Author: ESGonzalez
- Date: 1/26/18
- */
-
 #include "Utility.h"
 #include <vector>
 
