@@ -63,6 +63,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <vector>
 
 // function names to match what g95 expects
 //#define  Urand               Urand_
@@ -80,12 +81,18 @@
 //-------------------------------------
 // Public interface for functions
 //-------------------------------------
+void   activateTesting( std::vector< double > inputVec ); // added for testing mode
 REAL   Urand(void);
 ULONG  RN_skip_ahead( ULONG* seed, LONG* nskip );
 void   RN_init_problem( ULONG* new_seed,    int* print_info );
 void   RN_init_particle( ULONG nps );
 void   RN_test_basic(void);
-
+//-------------------------------------
+// Testing parameters
+//-------------------------------------
+int                    testIndex = 0;
+bool                   testingMode = false; // added for testing mode
+std::vector< double >  loopThrough; // added for testing mode
 //-------------------------------------
 // Constants for standard RN generators
 //-------------------------------------
@@ -118,10 +125,26 @@ static const ULONG  RN_CHECK[10] = {
 
 //----------------------------------------------------------------------
 //
+void    activateTesting( std::vector< double > inputVec ) {
+    // MCNP random number generator
+    loopThrough = inputVec;
+    testingMode = true;
+    return;
+}
+
+//----------------------------------------------------------------------
+//
 REAL    Urand( void ) {
+    if ( testingMode == true ) {
+        RN_SEED = loopThrough.at(testIndex);
+        testIndex += 1;
+        if ( testIndex == loopThrough.size() ) {
+            testIndex = 0;
+        }
+        return (REAL) (RN_SEED);
+    }
     // MCNP random number generator
     RN_SEED   = (RN_MULT*RN_SEED) & RN_MASK;
-    
     return  (REAL) (RN_SEED*RN_NORM);
 }
 

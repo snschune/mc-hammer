@@ -1,6 +1,11 @@
 #ifndef _RANDOM_HEADER_
 #define _RANDOM_HEADER_
 
+#include <vector>
+
+// call to return a uniform random number
+void activateTesting( std::vector< double > inputVec );
+
 // call to return a uniform random number
 double Urand( void );
 
