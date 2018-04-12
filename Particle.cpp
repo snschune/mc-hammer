@@ -90,7 +90,7 @@ void Particle::kill()
 void Particle::scatter( int gf )
 {
   setGroup(gf);
-
+  collisionCounter++;
   //change direction (isotropic scattering)
   double rand = Urand();
   double mu0 = 2*Urand()-1;
