@@ -1,8 +1,3 @@
-/*
-	Author: ESGonzalez
-	Date: 2/20/18
-*/
-
 #ifndef __NUCLIDE_H__
 #define __NUCLIDE_H__
 
@@ -13,10 +8,8 @@
 #include <cmath>
 #include <string>
 #include <cassert>
-#include "Particle.h"
 #include "Reaction.h"
 
-typedef std::shared_ptr< Particle > Part_ptr;
 typedef std::shared_ptr< Reaction > Reaction_ptr;
 
 class Nuclide
@@ -36,11 +29,11 @@ class Nuclide
     // Getters
     std::string                 name()         { return nuclideName;  };
     std::vector< Reaction_ptr > getReactions() { return reactions;    };
-    double                      getTotalXS ( Part_ptr p                           );
-    double                      getXS      ( Part_ptr p, std::string reactionName );
+    double                      getTotalXS ( int group                           );
+    double                      getXS      ( int group, std::string reactionName );
 
     // Functions
-    Reaction_ptr sampleReaction( Part_ptr p );
+    Reaction_ptr sampleReaction( int group );
 };
 
 #endif

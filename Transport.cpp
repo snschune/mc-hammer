@@ -23,7 +23,6 @@ void Transport::runTransport()
 	RN_init_particle(i);
         //sample src 
         Part_ptr p_new = geometry->sampleSource();
-        //Part_ptr p_new = make_shared<Particle>(point(0,0,0), point(0,0,1), 1);
         Cell_ptr startingCell = geometry->whereAmI(p_new->getPos());
         p_new->setCell(startingCell);
         pstack.push(p_new);
@@ -34,18 +33,16 @@ void Transport::runTransport()
            Part_ptr p = pstack.top();
             while(p->isAlive())
             {
-            //p->printState();
                 Cell_ptr current_Cell = p->getCell();
 
                 double d2s = current_Cell->distToSurface(p);
-                double d2c = current_Cell->distToCollision(p);
-            //cout << "d2s: " << d2s << "  d2c: " << d2c << endl;
+                double d2c = current_Cell->distToCollision( p->getGroup() );
                 
                 if(d2s > d2c) //collision!
                 {
                     // score collision tally in current cell
                     timer->startTimer("scoring collision tally");
-                    current_Cell->scoreTally(p , current_Cell->getMat()->getMacroXS( p ) ); 
+                    current_Cell->scoreTally(p , current_Cell->getMat()->getMacroXS( p->getGroup() ) ); 
                     tally++;
                     timer->endTimer("scoring collision tally");
 
@@ -57,7 +54,8 @@ void Transport::runTransport()
                     timer->endTimer("scoring mesh tally");
 
                     p->move(d2c);
-                    current_Cell->getMat()->sampleCollision( p, pstack );
+                    Reaction_ptr reactionToSample = current_Cell->getMat()->sampleCollision( p->getGroup() );
+                    reactionToSample->sample( p, pstack );
                     p->kill(); //TODO: make this not awful
                 }
                 else //hit surface
@@ -89,7 +87,6 @@ void Transport::runTransport()
         timer->endHist();
     }
     tally /= numHis;
-    //cout << "tally " << tally << endl;
 }
 
 void Transport::output() {

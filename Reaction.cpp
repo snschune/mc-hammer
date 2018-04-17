@@ -1,15 +1,4 @@
-/*
-  Author: ESGonzalez
-  Date: 2/20/18
-*/
-
 #include "Reaction.h"
-
-double Capture::getXS( Part_ptr p )
-{
-  int g = p->getGroup();
-  return captureXS[g-1];
-}
 
 void Capture::sample( Part_ptr p, std::stack< Part_ptr > &bank )
 {
@@ -32,12 +21,6 @@ Scatter::Scatter( int ng, std::vector< std::vector< double > > scatterXSi ) : Re
   }
 }
 
-double Scatter::getXS( Part_ptr p )
-{
-  int g = p->getGroup();
-  return scatterTotalXS[g-1];
-}
-
 void Scatter::sample( Part_ptr p, std::stack< Part_ptr > &bank )
 {
   //select energy group to shift
@@ -58,41 +41,8 @@ void Scatter::sample( Part_ptr p, std::stack< Part_ptr > &bank )
   p->scatter( gf );
 }
 
-double Fission::getXS( Part_ptr p )
-{
-  int g = p->getGroup();
-  return fissionXS[g-1];
-}
-
 void  Fission::sample( Part_ptr p, std::stack< Part_ptr > &bank ) {
-  // create random number of secondaries from multiplicity distributon and
-  // push all but one of them into the bank, and set working particle to the last one
-  // if no secondaries, kill the particle
-  int     g = p->getGroup();
-  int     n = floor( nu[g-1] + Urand() );
-  double x0 = p->getPos().x;
-  double y0 = p->getPos().y;
-  double z0 = p->getPos().z;
 
-  Source_ptr source = std::make_shared< setSourcePoint > ( "induced_fission", x0, y0, z0, chi );
-
-  if ( n <= 0 ) 
-  {
-    p->kill();
-  }
-  else 
-  {
-    // bank all but last particle (skips if n = 1)
-    for ( int i = 0 ; i < ( n - 1 ) ; i++ ) 
-    {
-      Part_ptr q = source->sample();
-      q->setCell( p->getCell() );
-      bank.push( q );
-    }
-    // set working particle to last one
-    Part_ptr q = source->sample();
-    q->setCell( p->getCell() );
-    *p = *q; // figure out how to do this
-  }
+  p->kill(); // need to rewrite this 
   
 }

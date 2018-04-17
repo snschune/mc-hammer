@@ -1,8 +1,3 @@
-/*
-  Author: ESGonzalez
-  Date: 2/20/18
-*/
-
 #ifndef __REACTION_H__
 #define __REACTION_H__
 
@@ -14,10 +9,8 @@
 #include <utility>
 
 #include "Particle.h"
-#include "Source.h"
 
 typedef std::shared_ptr< Particle > Part_ptr;
-typedef std::shared_ptr< Source >   Source_ptr;
 
 class Reaction 
 // Need to add safety features
@@ -31,7 +24,7 @@ class Reaction
    ~Reaction() {};
 
     virtual std::string name() final { return rxnName; };
-    virtual double      getXS  ( Part_ptr p ) = 0;
+    virtual double      getXS  ( int group ) = 0;
     virtual void        sample ( Part_ptr p, std::stack< Part_ptr > & bank ) = 0;
 };
 
@@ -44,7 +37,7 @@ class Capture : public Reaction
     Capture( int ng, std::vector< double > captureXSi ) : Reaction( ng ), captureXS( captureXSi ) { rxnName = "Capture"; };
    ~Capture() {};
 
-    double getXS( Part_ptr p );
+    double getXS( int group ) { return captureXS[group-1]; };
 
     void   sample( Part_ptr p, std::stack< Part_ptr > &bank );
 };
@@ -59,7 +52,7 @@ class Scatter : public Reaction
     Scatter( int ng, std::vector< std::vector< double > > scatterXSi );
    ~Scatter() {};
 
-    double getXS( Part_ptr p );
+    double getXS( int group ) { return scatterTotalXS[group-1]; };
 
     void   sample( Part_ptr p, std::stack< Part_ptr > &bank );
 };
@@ -76,7 +69,7 @@ class Fission : public Reaction
     : Reaction( ng ), fissionXS( fissionXSi ), nu( nui ), chi( chii ) { rxnName = "Fission"; };
    ~Fission() {};
 
-    double getXS ( Part_ptr p );
+    double getXS ( int group ) { return fissionXS[group-1]; };
 
     void   sample( Part_ptr p, std::stack< Part_ptr > &bank );
 };

@@ -5,9 +5,9 @@
 
 #include "Cell.h"
 
-double Cell::distToCollision(Part_ptr pi)
+double Cell::distToCollision( int group )
 {
-  double total_xs = mat->getMacroXS(pi);
+  double total_xs = mat->getMacroXS( group );
   double dist = -log(Urand())/total_xs;
   return dist;
 }
