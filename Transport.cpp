@@ -54,7 +54,8 @@ void Transport::runTransport()
                     timer->endTimer("scoring mesh tally");
 
                     p->move(d2c);
-                    Reaction_ptr reactionToSample = current_Cell->getMat()->sampleCollision( p->getGroup() );
+                    // sample the reaction
+                    React_ptr reactionToSample = current_Cell->getMat()->sampleCollision( p->getGroup() );
                     reactionToSample->sample( p, pstack );
                     p->kill(); //TODO: make this not awful
                 }

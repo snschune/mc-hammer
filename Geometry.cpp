@@ -18,6 +18,7 @@ Cell_ptr Geometry::whereAmI( point pos )
   return hereIAm;
 }
 
+/*
 void Geometry::readXS( std::string filename , int nGroups, bool loud )
 {
   std::vector< double >                  fissionxs;
@@ -179,3 +180,4 @@ void Geometry::readXS( std::string filename , int nGroups, bool loud )
   
   xs_file.close(); //close XS input file
 }
+*/

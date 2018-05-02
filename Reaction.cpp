@@ -1,29 +1,35 @@
 #include "Reaction.h"
 
-void Capture::sample( Part_ptr p, std::stack< Part_ptr > &bank )
-{
+Capture::Capture( XSec_ptr capti ) : Reaction( capti ) {
+  // make sure the correction XS is attached
+  std::shared_ptr< CaptureXS > capt = std::dynamic_pointer_cast< CaptureXS > ( capti );
+  rxnName = "Capture";
+  assert( rxnName == capt->name() );
+
+  // call the XS vectors
+  captureXS = capt->getCaptureXS();
+}
+
+void Capture::sample( Part_ptr p, std::stack< Part_ptr > &bank ) {
   p->kill();
 }
 
-Scatter::Scatter( int ng, std::vector< std::vector< double > > scatterXSi ) : Reaction( ng ), scatterXS( scatterXSi )
-{
+Scatter::Scatter( XSec_ptr scati ) : Reaction( scati ) {
+  // make sure the correction XS is attached
+  std::shared_ptr< ScatterXS > scat = std::dynamic_pointer_cast< ScatterXS > ( scati );
   rxnName = "Scatter";
+  assert( rxnName == scat->name() );
 
-  // Fill the total scatter vector
-  for (int j=0; j < nGroups; ++j) 
-  { // loop over rows
-    double scatterTotInc = 0; // increment the scatter xs total
-    for (int k=0; k < nGroups; ++k) 
-    { // loop over columns
-      scatterTotInc += scatterXS[j][k];                         
-    }  
-    scatterTotalXS.push_back(scatterTotInc);
-  }
+  // call the XS vectors
+  scatterXS      = scat->getScatterXS();
+  scatterTotalXS = scat->getScatterTotalXS();
+
+  // set the number of groups
+  nGroups = scatterXS.size();
 }
 
-void Scatter::sample( Part_ptr p, std::stack< Part_ptr > &bank )
-{
-  //select energy group to shift
+void Scatter::sample( Part_ptr p, std::stack< Part_ptr > &bank ) {
+  // select energy group to shift
   double rand = Urand();
   double cutoff = 0;
   int gf = 0;
@@ -32,13 +38,25 @@ void Scatter::sample( Part_ptr p, std::stack< Part_ptr > &bank )
   for(int i = 0; i < nGroups; i++)
   {
     cutoff += curSigs[i]/scatterTotalXS[g-1]; 
-    if(rand < cutoff)
+    if( rand < cutoff )
       {
         gf = i+1;
         break;  
       }
   }
   p->scatter( gf );
+}
+
+Fission::Fission( XSec_ptr fissi ) : Reaction( fissi ) {
+  // make sure the correction XS is attached
+  std::shared_ptr< FissionXS > fiss = std::dynamic_pointer_cast< FissionXS > ( fissi );
+  rxnName = "Fission";
+  assert( rxnName == fiss->name() );
+
+  // call the XS vectors
+  fissionXS = fiss->getFissionXS();
+  nu        = fiss->getNu();
+  chi       = fiss->getChi();
 }
 
 void  Fission::sample( Part_ptr p, std::stack< Part_ptr > &bank ) {

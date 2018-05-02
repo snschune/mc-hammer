@@ -8,15 +8,16 @@
 #include <cmath>
 #include <string>
 #include <cassert>
-#include "Reaction.h"
+#include "XSection.h"
+#include "Random.h"
 
-typedef std::shared_ptr< Reaction > Reaction_ptr;
+typedef std::shared_ptr< XSection > XSec_ptr;
 
 class Nuclide
 {
   private:
-    std::string                 nuclideName;
-    std::vector< Reaction_ptr > reactions;
+    std::string             nuclideName;
+    std::vector< XSec_ptr > xSections;
 
   public:
     // Constructor/Destructor
@@ -24,16 +25,16 @@ class Nuclide
    ~Nuclide() {};
 
     // Adders/Setters
-    void addReaction ( Reaction_ptr newReaction ) { reactions.push_back( newReaction ); };
+    void addXSection ( XSec_ptr newXSection ) { xSections.push_back( newXSection ); };
 
     // Getters
     std::string                 name()         { return nuclideName;  };
-    std::vector< Reaction_ptr > getReactions() { return reactions;    };
-    double                      getTotalXS ( int group                           );
-    double                      getXS      ( int group, std::string reactionName );
+    std::vector< XSec_ptr >     getXSections() { return xSections;    };
+    double                      getTotalXS     ( int group                           );
+    double                      getXS          ( int group, std::string xSectionName );
 
     // Functions
-    Reaction_ptr sampleReaction( int group );
+    React_ptr sampleReaction( int group );
 };
 
 #endif

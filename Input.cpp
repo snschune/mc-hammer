@@ -50,6 +50,9 @@ void Input::readInput( std::string xmlFilename ) {
   for ( auto n : inputNuclides ) {
     std::string name = n.attribute("name").value();
 
+    std::shared_ptr< XSection > xsec;
+    std::shared_ptr< Reaction > rxn;
+
     std::shared_ptr< Nuclide > Nuc = std::make_shared< Nuclide > ( n.attribute("name").value() );
     nuclides.push_back( Nuc );
 
@@ -58,6 +61,7 @@ void Input::readInput( std::string xmlFilename ) {
     {
       double tempXS;
       std::string rxnType = r.name();
+
       if ( rxnType == "Capture" ) 
       {
         std::vector< double > captureXS;
@@ -81,7 +85,11 @@ void Input::readInput( std::string xmlFilename ) {
                       << name << " does not equal nGroups." << std::endl;
             throw;
           }
-          Nuc->addReaction( std::make_shared< Capture > ( nGroups, captureXS ) );
+          xsec  = std::make_shared< CaptureXS > ( captureXS );
+          rxn   = std::make_shared< Capture >   ( xsec );
+          xsec->setRxn( rxn );
+
+          Nuc->addXSection( xsec );
           captureXS.clear();
         }
         else
@@ -132,7 +140,12 @@ void Input::readInput( std::string xmlFilename ) {
                     << name << " does not equal nGroups." << std::endl;
           throw;
         }
-        Nuc->addReaction( std::make_shared< Scatter > ( nGroups, scatterXS ) );
+        xsec  = std::make_shared< ScatterXS > ( scatterXS );
+        rxn   = std::make_shared< Scatter >   ( xsec );
+        xsec->setRxn( rxn );
+
+        Nuc->addXSection( xsec );
+
         scatterXS.clear();
       }
       else if ( rxnType == "Fission" ) 
@@ -209,7 +222,12 @@ void Input::readInput( std::string xmlFilename ) {
         }
         if ( fissionXS.size() == nuXS.size() && nuXS.size() == chiXS.size() ) 
         {
-          Nuc->addReaction( std::make_shared< Fission > ( nGroups, fissionXS, nuXS, chiXS ) );
+          xsec  = std::make_shared< FissionXS > ( fissionXS, nuXS, chiXS );
+          rxn   = std::make_shared< Fission >   ( xsec );
+          xsec->setRxn( rxn );
+
+          Nuc->addXSection( xsec );
+
           fissionXS.clear();
           nuXS.clear();
           chiXS.clear();
