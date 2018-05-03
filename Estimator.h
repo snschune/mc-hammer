@@ -1,7 +1,9 @@
 /*
  * Author: Kyle Beyer
- * Last Updated: 11/30/17
+ * Last Updated: 05/03/18
  *
+ * This is the most basic estimator object. 
+ * It is generic to any type of estimator.
  */
 
 #ifndef _ESTIMATOR_HEADER_
@@ -34,33 +36,8 @@ class Estimator {
     std::pair < double , double > getScalarEstimator(unsigned long long);
     
     // virtual estimator methods
-    virtual void score( double val);
+    virtual void score(double val);
 
 };
-/*
-class SurfaceCurrentTally : public Estimator {
-  public:
-    SurfaceTally(): Estimator() {};
-   ~SurfaceTally() {};
-    
-    void score();
-};
 
-class SurfaceFluxTally : public Estimator {
-  public:
-    SurfaceFluxTally(): Estimator() {};
-   ~SurfaceFluxTally() {};
-    
-    void score(double mu);
-};
-
-
-class CollisionTally : public Estimator {
-  public:
-    CollisionTally(): Estimator() {};
-   ~CollisionTally() {};
-    
-    void score(double xs);
-};
-*/
 #endif

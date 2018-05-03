@@ -37,16 +37,3 @@ std::pair < double , double > Estimator::getScalarEstimator(unsigned long long n
     }
     return(estimate);
 };
-
-/*
- *
-//functions
-void SurfaceFluxTally::score( double mu ) {
-     currentHistTally +=  1.0 / mu;
-};
-
-//functions
-void CollisionTally::score( double xs ) {
-     currentHistTally +=  1.0 / xs;
-};
-*/
