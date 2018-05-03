@@ -1,8 +1,3 @@
-/*
- Author: ESGonzalez, Kyle Beyer, Evan Leppink, Blake Rucinski
- Date: 1/26/18
- */
-
 #ifndef __UTILITY_H__
 #define __UTILITY_H__
 

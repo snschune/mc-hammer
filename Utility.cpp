@@ -1,8 +1,3 @@
-/*
- Author: ESGonzalez
- Date: 1/26/18
- */
-
 #include "Utility.h"
 #include <vector>
 
@@ -26,8 +21,8 @@ double Utility::fourDeterminant(const vector< double >& v1, const vector< double
 
 double Utility::threeDeterminant(const vector< double >& v1, const vector< double >& v2, const vector< double >& v3)
 {
-	double det = v1[0] * (v2[1] * v3[2] - v2[2] * v3[1]) - v1[1] * (v2[0] * v3[2] - v2[2] * v3[0]) + v1[2] * (v2[0] * v3[1] - v2[1] * v3[0]);
-	return det;
+    double det = v1[0] * (v2[1] * v3[2] - v2[2] * v3[1]) - v1[1] * (v2[0] * v3[2] - v2[2] * v3[0]) + v1[2] * (v2[0] * v3[1] - v2[1] * v3[0]);
+    return det;
 }
 
 std::vector< double > Utility::pointFourVec( point pos )
@@ -131,3 +126,4 @@ int Utility::linearizeIndices( std::vector<int> indices , std::vector<int> binSi
 double pointL2( point a , point b ) {
   return( (a - b)*(a - b) );
 }
+

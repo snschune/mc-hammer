@@ -46,12 +46,12 @@ vector< double > Tet::getCentroid()
 void Tet::setVertices(std::shared_ptr<point> p1, std::shared_ptr<point> p2,
                       std::shared_ptr<point> p3, std::shared_ptr<point> p4)
 {
-    vert1 = pointFourVec(*p1);
-    vert2 = pointFourVec(*p2);
-    vert3 = pointFourVec(*p3);
-    vert4 = pointFourVec(*p4);
+    vert1 = Utility::pointFourVec(*p1);
+    vert2 = Utility::pointFourVec(*p2);
+    vert3 = Utility::pointFourVec(*p3);
+    vert4 = Utility::pointFourVec(*p4);
     
-    d0 = fourDeterminant( vert1, vert2, vert3, vert4 );
+    d0 = Utility::fourDeterminant( vert1, vert2, vert3, vert4 );
     
 	
 	vector< double >  xy1  = {vert1[0], vert1[1],        1};
@@ -71,25 +71,25 @@ void Tet::setVertices(std::shared_ptr<point> p1, std::shared_ptr<point> p2,
 	vector< double >  yz4  = {vert4[1], vert4[2],        1};
 	vector< double > xyz4  = {vert4[0], vert4[1], vert4[2]};
 	
-	double A11 =    threeDeterminant( yz2, yz3, yz4);
-	double A12 = -1*threeDeterminant( xz2, xz3, xz4);
-	double A13 =    threeDeterminant( xy2, xy3, xy4);
-	double A14 = -1*threeDeterminant(xyz2,xyz3,xyz4);
+	double A11 =    Utility::threeDeterminant( yz2, yz3, yz4);
+	double A12 = -1*Utility::threeDeterminant( xz2, xz3, xz4);
+	double A13 =    Utility::threeDeterminant( xy2, xy3, xy4);
+	double A14 = -1*Utility::threeDeterminant(xyz2,xyz3,xyz4);
 	
-	double A21 = -1*threeDeterminant( yz1, yz3, yz4);
-	double A22 =    threeDeterminant( xz1, xz3, xz4);
-	double A23 = -1*threeDeterminant( xy1, xy3, xy4);
-	double A24 =    threeDeterminant(xyz1,xyz3,xyz4);
+	double A21 = -1*Utility::threeDeterminant( yz1, yz3, yz4);
+	double A22 =    Utility::threeDeterminant( xz1, xz3, xz4);
+	double A23 = -1*Utility::threeDeterminant( xy1, xy3, xy4);
+	double A24 =    Utility::threeDeterminant(xyz1,xyz3,xyz4);
 	
-	double A31 =    threeDeterminant( yz1, yz2, yz4);
-	double A32 = -1*threeDeterminant( xz1, xz2, xz4);
-	double A33 =    threeDeterminant( xy1, xy2, xy4);
-	double A34 = -1*threeDeterminant(xyz1,xyz2,xyz4);
+	double A31 =    Utility::threeDeterminant( yz1, yz2, yz4);
+	double A32 = -1*Utility::threeDeterminant( xz1, xz2, xz4);
+	double A33 =    Utility::threeDeterminant( xy1, xy2, xy4);
+	double A34 = -1*Utility::threeDeterminant(xyz1,xyz2,xyz4);
 	
-	double A41 = -1*threeDeterminant( yz1, yz2, yz3);
-	double A42 =    threeDeterminant( xz1, xz2, xz3);
-	double A43 = -1*threeDeterminant( xy1, xy2, xy3);
-	double A44 =    threeDeterminant(xyz1,xyz2,xyz3);
+	double A41 = -1*Utility::threeDeterminant( yz1, yz2, yz3);
+	double A42 =    Utility::threeDeterminant( xz1, xz2, xz3);
+	double A43 = -1*Utility::threeDeterminant( xy1, xy2, xy3);
+	double A44 =    Utility::threeDeterminant(xyz1,xyz2,xyz3);
 	
 	A1.push_back(A11);
 	A1.push_back(A12);
@@ -135,16 +135,16 @@ bool Tet::amIHere( const std::vector< double >& testPoint )
 
     // Compute determinant and return 'false' if sign is not the same as D0
     tempDet = testPoint[0]*A1[0] + testPoint[1]*A1[1] + testPoint[2]*A1[2] + A1[3]; //D1
-    if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
+    if (!Utility::sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
     
     tempDet = testPoint[0]*A2[0] + testPoint[1]*A2[1] + testPoint[2]*A2[2] + A2[3]; //D2
-    if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
+    if (!Utility::sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
         
     tempDet = testPoint[0]*A3[0] + testPoint[1]*A3[1] + testPoint[2]*A3[2] + A3[3]; //D2
-    if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
+    if (!Utility::sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
         
     tempDet = testPoint[0]*A4[0] + testPoint[1]*A4[1] + testPoint[2]*A4[2] + A4[3]; //D2
-    if (!sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
+    if (!Utility::sameSign(d0,tempDet)) { isWithin = false; return isWithin; }
     
     return isWithin;
 }

@@ -16,6 +16,7 @@
 
 #include "Cell.h"
 #include "Material.h"
+#include "Reaction.h"
 #include "Surface.h"
 #include "Random.h"
 #include "Particle.h"
@@ -33,6 +34,7 @@ using std::endl;
 
 
 typedef std::shared_ptr<Cell>       Cell_ptr;
+typedef std::shared_ptr<Reaction>   React_ptr;
 typedef std::shared_ptr<Particle>   Part_ptr;
 typedef std::shared_ptr<Material>   Mat_ptr;
 typedef std::shared_ptr<surface>    Surf_ptr;

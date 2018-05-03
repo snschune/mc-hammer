@@ -1,8 +1,3 @@
-/*
- Author: ESGonzalez
- Date: 02/09/18
- */
-
 #ifndef __INPUT_H__
 #define __INPUT_H__
 
@@ -15,6 +10,7 @@
 #include <utility>
 
 #include "pugixml.hpp"
+#include "XSection.h"
 #include "Reaction.h"
 #include "Nuclide.h"
 #include "Material.h"

@@ -15,14 +15,14 @@ void Transport::runTransport()
 {
     numHis = constants->getNumHis();
     double tally = 0;
-    for(int i = 0; i < numHis ; i++)
+
+    for( unsigned long long i = 0; i < numHis; i++ )
     {
         //start a timer
         timer->startHist();
-
+	RN_init_particle(i);
         //sample src 
         Part_ptr p_new = geometry->sampleSource();
-        //Part_ptr p_new = make_shared<Particle>(point(0,0,0), point(0,0,1), 1);
         Cell_ptr startingCell = geometry->whereAmI(p_new->getPos());
         p_new->setCell(startingCell);
         pstack.push(p_new);
@@ -33,30 +33,30 @@ void Transport::runTransport()
            Part_ptr p = pstack.top();
             while(p->isAlive())
             {
-            //p->printState();
                 Cell_ptr current_Cell = p->getCell();
 
                 double d2s = current_Cell->distToSurface(p);
-                double d2c = current_Cell->distToCollision(p);
-            //cout << "d2s: " << d2s << "  d2c: " << d2c << endl;
+                double d2c = current_Cell->distToCollision( p->getGroup() );
                 
                 if(d2s > d2c) //collision!
                 {
                     // score collision tally in current cell
                     timer->startTimer("scoring collision tally");
-                    current_Cell->scoreTally(p , current_Cell->getMat()->getMacroXS( p ) ); 
+                    current_Cell->scoreTally(p , current_Cell->getMat()->getMacroXS( p->getGroup() ) ); 
                     tally++;
                     timer->endTimer("scoring collision tally");
 
                     timer->startTimer("scoring mesh tally");
                     //std::cout << "About to score mesh tally " << std::endl;
                     // score mesh tally
-                    mesh->scoreTally( p , current_Cell->getMat()->getMacroXS( p ) );
+                    //mesh->scoreTally( p , current_Cell->getMat()->getMacroXS( p ) ); // TODO: uncomment this line (for testing only)
                     //std::cout << "We scored that mesh tally! " << std::endl;
                     timer->endTimer("scoring mesh tally");
 
                     p->move(d2c);
-                    current_Cell->getMat()->sampleCollision( p, pstack );
+                    // sample the reaction
+                    React_ptr reactionToSample = current_Cell->getMat()->sampleCollision( p->getGroup() );
+                    reactionToSample->sample( p, pstack );
                     p->kill(); //TODO: make this not awful
                 }
                 else //hit surface
@@ -87,12 +87,7 @@ void Transport::runTransport()
         // end the history timer
         timer->endHist();
     }
-
-    cout << std::endl << "Transport finished!" << std::endl;
-    cout << std::endl << "************************************************************************" << std::endl;
-    cout << "************************************************************************" << std::endl;
     tally /= numHis;
-    //cout << "tally " << tally << endl;
 }
 
 void Transport::output() {

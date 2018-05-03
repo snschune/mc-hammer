@@ -62,7 +62,7 @@ public:
   
   //operations
   double                 distToSurface   ( Part_ptr pi );
-  double                 distToCollision ( Part_ptr pi );
+  double                 distToCollision ( int group   );
   pair<Surf_ptr, double> closestSurface  ( Part_ptr p  );
   
   bool amIHere( const point& pos );

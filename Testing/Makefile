@@ -1,7 +1,7 @@
 exec    = a.out
 cc      = g++
 opt     = -O0
-cflags  = -std=c++14 $(opt)
+cflags  = -std=c++11 $(opt)
 srcdir  = ../
 
 tests = $(patsubst %.cpp,%.tst,$(filter-out $(main), $(wildcard *.cpp)))

@@ -60,7 +60,7 @@ public:
   Source_ptr              getSource()    { return source;    };
 
   // Functions
-  void     readXS   ( std::string filename , int nGroups, bool loud );
+  //void     readXS   ( std::string filename , int nGroups, bool loud );
   Cell_ptr whereAmI ( point pos );
   Part_ptr sampleSource() { return source->sample(); };	
 };

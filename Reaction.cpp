@@ -1,46 +1,35 @@
-/*
-  Author: ESGonzalez
-  Date: 2/20/18
-*/
-
 #include "Reaction.h"
 
-double Capture::getXS( Part_ptr p )
-{
-  int g = p->getGroup();
-  return captureXS[g-1];
+Capture::Capture( XSec_ptr capti ) : Reaction( capti ) {
+  // make sure the correction XS is attached
+  std::shared_ptr< CaptureXS > capt = std::dynamic_pointer_cast< CaptureXS > ( capti );
+  rxnName = "Capture";
+  assert( rxnName == capt->name() );
+
+  // call the XS vectors
+  captureXS = capt->getCaptureXS();
 }
 
-void Capture::sample( Part_ptr p, std::stack< Part_ptr > &bank )
-{
+void Capture::sample( Part_ptr p, std::stack< Part_ptr > &bank ) {
   p->kill();
 }
 
-Scatter::Scatter( int ng, std::vector< std::vector< double > > scatterXSi ) : Reaction( ng ), scatterXS( scatterXSi )
-{
+Scatter::Scatter( XSec_ptr scati ) : Reaction( scati ) {
+  // make sure the correction XS is attached
+  std::shared_ptr< ScatterXS > scat = std::dynamic_pointer_cast< ScatterXS > ( scati );
   rxnName = "Scatter";
+  assert( rxnName == scat->name() );
 
-  // Fill the total scatter vector
-  for (int j=0; j < nGroups; ++j) 
-  { // loop over rows
-    double scatterTotInc = 0; // increment the scatter xs total
-    for (int k=0; k < nGroups; ++k) 
-    { // loop over columns
-      scatterTotInc += scatterXS[j][k];                         
-    }  
-    scatterTotalXS.push_back(scatterTotInc);
-  }
+  // call the XS vectors
+  scatterXS      = scat->getScatterXS();
+  scatterTotalXS = scat->getScatterTotalXS();
+
+  // set the number of groups
+  nGroups = scatterXS.size();
 }
 
-double Scatter::getXS( Part_ptr p )
-{
-  int g = p->getGroup();
-  return scatterTotalXS[g-1];
-}
-
-void Scatter::sample( Part_ptr p, std::stack< Part_ptr > &bank )
-{
-  //select energy group to shift
+void Scatter::sample( Part_ptr p, std::stack< Part_ptr > &bank ) {
+  // select energy group to shift
   double rand = Urand();
   double cutoff = 0;
   int gf = 0;
@@ -49,7 +38,7 @@ void Scatter::sample( Part_ptr p, std::stack< Part_ptr > &bank )
   for(int i = 0; i < nGroups; i++)
   {
     cutoff += curSigs[i]/scatterTotalXS[g-1]; 
-    if(rand < cutoff)
+    if( rand < cutoff )
       {
         gf = i+1;
         break;  
@@ -58,41 +47,20 @@ void Scatter::sample( Part_ptr p, std::stack< Part_ptr > &bank )
   p->scatter( gf );
 }
 
-double Fission::getXS( Part_ptr p )
-{
-  int g = p->getGroup();
-  return fissionXS[g-1];
+Fission::Fission( XSec_ptr fissi ) : Reaction( fissi ) {
+  // make sure the correction XS is attached
+  std::shared_ptr< FissionXS > fiss = std::dynamic_pointer_cast< FissionXS > ( fissi );
+  rxnName = "Fission";
+  assert( rxnName == fiss->name() );
+
+  // call the XS vectors
+  fissionXS = fiss->getFissionXS();
+  nu        = fiss->getNu();
+  chi       = fiss->getChi();
 }
 
 void  Fission::sample( Part_ptr p, std::stack< Part_ptr > &bank ) {
-  // create random number of secondaries from multiplicity distributon and
-  // push all but one of them into the bank, and set working particle to the last one
-  // if no secondaries, kill the particle
-  int     g = p->getGroup();
-  int     n = floor( nu[g-1] + Urand() );
-  double x0 = p->getPos().x;
-  double y0 = p->getPos().y;
-  double z0 = p->getPos().z;
 
-  Source_ptr source = std::make_shared< setSourcePoint > ( "induced_fission", x0, y0, z0, chi );
-
-  if ( n <= 0 ) 
-  {
-    p->kill();
-  }
-  else 
-  {
-    // bank all but last particle (skips if n = 1)
-    for ( int i = 0 ; i < ( n - 1 ) ; i++ ) 
-    {
-      Part_ptr q = source->sample();
-      q->setCell( p->getCell() );
-      bank.push( q );
-    }
-    // set working particle to last one
-    Part_ptr q = source->sample();
-    q->setCell( p->getCell() );
-    *p = *q; // figure out how to do this
-  }
+  p->kill(); // need to rewrite this 
   
 }

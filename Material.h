@@ -13,14 +13,13 @@
 #include <vector>
 #include <cmath>
 #include <string>
-#include "Particle.h"
 #include "Nuclide.h"
-
+#include "Reaction.h"
 
 using std::vector;
 using std::stack;
 
-typedef std::shared_ptr< Particle > Part_ptr;
+typedef std::shared_ptr< Reaction > Reaction_ptr;
 typedef std::shared_ptr< Nuclide  > Nuclide_ptr;
 
 class Material
@@ -33,11 +32,11 @@ class Material
     double                                          atomDensity; // for homogeneous, set to 1
     std::vector< std::pair< Nuclide_ptr, double > > nuclides;
 
-    double getMicroXS( Part_ptr p );
+    double getMicroXS( int group );
 
   public:
     // Constructor/Destructor
-    Material( std::string label, double atomDensityi ) : materialName(label), atomDensity(atomDensityi) {};
+    Material( std::string label, double atomDensityi ) : materialName( label ), atomDensity( atomDensityi ) {};
    ~Material() {};
 
     // Adders
@@ -46,10 +45,10 @@ class Material
     // Getters
     std::string name()           { return materialName; };
     double      getAtomDensity() { return atomDensity;  };
-    double      getMacroXS( Part_ptr p );
+    double      getMacroXS( int group );
 
     // Functions
-    Nuclide_ptr sampleNuclide   ( Part_ptr p                          );
-    void        sampleCollision ( Part_ptr p, stack< Part_ptr > &bank );
+    Nuclide_ptr     sampleNuclide   ( int group );
+    Reaction_ptr    sampleCollision ( int group );
 };
 #endif
