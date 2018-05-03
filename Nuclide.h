@@ -14,7 +14,6 @@
 #include <string>
 #include <cassert>
 #include "Particle.h"
-#include "Reaction.h"
 
 typedef std::shared_ptr< Particle > Part_ptr;
 typedef std::shared_ptr< Reaction > Reaction_ptr;
