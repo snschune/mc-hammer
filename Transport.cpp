@@ -58,14 +58,15 @@ void Transport::runTransport()
                     timer->endTimer("scoring mesh tally");
                     tally++;
 
-                    // sample collision
-                    current_Cell->getMat()->sampleCollision( p, pstack );
-
-                    // check number of collisions
-                    if ( p.getNCollisions() >= constants->getKillAfterNColl() ) 
+                    // check number of collisions and kill particle if it would exceeed the global cutoff
+                    if ( p.getNCollisions() + 1 >= constants->getKillAfterNColl() ) 
                     {
                         p.kill(); 
                     }
+
+                    // sample collision
+                    current_Cell->getMat()->sampleCollision( p, pstack );
+
                 }
                 else //hit surface
                 {
