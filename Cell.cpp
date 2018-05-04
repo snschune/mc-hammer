@@ -5,6 +5,16 @@
 
 #include "Cell.h"
 
+void Cell::setImportance(double imp)
+{
+  importance = imp;
+}
+
+double Cell::getImportance()
+{
+  return importance;
+}
+
 double Cell::distToCollision(Particle& pi)
 {
   double total_xs = mat->getMacroXS(pi);

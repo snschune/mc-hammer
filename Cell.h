@@ -40,16 +40,18 @@ class Cell
 //NOTE: create all other objects before constructing a cell, or it leads to a pain in the butt
 {
 private:
-    std::string cellName;
-    Mat_ptr mat; //material properties within cell
-    vector<pair<Surf_ptr, bool>> surfacePairs;
+  std::string cellName;
+  Mat_ptr mat; //material properties within cell
+  vector<pair<Surf_ptr, bool>> surfacePairs;
     
-    // Estimators
-    vector< Estimator_ptr > estimators;
+  double importance;
+  
+  // Estimators
+  vector< Estimator_ptr > estimators;
    
 public: 
   //Constructor:
-  Cell( std::string label ) : cellName( label ) {};
+  Cell( std::string label ) : cellName( label ), importance(1.0) {};
  ~Cell() {};
     
   void    addSurfacePair ( std::pair< Surf_ptr, bool > newSurfacePair ) { surfacePairs.push_back( newSurfacePair ); };
@@ -58,8 +60,11 @@ public:
   Mat_ptr                      getMat()        { return mat;        };
   std::string                  name()          { return cellName;   };
   std::vector< Estimator_ptr > getEstimators() { return estimators; };
-  
+
   //operations
+  void   setImportance( double imp );
+  double getImportance();
+
   double                 distToSurface   ( Particle& pi );
   double                 distToCollision ( Particle& pi );
   pair<Surf_ptr, double> closestSurface  ( Particle& p  );

@@ -304,6 +304,11 @@ void Input::readInput( std::string xmlFilename ) {
         throw;
       } 
     }
+
+    // cell importance
+    if ( c.attribute("importance") ) {
+      Cel->setImportance( c.attribute("importance").as_double() );
+    }
    
     // iterate over surfaces
     for ( auto s : c.children() ) {

@@ -65,14 +65,14 @@
 </surfaces>
 
 <cells>
-  <cell name="berpball" material="berpball">
+  <cell name="berpball" material="berpball" importance="1.0">
     <surface name="sphere1" sense="-1"/>
   </cell>
-  <cell name="polyball" material="polyball">
+  <cell name="polyball" material="polyball" importance="4.0">
     <surface name="sphere1" sense="+1"/>
     <surface name="sphere2" sense="-1"/>
   </cell>
-  <cell name="air" material="air">
+  <cell name="air" material="air" importance="16.0">
     <surface name="sphere2" sense="+1"/>
     <surface name="xplane1" sense="+1"/>
     <surface name="xplane2" sense="-1"/>
