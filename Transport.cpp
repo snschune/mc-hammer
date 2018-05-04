@@ -70,7 +70,10 @@ void Transport::runTransport()
                     Cell_ptr newCell = geometry->whereAmI( p.getPos() );
 
                     if ( newCell == nullptr ) { p.kill(); }
-                    else { p.setCell(newCell); }
+                    else { 
+                      p.setCell(newCell);
+                      VarRed.importanceSplit( p, pstack, current_Cell->getImportance(), newCell->getImportance() );
+                    }
                 }
             }
         }

@@ -3,7 +3,7 @@
 <!-- This is how a comment is written in xml -->
 
 <!-- Setup Parameters -->
-<setup nhistories="1000" ngroups="2" killAfterNColl="1" xsfile="berpinpolyinair.xs" meshfile="berpinpolyinair.thrm" loud="true"/>
+<setup nhistories="100000" ngroups="2" killAfterNColl="1" xsfile="berpinpolyinair.xs" meshfile="berpinpolyinair.thrm" loud="true"/>
 <outfiles outfile="berpinpolyinair.out" vtkfile="berpinpolyinair.vtu" timefile="time.out"/>
 
 <nuclides>
@@ -55,7 +55,10 @@
 
 <surfaces>
   <sphere name="sphere1" x0="0.0" y0="0.0" z0="0.0" rad="3.79349"/>
-  <sphere name="sphere2" x0="0.0" y0="0.0" z0="0.0" rad="11.41349"/>
+  <sphere name="sphere2" x0="0.0" y0="0.0" z0="0.0" rad="5.69849"/>
+  <sphere name="sphere3" x0="0.0" y0="0.0" z0="0.0" rad="7.60349"/>
+  <sphere name="sphere4" x0="0.0" y0="0.0" z0="0.0" rad="9.50849"/>
+  <sphere name="sphere5" x0="0.0" y0="0.0" z0="0.0" rad="11.41349"/>
   <plane name="xplane1" a="1.0" b="0.0" c="0.0" d="-101.6"/>
   <plane name="xplane2" a="1.0" b="0.0" c="0.0" d="101.6"/>
   <plane name="yplane1" a="0.0" b="1.0" c="0.0" d="-101.6"/>
@@ -68,12 +71,24 @@
   <cell name="berpball" material="berpball" importance="1.0">
     <surface name="sphere1" sense="-1"/>
   </cell>
-  <cell name="polyball" material="polyball" importance="4.0">
+  <cell name="polyShell1" material="polyball" importance="1.0">
     <surface name="sphere1" sense="+1"/>
     <surface name="sphere2" sense="-1"/>
   </cell>
-  <cell name="air" material="air" importance="16.0">
+  <cell name="polyShell2" material="polyball" importance="1.0">
     <surface name="sphere2" sense="+1"/>
+    <surface name="sphere3" sense="-1"/>
+  </cell>
+  <cell name="polyShell3" material="polyball" importance="1.0">
+    <surface name="sphere3" sense="+1"/>
+    <surface name="sphere4" sense="-1"/>
+  </cell>
+  <cell name="polyShell4" material="polyball" importance="1.0">
+    <surface name="sphere4" sense="+1"/>
+    <surface name="sphere5" sense="-1"/>
+  </cell>
+  <cell name="air" material="air" importance="1.0">
+    <surface name="sphere5" sense="+1"/>
     <surface name="xplane1" sense="+1"/>
     <surface name="xplane2" sense="-1"/>
     <surface name="yplane1" sense="+1"/>
@@ -84,8 +99,8 @@
 </cells>
 
 <estimators> <!-- Right now we can only read in CollisionTally estimators, will add more as needed -->
-  <CollisionTally name="uncollidedFlux" apply="cell" applyName="all_cells" collisionOrder="2"/>
-  <CollisionTally name="uncollidedFlux" apply="tet" applyName="all_tets" collisionOrder="3"/>
+  <CollisionTally name="uncollidedFlux" apply="cell" applyName="all_cells" collisionOrder="0"/>
+  <CollisionTally name="uncollidedFlux" apply="tet"  applyName="all_tets" collisionOrder="0"/>
   <!-- ************* These examples are in-progress **************************** -->
   <!-- <CollisionTally name="uncollidedFlux" apply="cell" applyName="berpball"/> -->
   <!-- <CollisionTally name="uncollidedFlux" apply="tet" applyName="tet1"/>      -->

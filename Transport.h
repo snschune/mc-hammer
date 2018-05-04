@@ -25,6 +25,7 @@
 #include "Mesh.h"
 #include "Tet.h"
 #include "HammerTime.h"
+#include "VarianceReduction.h"
 
 using std::vector;
 using std::stack;
@@ -53,6 +54,8 @@ private:
     Geom_ptr geometry; 
     Mesh_ptr mesh;
     Time_ptr timer;
+
+    VarianceReduction VarRed;
     
 public:
     //constructor
