@@ -9,12 +9,9 @@
 #include <cassert>
 #include "EstimatorCollection.h"
 
-/* ****************************************************************************************************** * 
- * Base Estimator Collection                                   
- *
- * ****************************************************************************************************** */ 
 
-EstimatorCollection::EstimatorCollection(std::map< string , Bin_ptr > attributesin): attributes(attributesin) 
+EstimatorCollection::EstimatorCollection(std::map< string , Bin_ptr > attributesin , EstimatorType t): 
+                                          attributes(attributesin) , type(t) 
 {
 // default constructor calculates number of estimators required
   size = 1;
@@ -54,40 +51,12 @@ int EstimatorCollection::getLinearIndex(Part_ptr p ) {
   return( Utility::linearizeIndices( indices ,  binSizes ) );
 };
 
-void EstimatorCollection::scoreTally(Part_ptr p  , double d) {
+void EstimatorCollection::score(Part_ptr p  , double multiplier) {
   int i =  getLinearIndex(p);
   if( i >= 0  ) { 
     // if the particle attributes are within the binning range
     // score the particle at the correct index
-    estimators.at(i)->score(d);
+    estimators.at(i)->score( multiplier * p->getWeight() );
   }
 }
 
-/* ****************************************************************************************************** * 
- * Collision Estimator Collection                                   
- *
- * ****************************************************************************************************** */ 
-
-void CollisionEstimatorCollection::score(Part_ptr p) {
-  // tallies 1 / the total cross section of the material the particle is currently in
-  // A collision tally must be scored right after the collision is sampled
-  // before altering any of the particle properties as a result of the collision
-  scoreTally(p , 1.0 / p->getCell()->getMat()->getMacroXS(p) );
-};
-
-/* ****************************************************************************************************** * 
- * Surface Estimator Collection                                   
- *
- * ****************************************************************************************************** */ 
-
-void SurfaceFluenceEstimatorCollection::score(Part_ptr p) {
-  // tallies 1 / the cos of the angle between the particles direction
-  // and the surface normal where it last crossed a surface
-  
-  scoreTally(p , 1.0 / (p->getDir() * p->getSurf()->getNormal()) );
-};
-
-void SurfaceCurrentEstimatorCollection::score(Part_ptr p) {
-  // tallies 1 
-  scoreTally(p , 1.0 ) ;
-};

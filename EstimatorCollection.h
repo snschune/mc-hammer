@@ -24,17 +24,12 @@
 using std::vector;
 using std::string;
 
-typedef std::shared_ptr<surface>                           Surf_ptr;
-typedef std::shared_ptr<Cell>                              Cell_ptr;
 typedef std::shared_ptr<Estimator>                         Estimator_ptr;
 typedef std::shared_ptr<Particle>                          Part_ptr;
 typedef std::shared_ptr<ParticleAttributeBinningStructure> Bin_ptr;
 
-/* ****************************************************************************************************** * 
- * Base Estimator Collection                                   
- * ****************************************************************************************************** */ 
-
 class EstimatorCollection {
+
   protected:
     int                            size;
     vector <int>                   binSizes;
@@ -44,7 +39,22 @@ class EstimatorCollection {
     void scoreTally(Part_ptr , double d); 
 
   public:
-    EstimatorCollection(std::map< string , Bin_ptr > attributesin);
+    
+    // This allows EventHandler to pass in the correct multiplier
+    // corresponding to the estimator type
+    enum class EstimatorType {
+      SurfaceCurrent ,
+      SurfaceFluence , 
+      TrackLength    ,
+      Collision
+    };
+
+    // this holds the type 
+    EstimatorType type;
+    
+    EstimatorType getType() { return(type); };
+
+    EstimatorCollection(std::map< string , Bin_ptr > attributesin , EstimatorType t);
    ~EstimatorCollection() {};
 
     // find index of estimator to score
@@ -52,49 +62,12 @@ class EstimatorCollection {
     // attributes within the range of binning structures for this tally
     int getLinearIndex(Part_ptr p);
 
-    // interface for wrapper of scoreTally() for derived EstimatorCollection classes
-    virtual void score(Part_ptr)  = 0;
+    // score a tally in the correct bin, with a given multiplier
+    void score(Part_ptr p, double multiplier);
 
     void endHist();
-};
-
-/* ****************************************************************************************************** * 
- * Collision Estimator Collection                                   
- * ****************************************************************************************************** */ 
-
-class CollisionEstimatorCollection: public EstimatorCollection {
-  public:
-    CollisionEstimatorCollection(std::map< string , Bin_ptr > attributesin): EstimatorCollection(attributesin) {};
-   ~CollisionEstimatorCollection() {}; 
-
-    void score(Part_ptr p );
-};
-
-/* ****************************************************************************************************** * 
- * Surface Estimator Collection
- *  * scoring function virtual to allow for multiple inherited types for scoring on surfaces
- * ****************************************************************************************************** */ 
-
-class SurfaceEstimatorCollection: public EstimatorCollection {
-  public:
-    SurfaceEstimatorCollection(std::map< string , Bin_ptr > attributesin): EstimatorCollection(attributesin) {}; 
-   ~SurfaceEstimatorCollection() {};
-};
-
-class SurfaceFluenceEstimatorCollection : public SurfaceEstimatorCollection {
-  public:
-    SurfaceFluenceEstimatorCollection(std::map< string , Bin_ptr > attributesin): SurfaceEstimatorCollection(attributesin) {};
-   ~SurfaceFluenceEstimatorCollection() {};
-
-    void score(Part_ptr p);
-};
-
-class SurfaceCurrentEstimatorCollection : public SurfaceEstimatorCollection {
-  public:
-    SurfaceCurrentEstimatorCollection(std::map< string , Bin_ptr > attributesin): SurfaceEstimatorCollection(attributesin) {};
-   ~SurfaceCurrentEstimatorCollection() {};
     
-   void score(Part_ptr p);
 };
+
 
 #endif

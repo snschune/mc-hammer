@@ -15,7 +15,7 @@ Particle::Particle( const Particle &p): pos(p.getPos()) , dir(p.getDir())  {
   alive            = true;
   group            = p.getGroup();
   cell             = p.getCell();
-  collisionCounter = p.getNumCollisions(); 
+  collisionCounter = p.getNumCollisions();
 }
 
 // default constructor -- for source
@@ -69,6 +69,7 @@ void Particle::setDir(double ui, double vi, double wi)
     double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
     dir.x *= norm; dir.y *= norm; dir.z *= norm;
 }
+
 
 void Particle::move(double dist)
 {

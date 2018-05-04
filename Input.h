@@ -24,7 +24,7 @@
 #include "ParticleAttributeBinningStructure.h"
 #include "EstimatorCollection.h"
 
-typedef std::shared_ptr<EstimatorCollection> EstCol_ptr;
+typedef std::shared_ptr<EstimatorCollection> EstCollection_ptr;
 
 class Input
 {

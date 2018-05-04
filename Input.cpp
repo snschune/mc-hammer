@@ -44,7 +44,12 @@ void Input::readInput( std::string xmlFilename ) {
   mesh->setVTKFilename( vtkFilename );
   timer->setOutFilename( timeFilename );
 
-  // iterate over nuclides
+  /* ===================================================================================================================== *
+   *
+   * Iterate over Nuclides
+   * 
+   * ===================================================================================================================== */
+  
   std::vector< std::shared_ptr< Nuclide > > nuclides;
   pugi::xml_node inputNuclides = input_file.child("nuclides");
   for ( auto n : inputNuclides ) {
@@ -247,7 +252,12 @@ void Input::readInput( std::string xmlFilename ) {
     }
   } 
 
-  // iterate over materials
+  /* ===================================================================================================================== *
+   *
+   * Iterate over Materials
+   * 
+   * ===================================================================================================================== */
+  
   std::vector< std::shared_ptr< Material > > materials;
   pugi::xml_node inputMaterials = input_file.child("materials");
   for ( auto m : inputMaterials ) 
@@ -271,7 +281,12 @@ void Input::readInput( std::string xmlFilename ) {
     }
   }
 
-  // iterate over surfaces
+  /* ===================================================================================================================== *
+   *
+   * Iterate over surfaces
+   * 
+   * ===================================================================================================================== */
+  
   pugi::xml_node input_surfaces = input_file.child("surfaces");
   for ( auto s : input_surfaces ) {
     std::string type = s.name();
@@ -301,7 +316,12 @@ void Input::readInput( std::string xmlFilename ) {
 
   }
 
-  // iterate over cells
+  /* ===================================================================================================================== *
+   *
+   * Iterate over cells
+   * 
+   * ===================================================================================================================== */
+  
   pugi::xml_node input_cells = input_file.child("cells");
   for ( auto c : input_cells ) {
     std::string name = c.attribute("name").value();
@@ -356,7 +376,11 @@ void Input::readInput( std::string xmlFilename ) {
     geometry->addCell( Cel );
   }
 
-  // iterate over estimators
+  /* ===================================================================================================================== *
+   *
+   * Iterate over estimators
+   * 
+   * ===================================================================================================================== */
 
   pugi::xml_node input_estimators = input_file.child("estimators");
   for ( auto e : input_estimators ) {
@@ -394,7 +418,7 @@ void Input::readInput( std::string xmlFilename ) {
           for ( auto cel : geometry->getCells() ) {
             // make a CollisionEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
             // use the attributeMap for this estimator as the constructor
-            EstCol_ptr est = std::make_shared<CollisionEstimatorCollection>( attributeMap );
+            EstCollection_ptr est = std::make_shared<EstimatorCollection>( attributeMap , EstimatorCollection::EstimatorType::SurfaceFluence);
             cel->addEstimator(est);
           }
         }
@@ -404,7 +428,7 @@ void Input::readInput( std::string xmlFilename ) {
           if ( cel ) {
             // make a CollisionEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
             // use the attributeMap for this estimator as the constructor
-            EstCol_ptr est = std::make_shared<CollisionEstimatorCollection>( attributeMap );
+            EstCollection_ptr est = std::make_shared<EstimatorCollection>( attributeMap , EstimatorCollection::EstimatorType::SurfaceFluence );
             cel->addEstimator(est);
           }
           else {
@@ -423,7 +447,7 @@ void Input::readInput( std::string xmlFilename ) {
           for ( auto t : mesh->getTets() ) {
             // make a CollisionEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
             // use the attributeMap for this estimator as the constructor
-            EstCol_ptr est = std::make_shared<CollisionEstimatorCollection>( attributeMap );
+            EstCollection_ptr est = std::make_shared<EstimatorCollection>( attributeMap , EstimatorCollection::EstimatorType::SurfaceFluence );
             t->addEstimator(est);
           }
         }
@@ -433,7 +457,7 @@ void Input::readInput( std::string xmlFilename ) {
           if ( tet ) {
             // make a CollisionEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
             // use the attributeMap for this estimator as the constructor
-            EstCol_ptr est = std::make_shared<CollisionEstimatorCollection>( attributeMap );
+            EstCollection_ptr est = std::make_shared<EstimatorCollection>( attributeMap , EstimatorCollection::EstimatorType::Collision );
             tet->addEstimator(est);
           }
           else {
@@ -459,7 +483,7 @@ void Input::readInput( std::string xmlFilename ) {
           for ( auto surf : geometry->getSurfaces() ) {
             // make a SurfaceEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
             // use the attributeMap for this estimator as the constructor
-            EstCol_ptr est = std::make_shared<SurfaceFluenceEstimatorCollection>( attributeMap );
+            EstCollection_ptr est = std::make_shared<EstimatorCollection>( attributeMap , EstimatorCollection::EstimatorType::SurfaceFluence);
             surf->addEstimator(est);
           }
         }
@@ -469,7 +493,7 @@ void Input::readInput( std::string xmlFilename ) {
           if ( surf ) {
             // make a SurfaceEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
             // use the attributeMap for this estimator as the constructor
-            EstCol_ptr est = std::make_shared<SurfaceFluenceEstimatorCollection>( attributeMap );
+            EstCollection_ptr est = std::make_shared<EstimatorCollection>( attributeMap , EstimatorCollection::EstimatorType::SurfaceFluence );
             surf->addEstimator(est);
           }
           else {
@@ -495,7 +519,7 @@ void Input::readInput( std::string xmlFilename ) {
           for ( auto surf : geometry->getSurfaces() ) {
             // make a SurfaceEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
             // use the attributeMap for this estimator as the constructor
-            EstCol_ptr est = std::make_shared<SurfaceCurrentEstimatorCollection>( attributeMap );
+            EstCollection_ptr est = std::make_shared<EstimatorCollection>( attributeMap , EstimatorCollection::EstimatorType::SurfaceCurrent );
             surf->addEstimator(est);
           }
         }
@@ -505,7 +529,7 @@ void Input::readInput( std::string xmlFilename ) {
           if ( surf ) {
             // make a SurfaceEstimatorCollection shared ptr and cast it as an EstimatorCollection shared ptr 
             // use the attributeMap for this estimator as the constructor
-            EstCol_ptr est = std::make_shared<SurfaceCurrentEstimatorCollection>( attributeMap );
+            EstCollection_ptr est = std::make_shared<EstimatorCollection>( attributeMap , EstimatorCollection::EstimatorType::SurfaceCurrent );
             surf->addEstimator(est);
           }
           else {
@@ -526,7 +550,13 @@ void Input::readInput( std::string xmlFilename ) {
   
 
   }
-  // iterate over sources
+ 
+  /* ===================================================================================================================== *
+   *
+   * Iterate over Sources
+   * 
+   * ===================================================================================================================== */
+  
   pugi::xml_node input_sources = input_file.child("sources");
   for ( auto so : input_sources ) {
     std::string type  = so.name();
@@ -584,4 +614,3 @@ void Input::readInput( std::string xmlFilename ) {
   }
   constants->lock(); // Please don't move this
 }
-

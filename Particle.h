@@ -29,6 +29,7 @@ private:
     Surf_ptr surf; // the surface the particle most recently crossed
     int group;
     int collisionCounter;
+    const double  weight = 1; // temporary until var reduction is implemented
 
 public:
     //constructor
@@ -45,6 +46,7 @@ public:
     point getDir()           const { return(dir);              };   
     int   getGroup()         const { return(group);            };
     int   getNumCollisions() const { return(collisionCounter); };
+    double getWeight()       const { return(weight);           };
 
     // sets
     void countCollision() {collisionCounter++; };
