@@ -56,7 +56,7 @@ class Estimator {
     
     // estimator methods
     virtual void endHist();
-    virtual void score(double xs);
+    virtual void score(Particle& p, double xs);
     virtual void setCollisionOrder( int order ) { collisionOrder = order; }
     virtual int  getCollisionOrder()            { return( collisionOrder   ); }
     virtual std::pair < double , double > getScalarEstimator(unsigned long long) { return( fluxEstimator ); };
@@ -114,7 +114,7 @@ class CollisionTally : public Estimator {
     double getHistTallySqr() 		           { return( histTallySqr     ); };
     
     // collision tally specific estimator methods
-    void score(double xs);
+    void score(Particle& p, double xs);
     void endHist();
     std::pair< double , double > getScalarEstimator(unsigned long long);
 };

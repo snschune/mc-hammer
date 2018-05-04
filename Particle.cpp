@@ -9,7 +9,7 @@ using std::cout;
 using std::endl;
 
 //constructors
-Particle::Particle(point posi, point diri, int gi): pos(posi), dir(diri), group(gi), alive(1)
+Particle::Particle(point posi, point diri, int gi): pos(posi), dir(diri), group(gi), alive(1), wgt(1.0)
 {
     double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
     dir.x *= norm; dir.y *= norm; dir.z *= norm;
@@ -27,6 +27,8 @@ point Particle::getDir() { return dir; }
 int Particle::getGroup() { return group; }
 
 int Particle::getNCollisions() { return nCollisions; }
+
+double Particle::getWgt() { return wgt; }
 
 void Particle::setCell(Cell_ptr celli) { cell = celli; return; }
 
@@ -51,6 +53,11 @@ void Particle::setDir(double ui, double vi, double wi)
     
     double norm = 1.0 / std::sqrt( dir.x * dir.x  +  dir.y * dir.y  +  dir.z * dir.z );
     dir.x *= norm; dir.y *= norm; dir.z *= norm;
+}
+
+void Particle::adjustWgt( double factor )
+{
+    wgt *= factor;
 }
 
 void Particle::move(double dist)

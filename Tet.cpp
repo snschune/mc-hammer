@@ -153,7 +153,7 @@ void Tet::scoreTally(Particle& p , double xs)
 {
   if ( estimators.at( p.getGroup() - 1 )->getCollisionOrder() == p.getNCollisions() )
   {
-    estimators.at( p.getGroup() - 1 )->score(xs);
+    estimators.at( p.getGroup() - 1 )->score(p,xs);
   }
 }
 

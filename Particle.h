@@ -26,6 +26,7 @@ private:
     Cell_ptr cell; //still need to change this
     int group;
     int nCollisions;
+    double wgt;
 
 public:
     //constructor
@@ -33,10 +34,11 @@ public:
     //functions
     bool isAlive();
     Cell_ptr getCell();
-    point getPos();
-    point getDir();
-    int   getGroup();
-    int   getNCollisions();
+    point    getPos();
+    point    getDir();
+    int      getGroup();
+    int      getNCollisions();
+    double   getWgt();
 
     void setCell(Cell_ptr);
     void setGroup(int g);
@@ -44,6 +46,8 @@ public:
     void setDir(point diri);
     void setPos(double xi, double yi, double zi);
     void setDir(double ui, double vi, double wi);
+    void adjustWgt( double factor );
+
     void move(double dist);
     void kill();
     void scatter( int gf );

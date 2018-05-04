@@ -18,7 +18,7 @@
 
 //estimator functions
 void Estimator::endHist() {};
-void Estimator::score(double xs) {};
+void Estimator::score(Particle& p, double xs) {};
 //std::pair < double , double > Estimator::getScalarEstimator() {};
 
 //functions
@@ -40,8 +40,8 @@ void CellTally::score(Particle& pi , Particle& pf ) {
 
 
 //functions
-void CollisionTally::score( double xs ) {
-     currentHistTally +=  1.0 / xs;
+void CollisionTally::score( Particle& p, double xs ) {
+     currentHistTally +=  p.getWgt() / xs;
 };
 
 void CollisionTally::endHist() {
