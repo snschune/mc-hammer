@@ -69,6 +69,26 @@ double Cell::distToSurface(Particle& pi)
   return dist;
 }
 
+void Cell::recordTrackEntering() 
+{
+  tracks_entered++;
+}
+
+unsigned long long Cell::getTracksEntered() 
+{
+  return tracks_entered;
+}
+
+void Cell::recordCollision()
+{
+  collisions++;
+}
+
+unsigned long long Cell::getCollisions()
+{
+  return collisions;
+}
+
 // Estimator interface
 
 void Cell::scoreTally(Particle& p , double xs) 

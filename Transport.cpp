@@ -41,6 +41,9 @@ void Transport::runTransport()
 
                 if(d2s > d2c) //collision!
                 {
+                    // record collision has occurred in current cell
+                    current_Cell->recordCollision();
+
                     // move particle
                     p.move(d2c);
 
@@ -71,6 +74,7 @@ void Transport::runTransport()
 
                     if ( newCell == nullptr ) { p.kill(); }
                     else { 
+                      newCell->recordTrackEntering();
                       p.setCell(newCell);
                       VarRed.importanceSplit( p, pstack, current_Cell->getImportance(), newCell->getImportance() );
                     }
@@ -95,6 +99,8 @@ void Transport::output() {
     int i = 0;
     for( Cell_ptr cell : geometry->getCells() ) {
         ++i;
+        std::cout << "Tracks entered in cell       " << i << " = " << cell->getTracksEntered() << std::endl;
+        std::cout << "Collisions occurred in cell  " << i << " = " << cell->getCollisions()    << std::endl;
         std::cout << "Collision tally in cell " << i << std::endl;
         for( int j = 1; j <= constants->getNumGroups(); ++j) {
             std::cout << " group: " << j << ", tally = " << cell->getSingleGroupTally(j, numHis).first 
