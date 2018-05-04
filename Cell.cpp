@@ -5,7 +5,7 @@
 
 #include "Cell.h"
 
-double Cell::distToCollision(Part_ptr pi)
+double Cell::distToCollision(Particle& pi)
 {
   double total_xs = mat->getMacroXS(pi);
   double dist = -log(Urand())/total_xs;
@@ -26,12 +26,12 @@ bool Cell::amIHere( const point& pos )
   return isWithin;
 }
 
-pair<Surf_ptr, double> Cell::closestSurface(Part_ptr p)
+pair<Surf_ptr, double> Cell::closestSurface(Particle& p)
 {
 	Surf_ptr min_surf = nullptr;
 	double min_val = std::numeric_limits<double>::max();
-	point pos = p->getPos();
-	point dir = p->getDir();
+	point pos = p.getPos();
+	point dir = p.getDir();
 	for(auto bound: surfacePairs)
 	{
 		Surf_ptr cur_surf =  bound.first;
@@ -44,14 +44,14 @@ pair<Surf_ptr, double> Cell::closestSurface(Part_ptr p)
 	}
 	if(min_surf == nullptr)
 	{
-		p->printState();
+		p.printState();
 		std::cerr << "ERROR: NO SURFACE FOUND" << std::endl;
 		std::exit(1);
 	}
 	return make_pair(min_surf, min_val);
 }
 
-double Cell::distToSurface(Part_ptr pi)
+double Cell::distToSurface(Particle& pi)
 {
   Surf_ptr close_surface;
   double dist;
@@ -61,11 +61,11 @@ double Cell::distToSurface(Part_ptr pi)
 
 // Estimator interface
 
-void Cell::scoreTally(Part_ptr p , double xs) 
+void Cell::scoreTally(Particle& p , double xs) 
 {
-  if ( estimators.at( p->getGroup() - 1 )->getCollisionOrder() == p->getNCollisions() )
+  if ( estimators.at( p.getGroup() - 1 )->getCollisionOrder() == p.getNCollisions() )
   {
-    estimators.at( p->getGroup() - 1 )->score(xs);
+    estimators.at( p.getGroup() - 1 )->score(xs);
   }
 }
 

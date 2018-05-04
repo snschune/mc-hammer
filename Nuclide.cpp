@@ -6,7 +6,7 @@
 #include "Nuclide.h"
 
 // return the total microscopic cross section
-double Nuclide::getTotalXS( Part_ptr p ) 
+double Nuclide::getTotalXS( Particle& p ) 
 {
   double totalXS = 0.0;
 
@@ -17,7 +17,7 @@ double Nuclide::getTotalXS( Part_ptr p )
   return totalXS;
 }
 
-double Nuclide::getXS( Part_ptr p, std::string reactionName ) 
+double Nuclide::getXS( Particle& p, std::string reactionName ) 
 {
   double xs = 0.0;
   for ( auto reaction : reactions ) 
@@ -31,7 +31,7 @@ double Nuclide::getXS( Part_ptr p, std::string reactionName )
 }
 
 // randomly sample a reaction type from this nuclide
-Reaction_ptr Nuclide::sampleReaction( Part_ptr p ) 
+Reaction_ptr Nuclide::sampleReaction( Particle& p ) 
 {
   double u = getTotalXS( p ) * Urand();
   double s = 0.0;

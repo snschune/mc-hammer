@@ -12,7 +12,7 @@ void Material::addNuclide( Nuclide_ptr newNuclide, double atomFrac )
 	return;
 }
 
-double Material::getMicroXS( Part_ptr p ) 
+double Material::getMicroXS( Particle& p ) 
 {
   double xs = 0.0;
   for ( auto n : nuclides ) 
@@ -23,13 +23,13 @@ double Material::getMicroXS( Part_ptr p )
   return xs;
 }
 
-double Material::getMacroXS( Part_ptr p ) 
+double Material::getMacroXS( Particle& p ) 
 {
   return getAtomDensity() * getMicroXS( p );
 }
 
 // randomly sample a nuclide based on total cross sections and atomic fractions
-Nuclide_ptr Material::sampleNuclide( Part_ptr p ) 
+Nuclide_ptr Material::sampleNuclide( Particle& p ) 
 {
   double u = getMicroXS( p ) * Urand();
   double s = 0.0;
@@ -47,7 +47,7 @@ Nuclide_ptr Material::sampleNuclide( Part_ptr p )
 // function that samples an entire collision: sample nuclide, then its reaction, 
 // and finally process that reaction with input pointers to the working particle p
 // and the particle bank
-void Material::sampleCollision( Part_ptr p, std::stack< Part_ptr > &bank ) {
+void Material::sampleCollision( Particle& p, std::stack< Particle > &bank ) {
   // first sample nuclide
   Nuclide_ptr  N = sampleNuclide( p );
 

@@ -5,15 +5,15 @@
 
 #include "Reaction.h"
 
-double Capture::getXS( Part_ptr p )
+double Capture::getXS( Particle& p )
 {
-  int g = p->getGroup();
+  int g = p.getGroup();
   return captureXS[g-1];
 }
 
-void Capture::sample( Part_ptr p, std::stack< Part_ptr > &bank )
+void Capture::sample( Particle& p, std::stack< Particle > &bank )
 {
-  p->kill();
+  p.kill();
 }
 
 Scatter::Scatter( int ng, std::vector< std::vector< double > > scatterXSi ) : Reaction( ng ), scatterXS( scatterXSi )
@@ -33,19 +33,19 @@ Scatter::Scatter( int ng, std::vector< std::vector< double > > scatterXSi ) : Re
 
 }
 
-double Scatter::getXS( Part_ptr p )
+double Scatter::getXS( Particle& p )
 {
-  int g = p->getGroup();
+  int g = p.getGroup();
   return scatterTotalXS[g-1];
 }
 
-void Scatter::sample( Part_ptr p, std::stack< Part_ptr > &bank )
+void Scatter::sample( Particle& p, std::stack< Particle > &bank )
 {
   //select energy group to shift
   double rand = Urand();
   double cutoff = 0;
   int gf = 0;
-  int g = p->getGroup();
+  int g = p.getGroup();
   std::vector<double> curSigs = scatterXS[g-1];
   for(int i = 0; i < nGroups; i++)
   {
@@ -56,18 +56,18 @@ void Scatter::sample( Part_ptr p, std::stack< Part_ptr > &bank )
         break;  
       }
   }
-  p->scatter( gf );
+  p.scatter( gf );
 }
 
-double Fission::getXS( Part_ptr p )
+double Fission::getXS( Particle& p )
 {
-  int g = p->getGroup();
+  int g = p.getGroup();
   return fissionXS[g-1];
 }
 
-void  Fission::sample( Part_ptr p, std::stack< Part_ptr > &bank ) {
+void  Fission::sample( Particle& p, std::stack< Particle > &bank ) {
 
-  p->kill();
+  p.kill();
 
   /*
   // create random number of secondaries from multiplicity distributon and

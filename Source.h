@@ -17,7 +17,7 @@ public:
    ~Source() {} ;
 
    virtual std::string name() { return sourceName; };
-	virtual Part_ptr    sample() = 0;
+	virtual Particle    sample() = 0;
 };
 
 class setSourcePoint : public Source {
@@ -27,7 +27,7 @@ private:
 public:
    setSourcePoint( std::string label, double xSource, double ySource, double zSource, std::vector<double> groupProbSet) : Source(label), x0(xSource), y0(ySource), z0(zSource), groupProbability(groupProbSet)  {};
    ~setSourcePoint() {};
-   Part_ptr sample();
+   Particle sample();
 };
 
 class setSourceSphere : public Source {
@@ -38,7 +38,7 @@ public:
    setSourceSphere(std::string label, double xSource, double ySource, double zSource, double radInner, double radOuter, std::vector<double> groupProbSet )
    : Source(label), x0(xSource), y0(ySource), z0(zSource), radInner(radInner), radOuter(radOuter), groupProbability(groupProbSet) {};
    ~setSourceSphere() {};
-   Part_ptr sample();
+   Particle sample();
 };
 
 #endif

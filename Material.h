@@ -32,7 +32,7 @@ class Material
     double                                          atomDensity; // for homogeneous, set to 1
     std::vector< std::pair< Nuclide_ptr, double > > nuclides;
 
-    double getMicroXS( Part_ptr p );
+    double getMicroXS( Particle& p );
 
   public:
     // Constructor/Destructor
@@ -45,10 +45,10 @@ class Material
     // Getters
     std::string name()           { return materialName; };
     double      getAtomDensity() { return atomDensity;  };
-    double      getMacroXS( Part_ptr p );
+    double      getMacroXS( Particle& p );
 
     // Functions
-    Nuclide_ptr sampleNuclide   ( Part_ptr p                          );
-    void        sampleCollision ( Part_ptr p, stack< Part_ptr > &bank );
+    Nuclide_ptr sampleNuclide   ( Particle& p                          );
+    void        sampleCollision ( Particle& p, stack< Particle > &bank );
 };
 #endif

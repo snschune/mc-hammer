@@ -218,9 +218,9 @@ Tet_ptr Mesh::whereAmI( point pos )
     return hereIAm;
 }
 
-void Mesh::scoreTally(Part_ptr p, double xs) {
+void Mesh::scoreTally(Particle& p, double xs) {
     //what tet in the mesh did the particle collide in?
-    Tet_ptr t = whereAmI( p->getPos() );
+    Tet_ptr t = whereAmI( p.getPos() );
     
     // make sure its a valid mesh element
     if(t != nullptr) 

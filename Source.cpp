@@ -25,7 +25,7 @@ unsigned int Source::groupSample(std::vector<double> groupProbability)
     return(1);
 }
 
-Part_ptr setSourcePoint::sample(){
+Particle setSourcePoint::sample(){
 	double pi = acos(-1.);
 	
 	auto group = groupSample(groupProbability);
@@ -39,12 +39,12 @@ Part_ptr setSourcePoint::sample(){
 	double omegaZ=sin(acos(mu))*sin(phi);
 	point dir = point(omegaX,omegaY,omegaZ);
 	
-    Part_ptr p = std::make_shared<Particle>(pos, dir, group );
+    Particle p = Particle(pos, dir, group );
 
 	return p;
 }
 
-Part_ptr setSourceSphere::sample(){
+Particle setSourceSphere::sample(){
 	double pi = acos(-1.);
 	//Radius of the new particle
 	//double radius = pow((pow(radInner,3.0) + Urand()*(pow(radOuter,3.0)-pow(radInner,3.0))),(1. / 3.));
@@ -81,7 +81,7 @@ Part_ptr setSourceSphere::sample(){
 	double omegaZ=sin(acos(mu))*sin(phi);
 	point dir = point(omegaX,omegaY,omegaZ);
 	
-     Part_ptr p = std::make_shared<Particle>(pos, dir, group );
+     Particle p = Particle(pos, dir, group );
 
 	return p;
 

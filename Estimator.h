@@ -71,7 +71,7 @@ class MeshTally : public Estimator {
     MeshTally( std::string label, vector<int> numBins ): Estimator( label ) {};
    ~MeshTally() {};
 
-    void score(Part_ptr pi , Part_ptr pf );
+    void score(Particle& pi , Particle& pf );
 };
 
 class SurfaceTally : public Estimator {
@@ -83,7 +83,7 @@ class SurfaceTally : public Estimator {
     SurfaceTally( std::string label ): Estimator( label ) {};
    ~SurfaceTally() {};
     
-    void score(Part_ptr pi , Part_ptr pf );
+    void score(Particle& pi , Particle& pf );
 };
 
 class CellTally : public Estimator {
@@ -95,7 +95,7 @@ class CellTally : public Estimator {
     CellTally( std::string label ): Estimator( label ) {};
    ~CellTally() {};
 
-    void score(Part_ptr pi , Part_ptr pf);
+    void score(Particle& pi , Particle& pf);
 };
 
 class CollisionTally : public Estimator {

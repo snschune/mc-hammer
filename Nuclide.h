@@ -36,11 +36,11 @@ class Nuclide
     // Getters
     std::string                 name()         { return nuclideName;  };
     std::vector< Reaction_ptr > getReactions() { return reactions;    };
-    double                      getTotalXS ( Part_ptr p                           );
-    double                      getXS      ( Part_ptr p, std::string reactionName );
+    double                      getTotalXS ( Particle& p                           );
+    double                      getXS      ( Particle& p, std::string reactionName );
 
     // Functions
-    Reaction_ptr sampleReaction( Part_ptr p );
+    Reaction_ptr sampleReaction( Particle& p );
 };
 
 #endif

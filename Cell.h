@@ -60,14 +60,14 @@ public:
   std::vector< Estimator_ptr > getEstimators() { return estimators; };
   
   //operations
-  double                 distToSurface   ( Part_ptr pi );
-  double                 distToCollision ( Part_ptr pi );
-  pair<Surf_ptr, double> closestSurface  ( Part_ptr p  );
+  double                 distToSurface   ( Particle& pi );
+  double                 distToCollision ( Particle& pi );
+  pair<Surf_ptr, double> closestSurface  ( Particle& p  );
   
   bool amIHere( const point& pos );
 
   // Estimator interface
-  void scoreTally(Part_ptr p , double xs); 
+  void scoreTally(Particle& p , double xs); 
   void endTallyHist();
   std::pair< double , double > getSingleGroupTally(int group, unsigned long long nHist);
   std::vector< std::pair< double , double > > getTally(unsigned long long nHist);

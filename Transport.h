@@ -47,7 +47,7 @@ private:
     //vector<Mat_ptr> mats;
     //vector<Cell_ptr> cells;    //vector of cells (to be moved into Geometry)
     //vector<Surf_ptr> surfaces; //vector of surfaces '
-    stack<Part_ptr> pstack;
+    stack<Particle> pstack;
     vector<double> tallies;
     Cons_ptr constants;
     Geom_ptr geometry; 

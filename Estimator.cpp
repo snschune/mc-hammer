@@ -22,20 +22,20 @@ void Estimator::score(double xs) {};
 //std::pair < double , double > Estimator::getScalarEstimator() {};
 
 //functions
-void MeshTally::score(Part_ptr pi , Part_ptr pf ){
+void MeshTally::score(Particle& pi , Particle& pf ){
 
 };
 
 //functions
-void SurfaceTally::score(Part_ptr pi , Part_ptr pf ) {
+void SurfaceTally::score(Particle& pi , Particle& pf ) {
   bool cross = true;
   if (cross == true) {tally++;};
 };
 
 
 //functions
-void CellTally::score(Part_ptr pi , Part_ptr pf ) {
-  tally +=  dist(pi->getPos() , pf->getPos());
+void CellTally::score(Particle& pi , Particle& pf ) {
+  tally +=  dist(pi.getPos() , pf.getPos());
 };
 
 

@@ -31,8 +31,8 @@ class Reaction
    ~Reaction() {};
 
     virtual std::string name() final { return rxnName; };
-    virtual double      getXS  ( Part_ptr p ) = 0;
-    virtual void        sample ( Part_ptr p, std::stack< Part_ptr > & bank ) = 0;
+    virtual double      getXS  ( Particle& p ) = 0;
+    virtual void        sample ( Particle& p, std::stack< Particle > & bank ) = 0;
 };
 
 class Capture : public Reaction 
@@ -44,9 +44,9 @@ class Capture : public Reaction
     Capture( int ng, std::vector< double > captureXSi ) : Reaction( ng ), captureXS( captureXSi ) { rxnName = "Capture"; };
    ~Capture() {};
 
-    double getXS( Part_ptr p );
+    double getXS( Particle& p );
 
-    void   sample( Part_ptr p, std::stack< Part_ptr > &bank );
+    void   sample( Particle& p, std::stack< Particle > &bank );
 };
 
 class Scatter : public Reaction 
@@ -59,9 +59,9 @@ class Scatter : public Reaction
     Scatter( int ng, std::vector< std::vector< double > > scatterXSi );
    ~Scatter() {};
 
-    double getXS( Part_ptr p );
+    double getXS( Particle& p );
 
-    void   sample( Part_ptr p, std::stack< Part_ptr > &bank );
+    void   sample( Particle& p, std::stack< Particle > &bank );
 };
 
 class Fission : public Reaction 
@@ -76,9 +76,9 @@ class Fission : public Reaction
     : Reaction( ng ), fissionXS( fissionXSi ), nu( nui ), chi( chii ) { rxnName = "Fission"; };
    ~Fission() {};
 
-    double getXS ( Part_ptr p );
+    double getXS ( Particle& p );
 
-    void   sample( Part_ptr p, std::stack< Part_ptr > &bank );
+    void   sample( Particle& p, std::stack< Particle > &bank );
 };
 
 #endif

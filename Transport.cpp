@@ -20,19 +20,21 @@ void Transport::runTransport()
         //start a timer
         timer->startHist();
 	RN_init_particle(i);
+
         //sample src 
-        Part_ptr p_new = geometry->sampleSource();
-        Cell_ptr startingCell = geometry->whereAmI(p_new->getPos());
-        p_new->setCell(startingCell);
+        Particle p_new        = geometry->sampleSource();
+        Cell_ptr startingCell = geometry->whereAmI(p_new.getPos());
+        p_new.setCell(startingCell);
         pstack.push(p_new);
           
         //run history
         while( !pstack.empty() )
         {
-           Part_ptr p = pstack.top();
-            while(p->isAlive())
+            Particle p = pstack.top();
+            pstack.pop();
+            while(p.isAlive())
             {
-                Cell_ptr current_Cell = p->getCell();
+                Cell_ptr current_Cell = p.getCell();
 
                 double d2s = current_Cell->distToSurface(p);
                 double d2c = current_Cell->distToCollision(p);
@@ -40,7 +42,7 @@ void Transport::runTransport()
                 if(d2s > d2c) //collision!
                 {
                     // move particle
-                    p->move(d2c);
+                    p.move(d2c);
 
                     // score collision tally in current cell
                     timer->startTimer("scoring collision tally");
@@ -57,21 +59,20 @@ void Transport::runTransport()
                     current_Cell->getMat()->sampleCollision( p, pstack );
 
                     // check number of collisions
-                    if ( p->getNCollisions() >= constants->getKillAfterNColl() ) 
+                    if ( p.getNCollisions() >= constants->getKillAfterNColl() ) 
                     {
-                        p->kill(); 
+                        p.kill(); 
                     }
                 }
                 else //hit surface
                 {
-                    p->move(d2s + 0.00000001); // TODO: convert this to tolerance with Constants
-                    Cell_ptr newCell = geometry->whereAmI( p->getPos() );
+                    p.move(d2s + 0.00000001); // TODO: convert this to tolerance with Constants
+                    Cell_ptr newCell = geometry->whereAmI( p.getPos() );
 
-                    if ( newCell == nullptr ) { p->kill(); }
-                    else { p->setCell(newCell); }
+                    if ( newCell == nullptr ) { p.kill(); }
+                    else { p.setCell(newCell); }
                 }
             }
-            pstack.pop();
         }
         //tell all estimators that the history has ended
         for( auto cell : geometry->getCells() ) { cell->endTallyHist(); }

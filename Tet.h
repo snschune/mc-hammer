@@ -65,7 +65,7 @@ public:
     bool amIHere( const std::vector< double >& testPoint );
 
     // Estimator interface
-    void scoreTally(Part_ptr p , double xs); 
+    void scoreTally(Particle& p , double xs); 
     void endTallyHist();
     std::pair< double , double > getSingleGroupTally(int group, unsigned long long nHist);
     vector< std::pair< double , double > > getTally(unsigned long long nHist);

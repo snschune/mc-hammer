@@ -62,7 +62,7 @@ public:
   // Functions
   void     readXS   ( std::string filename , int nGroups, bool loud );
   Cell_ptr whereAmI ( point pos );
-  Part_ptr sampleSource() { return source->sample(); };	
+  Particle sampleSource() { return source->sample(); };	
 };
 
 #endif
