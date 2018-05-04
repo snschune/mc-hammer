@@ -44,7 +44,9 @@ private:
   Mat_ptr mat; //material properties within cell
   vector<pair<Surf_ptr, bool>> surfacePairs;
     
-  double importance;
+  double       importance;
+  unsigned int collision_split;
+
   unsigned long long tracks_entered;
   unsigned long long collisions;
   
@@ -53,7 +55,8 @@ private:
    
 public: 
   //Constructor:
-  Cell( std::string label ) : cellName( label ), importance(1.0), tracks_entered(0), collisions(0) {};
+  Cell( std::string label ) : cellName( label ), importance(1.0), collision_split(1),
+                              tracks_entered(0), collisions(0) {};
  ~Cell() {};
     
   void    addSurfacePair ( std::pair< Surf_ptr, bool > newSurfacePair ) { surfacePairs.push_back( newSurfacePair ); };
@@ -66,6 +69,9 @@ public:
   //operations
   void   setImportance( double imp );
   double getImportance();
+
+  void         setCollisionSplit( unsigned int n );
+  unsigned int getCollisionSplit();
 
   double                 distToSurface   ( Particle& pi );
   double                 distToCollision ( Particle& pi );

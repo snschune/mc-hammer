@@ -15,6 +15,16 @@ double Cell::getImportance()
   return importance;
 }
 
+void Cell::setCollisionSplit(unsigned int n)
+{
+  collision_split = n;
+}
+
+unsigned int Cell::getCollisionSplit()
+{
+  return collision_split;
+}
+
 double Cell::distToCollision(Particle& pi)
 {
   double total_xs = mat->getMacroXS(pi);

@@ -13,6 +13,7 @@ class VarianceReduction {
     void split( Particle& p, std::stack<Particle>& pstack, unsigned int n );
     void roulette( Particle& p, std::stack<Particle>& pstack, double s );
     void importanceSplit( Particle& p, std::stack<Particle>& pstack, double I1, double I2 );
+    void collisionSplit( Particle& p, std::stack<Particle>& pstack, unsigned int n );
 };
 
 

@@ -3,6 +3,10 @@
 #include <cmath>
 
 #include "Random.h"
+#include "Cell.h"
+#include "Material.h"
+
+typedef std::shared_ptr< Material > Mat_ptr;
 
 void VarianceReduction::split( Particle& p, std::stack<Particle>& pstack, double s )
 {
@@ -45,6 +49,20 @@ void VarianceReduction::importanceSplit( Particle& p, std::stack<Particle>& psta
     }
     else if ( I2 < I1 ) {
       roulette( p, pstack, I2/I1 );
+    }
+  }
+}
+
+void VarianceReduction::collisionSplit( Particle& p, std::stack<Particle>& pstack, unsigned int n )
+{
+  if ( n > 1 ) {
+    p.adjustWgt( 1.0/n );
+  
+    Mat_ptr  M = p.getCell()->getMat();
+    for ( auto i = 0 ; i < n-1 ; i++ ) {
+      Particle q = p;
+      M->sampleCollision( q, pstack );
+      pstack.push(q);   
     }
   }
 }

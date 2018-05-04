@@ -64,9 +64,10 @@ void Transport::runTransport()
                         p.kill(); 
                     }
 
+                    VarRed.collisionSplit( p, pstack, current_Cell->getCollisionSplit() );
+
                     // sample collision
                     current_Cell->getMat()->sampleCollision( p, pstack );
-
                 }
                 else //hit surface
                 {

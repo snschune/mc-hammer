@@ -309,6 +309,11 @@ void Input::readInput( std::string xmlFilename ) {
     if ( c.attribute("importance") ) {
       Cel->setImportance( c.attribute("importance").as_double() );
     }
+
+    // collision splitting
+    if ( c.attribute("coll_split") ) {
+      Cel->setCollisionSplit( (unsigned int) c.attribute("coll_split").as_int() );
+    }
    
     // iterate over surfaces
     for ( auto s : c.children() ) {
